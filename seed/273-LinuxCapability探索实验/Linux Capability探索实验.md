@@ -24,6 +24,7 @@ $ wget http://labfile.oss.aliyuncs.com/libcap-2.21.tar.gz
 $ tar xvf libcap-2.21.tar.gz
 $ sudo rm /usr/include/sys/capability.h
 $ sudo rm /lib/libcap.so*
+$ cd /home/shiyanlou/libcap-2.21/
 $ sudo make
 $ sudo make install
 ```
