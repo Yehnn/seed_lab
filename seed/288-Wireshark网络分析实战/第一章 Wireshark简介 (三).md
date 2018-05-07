@@ -1,13 +1,21 @@
+---
+show: step
+verison: 0.1
+enable_checker: true
+---
+
 #第一章 Wireshark简介 (三) 
-  >本节涵盖以下内容：
-  >  >
-  >  > >保存、打印及导出数据；
-  >  > >>
-  >  > >>配置用户界面（点击EDIT菜单的Preferences菜单项，会弹出Preferences窗口。所谓配置用户界面，就是配置该窗口中User Interface配置选项里的内容）；
-  >  > >>
-  >  > >>配置协议参数（即配置Preferences窗口中Protocol配置选项里的内容）。
+
+本节涵盖以下内容：
+- 保存、打印及导出数据；
+
+- 配置用户界面（点击EDIT菜单的Preferences菜单项，会弹出Preferences窗口。所谓配置用户界面，就是配置该窗口中User Interface配置选项里的内容）；
+
+- 配置协议参数（即配置Preferences窗口中Protocol配置选项里的内容）。
 
 ##1.7  数据文件的保存、打印及导出
+
+**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
 
 本节将讨论Wireshark软件中的文件操作，包括数据文件的保存、打印及导出等。
 
