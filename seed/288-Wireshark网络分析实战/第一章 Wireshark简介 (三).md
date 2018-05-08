@@ -6,7 +6,10 @@ enable_checker: true
 
 #第一章 Wireshark简介 (三) 
 
+**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
+
 本节涵盖以下内容：
+
 - 保存、打印及导出数据；
 
 - 配置用户界面（点击EDIT菜单的Preferences菜单项，会弹出Preferences窗口。所谓配置用户界面，就是配置该窗口中User Interface配置选项里的内容）；
@@ -14,8 +17,6 @@ enable_checker: true
 - 配置协议参数（即配置Preferences窗口中Protocol配置选项里的内容）。
 
 ##1.7  数据文件的保存、打印及导出
-
-**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
 
 本节将讨论Wireshark软件中的文件操作，包括数据文件的保存、打印及导出等。
 
@@ -28,6 +29,8 @@ enable_checker: true
 在Wireshark主抓包窗口下，既可把抓来的所有数据都保存进一个文件，也能以不同的格式或文件类型导出自己所需要的数据。
 现在，来讲解一下如何执行这些操作。
 
+**在执行操作之前，先在主界面选择一个网卡，比如 eth0，然后点击 start，抓了一些包后再点击启动栏的红色方框按钮停止。** 
+
 **数据保存操作**
 要把抓包文件中的所有数据包都保存进一个文件（或将现有抓包文件另存为一新文件），请按以下步骤行事。
 >1．点击**File**菜单里的Save菜单项（或按Ctrl+S键），在弹出窗口的“文件名”输入栏内输入有待保存的文件名。
@@ -35,7 +38,7 @@ enable_checker: true
 
 若要保存抓包文件（或已抓数据包）中的部分数据（比如，经过显示过滤器过滤的数据），请按以下步骤行事。
 >1．点击**File**菜单里的**Export Specified Packets**菜单项，**Export Specified Packets**窗口会立刻弹出，如图1.22所示。
->![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid906time1429415908235?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+>![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744535045-wm)
 >图1.22
 >
 >2．可在**Export Specified Packets**窗口的左下角区域，点击相应的单选框，来选择文件的导出方式。
@@ -72,7 +75,7 @@ Wireshark支持将抓到的数据以不同的格式来保存，好让各种其�
 >**PDML–XML格式**（*.PDML）：存为PDML文件格式。PSML也是一种基于XML的文件格式，但能保存数据包的详细信息。欲了解与此文件格式有关的详细信息，请见：http://www.nbee.org/doku.php?id=netpdl:pdml_specification。
 
 要以不同的文件格式来保存Wireshark抓取到的数据，请点击File菜单的Export Packet Dissections菜单项下相应的子菜单项。一旦点击，Export File窗口会立刻弹出，如图1.23所示。
- ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid906time1429416283737?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+ ![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744600816-wm)
 图1.23
 
 在图1.23所示的Export File窗口的下半部分，用方框圈定了2个区域。左侧区域中的单选或复选框用来完成待存数据的筛选操作，这在上一节已做过深入探讨。右侧区域中的复选框和下拉菜单则用来确定应以何种“精细程度”，来保存抓取到的数据包（“精细程度”分为三种：数据包列表、数据包的详细结构以及数据包的内容，这分别对应于在抓包主窗口中出现的那三个区域里的内容）。
@@ -91,7 +94,7 @@ Wireshark支持将抓到的数据以不同的格式来保存，好让各种其�
 >  数据包结构区域（Packet Details pane）；
 >
 >  数据包内容区域（Packet Byte pane）。
->  ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid906time1429416379690?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+>  ![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744766583-wm)
 >  图1.24
 
 ###1.7.3  幕后原理   

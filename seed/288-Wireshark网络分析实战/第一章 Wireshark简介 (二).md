@@ -6,17 +6,18 @@ eneble_checker: true
 
 #第一章 Wireshark简介 (二) 
 
-  >本节涵盖以下内容：
-  > >
-  > > >配置启动窗口；
-  > > >>
-  > > >>配置时间参数；
-  > > >>
-  > > >>调整配色规则；
+**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
+
+本节涵盖以下内容：
+
+- 配置启动窗口；
+
+- 配置时间参数；
+
+- 调整配色规则；
 
 ##1.4  配置启动窗口
 
-**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
 
 本节会介绍与Wireshark启动窗口有关的基本配置，同时会介绍抓包主窗口、文件格式以及可视选项的配置。
 
@@ -146,7 +147,8 @@ eneble_checker: true
 ###1.5.1 准备工作   
 
 要配置Wireshark抓包主窗口数据包列表区域中的数据包的时间显示格式，请进入View菜单，选择Time Display Format菜单项，右边会出现图1.19所示的子菜单。
- ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid905time1429414224241?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744213852-wm)
 图1.19
 
 ###1.5.2  配置方法   
@@ -185,15 +187,15 @@ Wireshark支持基于各种过滤条件，来配置新的配色规则。这样�
 >
 >2．点击底部的Coloring Rules菜单项，Coloring Rules窗口会立刻弹出，如图1.20所示。
 
- ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid905time1429414438427?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+ ![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744148353-wm)
 图1.20
 
 ###1.6.2  配置方法   
 
 现在，来看一下如何定义一条新的配色规则。
 
-点击Coloring Rules窗口中的New按钮，Edit Color Filter窗口会立刻弹出，如图1.21所示。
- ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid905time1429414524163?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+点击Coloring Rules窗口中的 `新建` 按钮，Edit Color Filter窗口会立刻弹出，如图1.21所示。
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525744314454-wm)
 图1.21
 
 新的配色规则就在此窗口内配置，请按以下步骤行事。

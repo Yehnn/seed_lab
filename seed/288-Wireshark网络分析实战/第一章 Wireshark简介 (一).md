@@ -1,12 +1,16 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 #第一章 Wireshark简介 (一) 
 
----
-  > **本节涵盖以下内容**：
-  > > 
-  > - 安置Wireshark（主机/程序）；
-  > - 开始抓包；
 
----
+**本节涵盖以下内容**：
+
+- 安置Wireshark（主机/程序）；
+- 开始抓包；
 
 ##1.1  Wireshark简介
 
@@ -130,13 +134,13 @@ dpkg-reconfigure wireshark-common   选 no
 
 ###1.3.1  准备工作   
 
-安装过Wireshark之后，需点击桌面→开始→程序菜单或快速启动栏上相应的图标，运行该数据包分析软件。
+安装过Wireshark之后，需点击应用程序菜单-》互联网-》Wireshark，运行该数据包分析软件。
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525679045270.png-wm)
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525743708949-wm)
 
-Wireshark一旦运行，便会弹出图所示的窗口（Wireshark1.6.7运行窗口）。
+Wireshark一旦运行，便会弹出图所示的窗口（Wireshark1.10.6运行窗口）。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525679161585-wm)
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525743795878-wm)
 
 ###1.3.2  操作方法   
 
@@ -146,10 +150,11 @@ Wireshark一旦运行，便会弹出图所示的窗口（Wireshark1.6.7运行窗
 
 若只是点击图所示Wireshark快速启动工具栏里的绿色图标（正数第三个图标），Wireshark在抓包时，实际使用的网卡将会是该软件默认指定的网卡（如何更改这一默认配置，详见3.3节）。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525679209607-wm)
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525743880913-wm)
 
 要选择Wireshark抓包时实际使用的网卡，请点击快速启动栏里左边第一个图标（List the available capture interfaces图标），Wireshark Capture Interfaces窗口会立刻弹出，如图所示。
-![1.8](https://dn-anything-about-doc.qbox.me/userid17579labid892time1429252146236?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/5962221525743957823-wm)
 
 要想得知哪块网卡为有效网卡，最佳途径是观察其是否能够收发流量。通过上图，可以得知Wireshark感知到的各块网卡正在收、发的数据包的个数（Packets列）及速率（Packets/s列）。
 
