@@ -6,16 +6,13 @@ enable_checker: true
 
 #第三章 显示过滤器的用法
 
-**注意：进入实验需要等待一点时间才会出现界面，弹窗提示直接选择 `use default config` 按钮。** 
+##一、实验简介
 
 本节涵盖以下主题：
 
 - 显示过滤器简介；
 
 - 配置Ethernet、ARP、主机及网络过滤器；
-
-
-##3.1  简介
 
 本章会讲解如何操纵Wireshark显示过滤器。显示过滤器应用于Wireshark抓取数据包之后（此时，Wireshark抓到的数据可能已经经过了抓包过滤器的过滤），使用它的目的是要让Wireshark按需显示已经抓取到的部分数据。
 
@@ -34,7 +31,7 @@ enable_checker: true
 > 请别忘了，捯饬显示过滤器时，所有数据都已被Wireshark抓获，显示出的数据只是经过显示过滤器筛选而已。也就是说，抓包文件依旧保存Wireshark抓到的所有原始数据，但可在应用显示过滤器之后，让Wireshark把经过筛选的数据单独保存为一个新的文件。	 
 
 
-##3.2  配置显示过滤器
+##二、配置显示过滤器
 
 配置显示过滤器时，可选择以下几种方式。
 >-  借助于显示过滤器窗口。
@@ -44,7 +41,7 @@ enable_checker: true
 
 本章只介绍前三种显示过滤器的配法。
 
-###3.2.1  配置准备   
+###2.1 配置准备   
 
 每条显示过滤器通常都是由若干原词构成，原词之间通过连接符（如and或or等）连接，原词之前还可以添加not表示相反的意思，其语法如下所列。
 [not] Expression [and|or] [not] Expression...
@@ -53,8 +50,7 @@ enable_checker: true
 
 下表所列为显示过滤表达式中条件操作符的用途。
 
-
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420525828?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![6-2.1-1](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420525828?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
 在参数和条件操作符之间可以不留空格，也可以保留空格。
 
@@ -63,27 +59,27 @@ enable_checker: true
 当人们输入类似于ip.addr != 192.168.1.100这样的过滤表达式时，是希望Wireshark过滤掉抓包文件中源和目的IP地址均不为192.168.1.100的数据包。可惜，每个IP数据包必含2个IP地址，一为源IP地址，一为目的IP地址。Wireshark根据上面这条过滤表达式执行显示过滤功能时，只要发现源或目的IP地址至少有一个不为192.168.1.100，便会判定条件为真。出于这个原因，要想让Wireshark显示源和目的IP地址均不为192.168.1.100的数据包，显示过滤表达式的正确写法应该是：!(ip.addr == 192.168.1.100)。
 
 下表所列为显示过滤表达式中逻辑关系操作符的用途。
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420631822?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![6-2.1-2](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420631822?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
 
-###3.2.2  配置方法   
+###2.2 配置方法   
 
 可选择下列途径来配置显示过滤器。
 
 借助于显示过滤器窗口
 
-要用此法配置显示过滤器，请把鼠标移至过滤器工具条上的Expression…按钮，如图3.1所示。
- ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746276156.png-wm)
-图3.1
+要用此法配置显示过滤器，请把鼠标移至过滤器工具条上的Expression…按钮，如图所示。
+ ![6-2.2-1](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746276156.png-wm)
 
-点击此按钮，图3.2所示的Filter Expression窗口将立刻弹出。
+
+点击此按钮，如图所示的Filter Expression窗口将立刻弹出。
 
 该窗口由5个重要区域构成，如下所列。
 >  **Field name**（协议头部中的字段名称）区域：在该区域，可利用Wireshark预定义的协议模板来配置显示过滤器所含各参数。点最左边的“+”号，即可浏览到相关协议的各个属性（或协议头部中各字段的名称），并可选择相应的属性作为显示过滤器的参数。
 
 试举一例，要想基于某一具体的IPv4地址来构造显示过滤器，就得先找到IPv4协议，点其左边的“+”号，便会暴露出Wireshark所支持的IPv4的各项属性（或IPv4包头中的各个字段），然后再选择ip.addr作为显示过滤器的参数即可。
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746348258.png-wm) 
-图3.2
+![6-2.2-2](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746348258.png-wm) 
+
 
 再举一例，要想基于某个具体的TCP源或目的端口号来构造显示过滤器，需先找到TCP协议，点击左边的“+”号，将会暴露出Wireshark所支持的TCP的各项属性（或TCP头部的各个字段），然后再选择tcp.port作为显示过滤器的参数即可。
 >  Relation（关系）区域：可从该区域选择条件操作符。选择“==”表示“等于”，选择“！=”表示“不等于”，依次类推。
@@ -98,9 +94,9 @@ enable_checker: true
 >  Range (offset: length)（范围（偏移：长度））区域：可利用该区域中的输入栏，按照“偏移字节数：过滤器检测长度”的格式，来构造字节偏移型显示过滤器。
 
 在显示过滤器工具条的Filter输入栏内直接输入显示过滤语句
-只要掌握了显示过滤器的配置语法，在显示过滤器工具条的Filter输入栏内直接输入显示过滤语句，可谓是一种最为方便的配置显示过滤器的方法（见图3.3）。
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746437028.png-wm) 
-图3.3
+只要掌握了显示过滤器的配置语法，在显示过滤器工具条的Filter输入栏内直接输入显示过滤语句，可谓是一种最为方便的配置显示过滤器的方法。
+![6-2.2-3](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746437028.png-wm) 
+
 
 向Filter输入栏内输入显示过滤语句所包含的字符时，输入栏的背景色可能会呈以下三种颜色之一。
 >  绿色：这表示输入的过滤语句正确，可应用于抓包文件。
@@ -111,11 +107,11 @@ enable_checker: true
 
 在抓包主窗口的数据包结构区域内，将数据包的某个属性值指定为显示过滤器的过滤条件
 
-这是一种定义显示过滤器的快捷方法。可在抓包主窗口中的数据包结构区域内，把数据包的某个属性（特征或协议头部字段值）指定为显示过滤器。为此，请在该区域内选中相关数据包的某个属性，单击右键。在右键菜单中，包含了几个与显示过滤器有关的菜单项，如图3.4所示。
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420957398?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10) 
-图3.4
+这是一种定义显示过滤器的快捷方法。可在抓包主窗口中的数据包结构区域内，把数据包的某个属性（特征或协议头部字段值）指定为显示过滤器。为此，请在该区域内选中相关数据包的某个属性，单击右键。在右键菜单中，包含了几个与显示过滤器有关的菜单项，如图所示。
+![6-2.2-4](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429420957398?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10) 
 
-以下是对图3.4所示右键菜单中各菜单项的介绍。
+
+以下是对上图所示右键菜单中各菜单项的介绍。
 >-  Apply as Filter（直接作为显示过滤器使用）：只要点选了该菜单项下的各子菜单项，事先选定的数据包的属性将会作为显示过滤器（或其中的一项参数），并同时作用于抓包文件。
 >-  Prepare a Filter（作为有待应用的显示过滤器）：只要点选了该菜单项下的各子菜单项，事先选定的数据包的属性将会成为有待应用的显示过滤器（或其中的一项参数）（选定后，需点下Apply按钮才能生效）。
 >  以下所列为上述两个右键菜单项中都包含的两个子菜单项。
@@ -126,22 +122,22 @@ enable_checker: true
 
 此外，还可以使用Apply as Filter和Prepare a Filter菜单项所包含的“... and selected”、“... or selected”、“... and not selected”或“or ... or not selected”子菜单项来构造显示过滤表达式。
 
-###3.2.3  幕后原理   
+###2.3 幕后原理   
 
 显示过滤器为Wireshark软件所独有。用Wireshark执行抓包分析任务时，有很多地方都会用到显示过滤器，相关内容会在本书后续章节随文讲解。
 
-在显示过滤工具条的Filter输入栏内输入显示过滤器时，可借助于自动补齐特性，来完成过滤器的构造。比如，若在Filter输入栏内输入tcp.f时，自动补齐特性将会生效，会使Wireshark在该输入栏下自动列出所有以tcp.f打头的显示过滤器参数（即TCP数据包的属性或TCP头部中的字段），如图3.5所示。对于本例，以tcp.f打头的显示过滤器参数是tcp.flag（可利用该参数来引用TCP头部中的各标记位字段值）。
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421067938?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10) 
-图3.5
+在显示过滤工具条的Filter输入栏内输入显示过滤器时，可借助于自动补齐特性，来完成过滤器的构造。比如，若在Filter输入栏内输入tcp.f时，自动补齐特性将会生效，会使Wireshark在该输入栏下自动列出所有以tcp.f打头的显示过滤器参数（即TCP数据包的属性或TCP头部中的字段），如图所示。对于本例，以tcp.f打头的显示过滤器参数是tcp.flag（可利用该参数来引用TCP头部中的各标记位字段值）。
+![6-2.3-1](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421067938?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10) 
 
-###3.2.4  拾遗补缺   
+
+###2.4 拾遗补缺   
 
 本节将介绍几个与Wireshark显示过滤器有关的操作技巧。
 **如何获悉显示过滤器所包含的参数**
 
-在Wireshark抓包主窗口的数据包结构区域中，只要选中了任何一种协议头部的某个字段，与该字段相对应的显示过滤参数将会出现在抓包主窗口底部状态栏的左侧，如图3.6所示。
- ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746691436.png-wm)
-图3.6
+在Wireshark抓包主窗口的数据包结构区域中，只要选中了任何一种协议头部的某个字段，与该字段相对应的显示过滤参数将会出现在抓包主窗口底部状态栏的左侧，如图所示。
+ ![6-2.4-1](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746691436.png-wm)
+
 
 **如何在数据包列表区域中添加新列**
 
@@ -149,15 +145,15 @@ enable_checker: true
 
 **如何保存经过显示过滤器筛选的数据**
 
-要想把应用了显示过滤器之后所看见的数据包另存为一个抓包文件，请点击File菜单下的Export Specified Packets...菜单项，根据弹出窗口中的提示信息来执行相应的操作，如图3.7所示。
- ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746758991.png-wm)
-图3.7
+要想把应用了显示过滤器之后所看见的数据包另存为一个抓包文件，请点击File菜单下的Export Specified Packets...菜单项，根据弹出窗口中的提示信息来执行相应的操作，如图所示。
+ ![6-2.4-2](https://dn-simplecloud.shiyanlou.com/uid/596222/1525746758991.png-wm)
 
-##3.3  配置Ethernet、ARP、主机和网络过滤器
+
+##三、配置Ethernet、ARP、主机和网络过滤器
 
 本章会介绍如何配置第二层过滤器（基于Ethernet地址或Ethernet帧的某些属性来进行过滤）和第三层过滤器（基于IP地址或某IP数据包的某些属性来进行过滤）。此外，还会讲解如何配置地址解析协议（ARP）过滤器。
 
-###3.3.1  配置准备   
+###3.1 配置准备   
 
 配置Ethernet显示过滤器的目的，是要让Wireshark只显示相关的第二层以太网帧；配置IP显示过滤器的目的，则是让Wireshark只显示必要的第三层IP数据包。第一种过滤器所依据的是MAC地址或Ethernet帧的某些属性，第二种过滤器则要仰仗IP地址或IP数据包的某些属性。
 
@@ -193,13 +189,13 @@ enable_checker: true
 >
 >  ip.version == <4/6>：让Wireshark只显示具有指定IP版本号的IP数据包（IP包头，不论IPv4还是IPv6，都包含了一个1字节的版本号字段）。
 
-###3.3.2  配置方法
+###3.2 配置方法
 
 下表所列为若干常用L2和L3 Wireshark显示过滤器的举例。
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421393247?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![6-3.2-1](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421393247?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
 续表
-![图片描述信息](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421375744?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
+![6-3.2-2](https://dn-anything-about-doc.qbox.me/userid2418labid909time1429421375744?watermark/1/image/aHR0cDovL3N5bC1zdGF0aWMucWluaXVkbi5jb20vaW1nL3dhdGVybWFyay5wbmc=/dissolve/60/gravity/SouthEast/dx/0/dy/10)
 
 上表给出了IPv4和IPv6地址与显示过滤器参数ip.addr和ipv6.addr配搭使用时的表示方法。只要Wireshark显示过滤器语句中包含有IPv4或IPv6地址，都可以采用与上表相同的表示方法。
 
@@ -237,7 +233,7 @@ ARP过滤器也分以下两类。
 >-  要让Wireshark显示除ICMP包和ARP帧以外的所有流量，显示过滤器的写法为：not arp && not icmp或not arp and not icmp 。
 
 
-###3.3.3  幕后原理
+###3.3 幕后原理
 
 本节是对上一节所举显示过滤器示例的幕后原理的解释。
 
@@ -255,7 +251,7 @@ IPv4多播数据包的目的IP地址范围介于224.0.0.0～239.255.255.255之�
 
 IPv6多播地址的首字节总是ff，随后的一个字节由4位标记字段和4位范围字段组成。因此，要筛选出IPv6多播数据包，显示过滤器就应该写成ipv6.dst == ff00::/8。ff00::/8表示以ff打头的所有IPv6地址，即IPv6多播地址。
 
-###3.3.4  进阶阅读
+###3.4 进阶阅读
 
 >  欲知更多有关以太网（LAN）的内容，请参阅本书第7章。
 
