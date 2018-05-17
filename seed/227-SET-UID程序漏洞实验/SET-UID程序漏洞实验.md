@@ -23,17 +23,17 @@ Set-UID 是 Unix 系统中的一个重要的安全机制。当一个 Set-UID 程
 
 猜测为什么“passwd”，“chsh”，“su”，和“sudo”命令需要Set-UID机制，如果它们没有这些机制的话，会发生什么。
 
-如果你不熟悉这些程序，你可以通话阅读使用手册来熟悉它们。如果你拷贝这些命令到自己的目录下，这些程序就不会是Set-UID程序。
+如果你不熟悉这些程序，可以通过阅读使用手册来熟悉它们。如果你拷贝这些命令到自己的目录下，这些程序就不会是Set-UID程序。
 
 ```bash
 $ cp /usr/bin/passwd /tmp/passwd
 $ ls -la /usr/bin/passwd
 $ ls -la /tmp/passwd
-$ /tmp/passwd
+$ /tmp/passwd #shiyanlou密码可以通过点击右侧工具栏SSH直连看到
 $ /usr/bin/passwd
 ```
 
-![tu-01](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-01.png)
+![2.1-1](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-01.png/wm)
 
 从上面的截图可以看出：将 passwd 拷贝到 /tmp/ 下，权限发生了变化（在原目录下 suid位 被设置），复件没有了修改密码的权限。
 
@@ -51,13 +51,13 @@ $ /usr/bin/passwd
 
 在linux环境下运行Set-UID 程序，同时描述并且解释你的观察结果。
 
-- 以root方式登录，拷贝/bin/zsh 到/tmp, 同时设置拷贝到tmp目录下的zsh为set-uid root权限，然后以普通用户登录，运行/tmp/zsh。你会得到root权限吗？请描述你的结果。
+- 以root方式登录，拷贝`/usr/bin/zsh` 到`/tmp`, 同时设置拷贝到tmp目录下的zsh为set-uid root权限，然后以普通用户登录，运行`/tmp/zsh`。你会得到root权限吗？请描述你的结果。
 
-![tu-02](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-02.png)
+![2.2-1](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-02.png/wm)
 
-- 拷贝/bin/bash到/tmp目录，同时设置/tmp目录下的bash为Set-UID root权限，然后以普通用户登录，运行/tmp/bash。你会得到root权限吗？请描述你的结果。
+- 拷贝`/bin/bash`到`/tmp`目录，同时设置`/tmp`目录下的bash为Set-UID root权限，然后以普通用户登录，运行`/tmp/bash`。你会得到root权限吗？请描述你的结果。
 
-![tu-03](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-03.png)
+![2.2-2](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-03.png/wm)
 
 可见，同样的操作，运行复制的zsh可以获得root权限，而bash不能。
 
@@ -87,7 +87,7 @@ $ /usr/bin/passwd
 
 ### 2.3 bash 内在保护机制
 
-从上面步骤可以看出，/bin/bash有某种内在的保护机制可以阻止Set-UID机制的滥用。为了能够体验这种内在的保护机制出现之前的情形，我们打算使用另外一种shell程序——/bin/zsh。在一些linux的发行版中（比如Fedora和Ubuntu），/bin/sh实际上是/bin/bash的符号链接。为了使用zsh，我们需要把/bin/sh链接到/bin/zsh。
+从上面步骤可以看出，`/bin/bash`有某种内在的保护机制可以阻止Set-UID机制的滥用。为了能够体验这种内在的保护机制出现之前的情形，我们打算使用另外一种shell程序——`/bin/zsh`。在一些linux的发行版中（比如Fedora和Ubuntu），`/bin/sh`实际上是`/bin/bash`的符号链接。为了使用zsh，我们需要把`/bin/sh`链接到`/bin/zsh`。
 
 下面的指令将会把默认的shell指向zsh：
 
@@ -98,21 +98,21 @@ $ sudo su
 # ln -s zsh sh
 ```
 
-![tu-04](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-04.png)
+![2.3-1](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-04.png/wm)
 
 ```checker
 - name: check link
   script: |
     #!/bi/bash
-    ls -la /tmp/sh|grep zsh
+    ls -la /bin/sh|grep zsh
   error: 没有修改 sh 链接
 ```
 
 ###2.4 PATH环境变量的设置
 
-system(const char * cmd)系统调用函数被内嵌到一个程序中执行一个命令，system()调用/bin/sh来执行shell程序，然后shell程序去执行cmd命令。但是在一个Set-UID程序中system()函数调用shell是非常危险的，这是因为shell程序的行为可以被环境变量影响，比如PATH；而这些环境变量可以在用户的控制当中。通过控制这些变量，用心险恶的用户就可以控制Set-UID程序的行为。
+system(const char * cmd)系统调用函数被内嵌到一个程序中执行一个命令，system()调用`/bin/sh`来执行shell程序，然后shell程序去执行cmd命令。但是在一个Set-UID程序中system()函数调用shell是非常危险的，这是因为shell程序的行为可以被环境变量影响，比如PATH；而这些环境变量可以在用户的控制当中。通过控制这些变量，用心险恶的用户就可以控制Set-UID程序的行为。
 
-下面的Set-UID程序被用来执行/bin/ls命令；然后程序员可以为ls命令使用相对路径，而不是绝对路径。在 /tmp 目录下新建 test.c 文件：
+下面的Set-UID程序被用来执行`/bin/ls`命令；然后程序员可以为ls命令使用相对路径，而不是绝对路径。在 `/tmp` 目录下新建 `test.c` 文件：
 
 ```
 int main()
@@ -122,19 +122,19 @@ int main()
 }
 ```
 
-- 你能够设置这个Set-UID程序运行你自己的代码而不是/bin/ls吗？如果你能的话，你的代码具有root权限吗？描述并解释你的观察。
+- 你能够设置这个Set-UID程序运行你自己的代码而不是`/bin/ls`吗？如果你能的话，你的代码具有root权限吗？描述并解释你的观察。
 
-可以具有root权限，把/bin/sh拷贝到/tmp目录下面重命名为ls（先要确保/bin/目录下的sh 符号链接到zsh，而不是bash），将环境变量PATH设置为当前目录/tmp，运行编译的程序test。就可以获得root权限：
+可以具有root权限，把`/bin/sh`拷贝到`/tmp`目录下面重命名为`ls`（先要确保`/bin/`目录下的sh 符号链接到zsh，而不是bash），将环境变量PATH设置为当前目录`/tmp`，运行编译的程序test。就可以获得root权限：
 
-![tu-05](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-05.png)
+![2.4-1](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-05.png/wm)
 
-- 先恢复环境变量 PATH ，然后修改/bin/sh使得其返回到/bin/bash，重复上面的攻击，你仍然可以获得root权限吗？描述并解释你的观察。
+- 先恢复环境变量 PATH ，然后修改`/bin/sh`使得其返回到`/bin/bash`，重复上面的攻击，你仍然可以获得root权限吗？描述并解释你的观察。
 
 ```
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 ```
 
-![tu-06](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-06.png)
+![2.4-2](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-06.png/wm)
 
 可见修改sh连接回bash，运行test程序不能使普通用户获得 root 权限。
 
@@ -153,13 +153,22 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/us
 
 ###2.5 system()和execve()的不同
 
-首先确保/bin/sh指向zsh。然后使用命令如下命令恢复 PATH：
+首先确保`/bin/sh`指向zsh:
+
+```
+$ sudo su
+# cd /bin
+# rm sh
+# ln -s zsh sh
+```
+
+然后使用如下命令恢复 PATH：
 
 ```bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 ```
 
-背景：Bob 在一家审计代理处工作，他正在调查一家公司是否存在诈骗行为。为了这个目的，他需要阅读这家公司在 Unix 系统中的所有文件。为了保护系统的可靠性，他不能修改任何一个文件。为了达到这个目的，Vince——系统的超级用户为他写了一个SET-ROOT-UID程序，并且给了Bob可以执行它的权限。这个程序需要Bob在命令行中打出一个文件名，然后运行/bin/cat命令显示这个文件。既然这个程序是以root权限运行的，它就可以显示Bob想看的任何一个文件。然而，既然这个程序没有写操作，Vince很确信Bob不能用这个程序修改任何文件。首先在 /tmp 目录下新建 SRU.c 文件，内容如下：
+背景：Bob 在一家审计代理处工作，他正在调查一家公司是否存在诈骗行为。为了这个目的，他需要阅读这家公司在 Unix 系统中的所有文件。为了保护系统的可靠性，他不能修改任何一个文件。为了达到这个目的，Vince——系统的超级用户为他写了一个SET-ROOT-UID程序，并且给了Bob可以执行它的权限。这个程序需要Bob在命令行中打出一个文件名，然后运行`/bin/cat`命令显示这个文件。既然这个程序是以root权限运行的，它就可以显示Bob想看的任何一个文件。然而，既然这个程序没有写操作，Vince很确信Bob不能用这个程序修改任何文件。首先在 `/tmp` 目录下新建 `SRU.c` 文件，内容如下：
 
 ```
 #include <string.h>
@@ -187,19 +196,21 @@ int main(int argc, char *argv[])
 }
 ```
 
-- 程序中有 q=0。程序会使用system()调用命令行。这个命令安全码？如果你是Bob，你能对系统的完整性妥协吗？你能重新移动一个对你没有写权限的文件吗?
+- 程序中有 q=0。程序会使用system()调用命令行。这个命令安全吗？如果你是Bob，你能对系统的完整性妥协吗？你能重新移动一个对你没有写权限的文件吗?
 
-这个命令不安全，Bob可能会出于好奇或者个人利益驱使阅读或者修改只有root用户才可以运行的一些文件。比如截图中：file文件只有root用户有读写权限，但普通用户通过运行该程序，阅读并重命名了file文件：
+这个命令不安全，Bob可能会出于好奇或者个人利益驱使阅读或者修改只有root用户才可以运行的一些文件。
 
-![tu-07](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-07.png)
+比如截图中：file文件只有root用户有读写权限，但普通用户通过运行该程序，阅读并重命名了file文件：
+
+![2.5-1](https://doc.shiyanlou.com/document-uid600404labid733timestamp1526518035865.png/wm)
 
 - 如果令q=1；刚才的攻击还会有效吗？请描述并解释你的观察。
 
-修改为q=1后，不会有效。前面步骤之所以有效，是因为system()函数调用/bin/sh，链接至zsh，具有root权限执行了cat file文件后，接着执行mv file file_new命令。
+修改为q=1后，不会有效。前面步骤之所以有效，是因为system()函数调用`/bin/sh`，链接至zsh，具有root权限执行了`cat file`文件后，接着执行`mv file file_new`命令。
 
-而当令q=1, execve()函数会把file; mv file file_new 看成是一个文件名，系统会提示不存在这个文件：
+而当令q=1, execve()函数会把`file; mv file file_new` 看成是一个文件名，系统会提示不存在这个文件：
 
-![tu-08](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-08.png)
+![2.5-2](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-08.png/wm)
 
 ```checker
 - name: check SRU
@@ -218,7 +229,7 @@ int main(int argc, char *argv[])
 
 为了保证Set-UID程序在LD_PRELOAD环境的操纵下是安全的，动态链接器会忽略环境变量，但是在某些条件下是例外的，在下面的任务中，我们猜测这些特殊的条件到底是什么。
 
-1、让我们建立一个动态链接库。把下面的程序命名为mylib.c，放在/tmp目录下。在函数库libc中重载了sleep函数：
+1、让我们建立一个动态链接库。把下面的程序命名为`mylib.c`，放在`/tmp`目录下。在函数库libc中重载了sleep函数：
 
 ```
 #include <stdio.h>
@@ -237,7 +248,7 @@ gcc -shared -Wl,-soname,libmylib.so.1 \
 -o libmylib.so.1.0.1 mylib.o –lc
 ```
 
-3、把下面的程序命名为myprog.c，放在/tmp目录下：
+3、把下面的程序命名为`myprog.c`，放在`/tmp`目录下：
 
 ```
 int main()
@@ -253,25 +264,27 @@ int main()
 
 可见，它会使用LD_PRELOAD环境变量，重载sleep函数：
 
-![tu-09](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-09.png)
+![2.6-1](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-09.png/wm)
 
 - **把myprog编译成一个Set-UID root的程序在普通用户下运行**
 
 在这种情况下，忽略LD_PRELOAD环境变量，不重载sleep函数，使用系统自带的sleep函数：
 
-![tu-10](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-10.png)
+![2.6-2](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-10.png/wm)
 
 - **把myprog编译成一个Set-UID root的程序在root下运行**
 
 在这种情况下，使用LD_PRELOAD环境变量，使用重载的sleep函数：
 
-![tu-11](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-11.png)
+![2.6-3](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-11.png/wm)
 
 - **在一个普通用户下把myprog编译成一个Set-UID 普通用户的程序在另一个普通用户下运行**
 
+**注意：需要先使用命令 `rm myprog` 把之前编译生成的 `myprog` 文件删掉** 
+
 在这种情况下，不会重载sleep函数：
 
-![tu-12](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-12.png)
+![2.6-4](https://doc.shiyanlou.com/xxaq_set_uid/setuid-01-12.png/wm)
 
 由以上四种情况可见：只有用户自己创建的程序自己去运行，才会使用LD\_PRELOAD环境变量，重载sleep函数，否则的话忽略LD\_PRELOAD环境变量，不会重载sleep函数。
 
@@ -290,7 +303,7 @@ int main()
 
 ###2.7 消除和清理特权
 
-为了更加安全，Set-UID程序通常会调用setuid()系统调用函数永久的清除它们的root权限。然而有些时候，这样做是远远不够的。在root用户下，在/tmp目录新建一个空文件zzz。在root用户下将下面代码命名为test2.c，放在/tmp目录下，编译这个程序，给这个程序设置root权限。在一个普通的用户下，运行这个程序。描述你所观察到的情况，/tmp/zzz这个文件会被修改吗？解释你的观察。
+为了更加安全，Set-UID程序通常会调用setuid()系统调用函数永久的清除它们的root权限。然而有些时候，这样做是远远不够的。在root用户下，在`/tmp`目录新建一个空文件`zzz`。在root用户下将下面代码命名为`test2.c`，放在`/tmp`目录下，编译这个程序，给这个程序设置root权限。在一个普通的用户下，运行这个程序。描述你所观察到的情况，`/tmp/zzz`这个文件会被修改吗？解释你的观察。
 
 代码：
 
@@ -325,9 +338,9 @@ int main(){
 
 结果如图：
 
-![tu-13](https://dn-anything-about-doc.qbox.me/xxaq_set_uid/setuid-01-13.png)
+![2.7-1](https://doc.shiyanlou.com/document-uid600404labid733timestamp1526520890077.png/wm)
 
-如图所示文件被修改了，原因在于设置uid前，zzz文件就已经被打开了。只要将语句setuid(getuid())移至调用open函数之前，就能避免这个问题。
+如图所示文件被修改了，原因在于设置uid前，zzz文件就已经被打开了。只要将语句`setuid(getuid())`移至调用open函数之前，就能避免这个问题。
 
 ```checker
 - name: check zzz
