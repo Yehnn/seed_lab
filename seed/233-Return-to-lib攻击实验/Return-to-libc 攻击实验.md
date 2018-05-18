@@ -21,7 +21,9 @@ enable_checker: true
 
 实验楼提供的是 64 位 Ubuntu linux，而本次实验为了方便观察汇编语句，我们需要在 32 位环境下作操作，因此实验之前需要做一些准备。
 
+
 ####2.1 输入命令安装一些用于编译 32 位 C 程序的软件包
+
 
 ```
 sudo apt-get update
@@ -44,6 +46,7 @@ sudo apt-get install lib32readline-gplv2-dev
 
 ![2.2-1](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526547396865.png/wm)
 
+
 ##三、实验步骤
 本节将通过实践操作，带领大家了解 Return-to-libc 攻击。
 
@@ -58,6 +61,7 @@ sudo sysctl -w kernel.randomize_va_space=0
 此外，为了进一步防范缓冲区溢出攻击及其它利用 shell 程序的攻击，许多 shell 程序在被调用时自动放弃它们的特权。因此，即使你能欺骗一个 Set-UID 程序调用一个 shell，也不能在这个 shell 中保持 root 权限，这个防护措施在`/bin/bash` 中实现。
 
 linux 系统中，`/bin/sh` 实际是指向`/bin/bash` 或 `/bin/dash` 的一个符号链接。为了重现这一防护措施被实现之前的情形，我们使用另一个 shell 程序（zsh）代替 `/bin/bash`。下面的指令描述了如何设置 zsh 程序：
+
 
 ```
 sudo su
@@ -94,9 +98,23 @@ gcc -z noexecstack -o test test.c  #栈不可执行
   error: 没有链接 sh 到 zsh
 ```
 
+```checker
+- name: check random
+  script: |
+    #!/bin/bash
+    sysctl -a|grep randomize_va_space|grep 0
+  error: 没有关闭地址空间随机化功能
+- name: check link
+  script: |
+    #!/bin/bash
+    ls -l /bin/sh|grep zsh
+  error: 没有链接 sh 到 zsh
+```
+
 ###3.2 漏洞程序
 
 在 `/home/shiyanlou` 目录下新建 `retlib.c` 文件
+
 
 ```
 cd /home/shiyanlou
@@ -278,7 +296,6 @@ gcc -m32 -o exploit exploit.c
 先运行攻击程序 exploit，再运行漏洞程序 retlib，可见攻击成功，获得了 root 权限：
 
 ![3.4-4](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548397230.png/wm)
-
 
 ##四、练习
 
