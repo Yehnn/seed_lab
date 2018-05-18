@@ -17,16 +17,18 @@ enable_checker: true
 
 ##二、实验准备
 
-系统用户名 shiyanlou
+系统用户名： shiyanlou
 
 实验楼提供的是 64 位 Ubuntu linux，而本次实验为了方便观察汇编语句，我们需要在 32 位环境下作操作，因此实验之前需要做一些准备。
 
-###2.1 输入命令安装一些用于编译 32 位 C 程序的东西：
+
+####2.1 输入命令安装一些用于编译 32 位 C 程序的软件包
+
 
 ```
 sudo apt-get update
 
-sudo apt-get install lib32z1 libc6-dev-i386
+sudo apt-get install lib32z1 libc6-dev-i386 #这个过程耗时有点长，请等待一会
 
 sudo apt-get install lib32readline-gplv2-dev
 ```
@@ -35,18 +37,18 @@ sudo apt-get install lib32readline-gplv2-dev
 - name: check package
   script: |
     #!/bin/bash
-    apt-cache pkgnames|grep lib32z1
-    apt-cache pkgnames|grep libc6-dev-i386
-    apt-cache pkgnames|grep lib32readline-gplv2-dev
+    apt-cache pkgnames|grep -E "lib32z1|libc6-dev-i386|lib32readline-gplv2-dev"
   error: 没有安装需要的安装包
+  timeout: 30
 ```
 
-###2.2 输入命令“linux32”进入 32 位 linux 环境。输入“/bin/bash”使用 bash：
+####2.2 输入命令 `linux32` 进入 32 位 linux 环境，输入 `/bin/bash` 使用 bash：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526547396865.png/wm)
+![2.2-1](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526547396865.png/wm)
+
 
 ##三、实验步骤
-
+本节将通过实践操作，带领大家了解 Return-to-libc 攻击。
 
 ###3.1 初始设置
 
@@ -56,9 +58,10 @@ Ubuntu 和其他一些 Linux 系统中，使用地址空间随机化来随机堆
 sudo sysctl -w kernel.randomize_va_space=0
 ```
 
-此外，为了进一步防范缓冲区溢出攻击及其它利用 shell 程序的攻击，许多 shell 程序在被调用时自动放弃它们的特权。因此，即使你能欺骗一个 Set-UID 程序调用一个 shell，也不能在这个 shell 中保持 root 权限，这个防护措施在/bin/bash 中实现。
+此外，为了进一步防范缓冲区溢出攻击及其它利用 shell 程序的攻击，许多 shell 程序在被调用时自动放弃它们的特权。因此，即使你能欺骗一个 Set-UID 程序调用一个 shell，也不能在这个 shell 中保持 root 权限，这个防护措施在`/bin/bash` 中实现。
 
-linux 系统中，/bin/sh 实际是指向/bin/bash 或 /bin/dash 的一个符号链接。为了重现这一防护措施被实现之前的情形，我们使用另一个 shell 程序（zsh）代替 /bin/bash。下面的指令描述了如何设置 zsh 程序：
+linux 系统中，`/bin/sh` 实际是指向`/bin/bash` 或 `/bin/dash` 的一个符号链接。为了重现这一防护措施被实现之前的情形，我们使用另一个 shell 程序（zsh）代替 `/bin/bash`。下面的指令描述了如何设置 zsh 程序：
+
 
 ```
 sudo su
@@ -80,7 +83,20 @@ gcc -z execstack -o test test.c    #栈可执行
 gcc -z noexecstack -o test test.c  #栈不可执行
 ```
 
-> 本次实验的目的，就是展示这个“栈不可执行”的保护措施并不是完全有效，所以我们使用“-z noexecstack”，或者不手动指定而使用编译器的默认设置。
+> 本次实验的目的，就是展示这个“栈不可执行”的保护措施并不是完全有效，所以我们使用`-z noexecstack`，或者不手动指定而使用编译器的默认设置。
+
+```checker
+- name: check random
+  script: |
+    #!/bin/bash
+    sysctl -a|grep randomize_va_space|grep 0
+  error: 没有关闭地址空间随机化功能
+- name: check link
+  script: |
+    #!/bin/bash
+    ls -l /bin/sh|grep zsh
+  error: 没有链接 sh 到 zsh
+```
 
 ```checker
 - name: check random
@@ -97,9 +113,8 @@ gcc -z noexecstack -o test test.c  #栈不可执行
 
 ###3.2 漏洞程序
 
-把以下代码保存为“retlib.c”文件，保存到 /home/shiyanlou 目录下。
+在 `/home/shiyanlou` 目录下新建 `retlib.c` 文件
 
-在 /home/shiyanlou 目录下新建 retlib.c 文件
 
 ```
 cd /home/shiyanlou
@@ -151,9 +166,9 @@ exit
 
 GCC 编译器有一种栈保护机制来阻止缓冲区溢出，所以我们在编译代码时需要用 –fno-stack-protector 关闭这种机制。
 
-上述程序有一个缓冲区溢出漏洞，它先从一个叫 `badfile` 的文件里把 40 字节的数据读取到 12 字节的 `buffer`，引起溢出。`fread()` 函数不检查边界所以会发生溢出。由于此程序为 SET-ROOT-UID 程序，如果一个普通用户利用了此缓冲区溢出漏洞，他有可能获得 `root shell`。应该注意到此程序是从一个叫做“badﬁle”的文件获得输入的，这个文件受用户控制。现在我们的目标是为 `badﬁle` 创建内容，这样当这段漏洞程序将此内容复制进它的缓冲区，便产生了一个 root shell 。
+上述程序有一个缓冲区溢出漏洞，它先从一个叫 `badfile` 的文件里把 40 字节的数据读取到 12 字节的 `buffer`，引起溢出。`fread()` 函数不检查边界所以会发生溢出。由于此程序为 SET-ROOT-UID 程序，如果一个普通用户利用了此缓冲区溢出漏洞，他有可能获得 `root shell`。应该注意到此程序是从一个叫做`badﬁle`的文件获得输入的，这个文件受用户控制。现在我们的目标是为 `badﬁle` 创建内容，这样当这段漏洞程序将此内容复制进它的缓冲区，便产生了一个 root shell 。
 
-我们还需要用到一个读取环境变量的程序，在 /home/shiyanlou 目录下新建 getenvaddr.c 文件，文件内容如下：
+我们还需要用到一个读取环境变量的程序，在 `/home/shiyanlou` 目录下新建 `getenvaddr.c` 文件，文件内容如下：
 
 ```c
 /* getenvaddr.c */
@@ -209,9 +224,7 @@ gcc -m32 -o getenvaddr getenvaddr.c
 
 ###3.3 攻击程序
 
-把以下代码保存为“exploit.c”文件，保存到 /tmp 目录下。代码如下：
-
-在 /home/shiyanlou 目录下新建 exploit.c 文件，内容如下：
+在 `/home/shiyanlou` 目录下新建 `exploit.c` 文件，内容如下：
 
 ```c
 /* exploit.c */
@@ -248,19 +261,19 @@ int main(int argc, char **argv)
 
 ####1、用刚才的 getenvaddr 程序获得 BIN_SH 地址：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526547920065.png)
+![3.4-1](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526547920065.png)
 
 ####2、gdb 获得 system 和 exit 地址：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548112491.png/wm)
+![3.4-2](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548112491.png/wm)
 
 >  退出gdb调试：按 `q` 再按 `enter` ，再输入 `y` 。
 >
-> 实际操作中得到的地址和我的不同，需要改成你自己实际得到的地址。
+>  实际操作中得到的地址和我的不同，需要改成你自己实际得到的地址。
 
-修改 exploit.c 文件，填上刚才找到的内存地址：
+修改 `exploit.c` 文件，填上刚才找到的内存地址：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548175344.png)
+![3.4-3](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548175344.png)
 
 删除刚才调试编译的 exploit 程序和 badfile 文件，重新编译修改后的 exploit.c：
 
@@ -282,14 +295,13 @@ gcc -m32 -o exploit exploit.c
 
 先运行攻击程序 exploit，再运行漏洞程序 retlib，可见攻击成功，获得了 root 权限：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548397230.png/wm)
-
+![3.4-4](https://doc.shiyanlou.com/document-uid8797labid754timestamp1526548397230.png/wm)
 
 ##四、练习
 
 **1、按照实验步骤进行操作，攻击漏洞程序并获得 root 权限。** 
 
-**2、将/bin/sh 重新指向/bin/bash（或/bin/dash），观察能否攻击成功，能否获得 root 权限。** 
+**2、将`/bin/sh` 重新指向`/bin/bash`（或`/bin/dash`），观察能否攻击成功，能否获得 root 权限。** 
 
 **3、观察、思考本次实验和[缓冲区溢出漏洞实验](http://www.shiyanlou.com/courses/231)的相同和不同之处。** 
 
