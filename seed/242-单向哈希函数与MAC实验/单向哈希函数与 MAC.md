@@ -1,3 +1,9 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 #单向哈希函数与 MAC
 
 ##一、实验描述
@@ -19,20 +25,34 @@ $ sudo apt-get install bless
 
 ##三、实验内容
 
+下面进入具体的实验操作中。
+
 ###实验 1:生成消息摘要和 MAC
-在本实验中，我们将认识各种单向哈希算法。你可以使用 openssl dgst 命令为一个文件生成哈希值。输入 man openssl 和 man dgst 查看手册。
+
+在本实验中，我们将认识各种单向哈希算法。你可以使用 `openssl dgst` 命令为一个文件生成哈希值。输入 man openssl 和 man dgst 查看手册。
 
     $ openssl dgst dgsttype filename
 
-使用指定的单向哈希算法替换 dgsttype 部分，比如 -md5, -sha1, -sha256 等等，至少使用 3 种算法，描述你观测到的结果。
+使用指定的单向哈希算法替换 `dgsttype` 部分，比如 `-md5`, `-sha1`, `-sha256` 等等，至少使用 3 种算法，描述你观测到的结果。
+
+新建一个文件 test1.txt ：
+
+```bash
+$ cd /home/shiyanlou
+$ vi test1.txt
+```
+
+![3.1](https://doc.shiyanlou.com/document-uid8797labid789timestamp1527063988766.png)
 
 ###实验 2:Keyed Hash 和 HMAC
 
-本节实验中，我们要为文件生成 keyed hash（比如 MAC）。使用-hmac 选项，选项后所带参数就是 key。
+本节实验中，我们要为文件生成 `keyed hash`（比如 MAC）。使用`-hmac` 选项，选项后所带参数就是 `key`。
 
     $ openssl dgst -md5 -hmac "abcdefg" filename
 
-请分别使用 HMAC-MD5, HMAC-SHA256 和 HMAC-SHA1 生成 keyed hash，并配以不同长度的 key。我们是否总是需要在 HMAC 中使用一个固定长度的 key？如果是这样，key 的长度是多少？如果不是，为什么？
+请分别使用 `HMAC-MD5`, `HMAC-SHA256` 和 `HMAC-SHA1` 生成 `keyed hash`，并配以不同长度的 `key`。我们是否总是需要在 `HMAC` 中使用一个固定长度的 `key`？如果是这样，`key` 的长度是多少？如果不是，为什么？
+
+![3.2](https://doc.shiyanlou.com/document-uid8797labid789timestamp1527064403408.png)
 
 ###实验 3：单向哈希函数的随机性
 
@@ -44,7 +64,13 @@ $ sudo apt-get install bless
 5. 观察 H1 与 H2 是否相似，请描述你的观察。
 6. 写一个程序计算 H1 与 H2 相同位的数量。
 
-方便起见，这里给出python的一种实现，可以用任何方式完成练习，不必拘泥于形式。
+方便起见，这里给出python的一种实现，可以用任何方式完成练习，不必拘泥于形式。在 /home/shiyanlou 目录下新建一个 hash.py 文件：
+
+```bash
+$ vi hash.py
+```
+
+按 `i` 键插入，输入如下代码：
 
 ```python
 #-*- coding:utf8 -*-
@@ -53,7 +79,7 @@ import os, tempfile
 import binascii
 
 
-翻转字节的任意一位
+#翻转字节的任意一位
 def flipBit(x, kth):
     x = ord(x)
     if (x & 1 << kth ) != 0:
@@ -61,7 +87,7 @@ def flipBit(x, kth):
     else:
         return chr(x | ( 1 << kth))
 
-十六进制字符串转二进制字符串
+#十六进制字符串转二进制字符串
 def byte_to_binary(n):
     return ''.join(str((n & (1 << i)) and 1) for i in reversed(range(8)))
 
@@ -80,7 +106,7 @@ with tempfile.NamedTemporaryFile() as fa:
         def get_hash(fp, text):
             fp.write(text)
             fp.seek(0)
-            result = os.popen("openssl dgst -sha1 {}".format(fp.name)).read()[66:-1]
+            result = os.popen("openssl dgst -sha1 {}".format(fp.name)).read().split('=')[1].strip()
             print result
             return result
 
@@ -95,6 +121,20 @@ with tempfile.NamedTemporaryFile() as fa:
         print "diff count:", reduce(lambda x, y: x+y, [origin_hash[i] == changed_hash[i] for i in range(len(origin_hash))])
 ```
 
+> 按 `esc` 键，再输入 `:wq` 保存退出。
+
+程序运行截图：
+
+![3.3](https://doc.shiyanlou.com/document-uid8797labid789timestamp1527232272028.png)
+
+```checker
+- name: check hash.py
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/hack.py
+  error: /home/shiyanlou 目录没有 hack.py 文件
+```
+
 ###实验 4：单向特性（One-Way）与避免冲突特性（Collision-Free）的对比
 
 本节实验中，我们将探索哈希函数的两个特性 one-way 与 collision-free 。我们将使用暴力破解的方法看看攻破两种特性分别要花多长时间，这回我们不使用命令工具，而是调用加密库写 C 程序. 示例代码地址： http://www.openssl.org/docs/crypto/EVP_DigestInit.html
@@ -106,20 +146,16 @@ with tempfile.NamedTemporaryFile() as fa:
 3. 通过你的观察，哪种特性更容易通过暴力破解击破。
 4. （Bonus！）你可以用数学方法解释你观察到的结果之间的区别吗？
 
-注：为了编译你的代码或者写 makefile，你可能需要以下信息。
-
->INC=/usr/local/ssl/include/
->LIB=/usr/local/ssl/lib/
->all:
->   gcc -I\$(INC) -L$(LIB) -o enc yourcode.c -lcrypto -ldl
-
-
 样例：
-```
+
+在 /home/shiyanlou 目录下新建 hash.c ：
+
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <openssl/evp.h>
+#include <string.h>
 
 int hash_table[16777216];
 char buffer[50];
@@ -156,7 +192,8 @@ int main(int argc, char const *argv[])
   
   unsigned char md_value[EVP_MAX_MD_SIZE];
   int md_len, i;
-
+    
+  //使 EVP_Digest 系列函数支持所有有效的信息摘要算法
   OpenSSL_add_all_digests();
 
   if(!argv[1]) {
@@ -164,6 +201,7 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
+  //根据输入的信息摘要函数的名字得到相应的 EVP_MD 算法结构
   md = EVP_get_digestbyname(argv[1]);
 
   if(!md) {
@@ -171,16 +209,22 @@ int main(int argc, char const *argv[])
     exit(1);
   }
 
-  char* search_value = argv[2];
+  const  char* search_value = argv[2];
 
   while(1){
     if (co_free_flag && one_way_flag) break;
 
+    //初始化信息摘要结构mdctx，这在调用EVP_DigestInit_ex函数的时候是必须的。  
+    //EVP_MD_CTX_init(&mdctx);  
     mdctx = EVP_MD_CTX_create();
+   //使用md的算法结构设置mdctx结构，impl为NULL，即使用缺省实现的算法（openssl本身提供的信息摘要算法）
     EVP_DigestInit_ex(mdctx, md, NULL);
     gen_string();
+    //开始真正进行信息摘要运算，可以多次调用该函数，处理更多的数据 
     EVP_DigestUpdate(mdctx, buffer, strlen(buffer));
+    //完成信息摘要计算过程，将完成的摘要信息存储在md_value里面,长度信息存储在md_len里面  
     EVP_DigestFinal_ex(mdctx, md_value, &md_len);
+    //使用该函数释放mdctx占用的资源，如果使用_ex系列函数，这是必须调用的。 
     EVP_MD_CTX_destroy(mdctx);
     
     sprintf(hash_value, "%02x%02x%02x", md_value[0], md_value[1], md_value[2]);
@@ -191,24 +235,38 @@ int main(int argc, char const *argv[])
     {
       co_free_flag = 1;
       co_end = clock();
-      printf("Collision Found\ndelta time: %d\n", co_end - start);
+      printf("Collision Found\ndelta time: %ld\n", co_end - start);
     }
 
     if (0 == strcmp(search_value, hash_value)){
       one_way_flag = 1;
       time(&one_end);
-      printf("Content Found. The content is %s\ndelta time: %d\n", buffer, one_end - start);
+      printf("Content Found. The content is %s\ndelta time: %ld\n", buffer, one_end - start);
       break;
     }
-  }
+  } 
   /* Call this once before exit. */
   EVP_cleanup();
   exit(0);
 }
+```
 
+编译
+
+```bash
+$ gcc -I /usr/include/openssl -L /usr/lib/ssl -o hash hash.c -lcrypto -ldl
+```
+
+```checker
+- name: check hack.c
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/hack.c
+  error: /home/shiyanlou 目录下没有 hack.c 文件
 ```
 
 ##四、作业
+
 按要求完成实验内容并回答每节实验给出的问题。
 
 ##版权声明
