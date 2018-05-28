@@ -1,6 +1,12 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # iptables 攻击预防
 
-## 实验介绍
+## 一、实验介绍
 
 在了解了 iptables 的结构与用法之后我们需要学会在特定的场景去应用他们，而不再是简单的纸上谈兵。本实验将带大家了解网络开放之后可能带来的攻击以及如何去预防
 
@@ -9,15 +15,15 @@
 - DDOS 攻击
 - SYN 攻击
 
-## 一、DDOS 攻击
+## 二、DDOS 攻击
 
-在计算中，拒绝服务（ DOS，denial-of-service ）攻击是试图消耗一台机器或网络的资源，例如去暂时或无限期中断甚至去暂停服务的主机连接到互联网，使其无法给予真正需求的用户。拒绝服务通常是通过 flood 攻击有针对性的尝试对目标机器或资源的多余请求，以使得系统过载，并防止一些或所有合法的请求。因为早期的服务器的性能和网络刚发展，性能并不高，所以由一台主机去不断的请求服务，就可以导致服务器应付不过来
+在计算中，拒绝服务（ DOS，denial-of-service ）攻击是试图消耗一台机器或网络的资源，例如去暂时或无限期中断甚至去暂停服务的主机连接到互联网，使其无法给予真正需求的用户。拒绝服务通常是通过 flood 攻击有针对性的尝试对目标机器或资源的多余请求，以使得系统过载，并防止一些或所有合法的请求。因为早期的服务器的性能和网络刚发展，性能并不高，所以由一台主机去不断地请求服务，就可以导致服务器应付不过来
 
-后来硬件与网络飞速的发展，一台主机发动再多的请求，服务器也能够从容的应对，既然一台不够，那就成千上万台的来，所以有了分布式拒绝服务（DDoS，distributed denial-of-service）。
+后来硬件与网络飞速的发展，一台主机发动再多的请求，服务器也能够从容地应对，既然一台不够，那就成千上万台的来，所以有了分布式拒绝服务（DDoS，distributed denial-of-service）。
 
-一个分布式拒绝服务（DDoS，distributed denial-of-service）攻击源往往不止一个，有往往成千上万个，并且都是真实唯一的IP地址。
+一个分布式拒绝服务（DDoS，distributed denial-of-service）攻击源往往不止一个，又往往成千上万个，并且都是真实唯一的IP地址。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470364868978-wm)
+![4-2](https://dn-simplecloud.shiyanlou.com/1135081470364868978-wm)
 
 （图片来源于：<https://en.wikipedia.org/wiki/Denial-of-service_attack#.28S.29SYN_flood>）
 
@@ -40,7 +46,7 @@
 
 还有很多的 DDOS 的攻击，只有针对具体的情况来做具体的分析。他们的目的都是消耗机器的资源，让其不能为用户提供正常的服务
 
-## 二、SYN 攻击
+## 三、SYN 攻击
 
 据统计，在所有黑客攻击事件中，SYN攻击是最常见又最容易被利用的一种攻击手法。在2000年时 YAHOO 的网站遭受的攻击，就是黑客利用的就是简单而有效的 SYN 攻击，而 SYN 攻击依靠的就是 TCP 三次握手
 
@@ -50,10 +56,10 @@ TCP是面向连接的，可靠的进程通信的协议，提供全双工服务�
 
 >在这之前，服务器必须先绑定到一个端口并监听一个端口，以打开它的连接：这被称为被动打开。一旦被动打开，客户端可以启动一个主动打开,建立连接
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470292587273-wm)
+![4-3-1](https://dn-simplecloud.shiyanlou.com/1135081470292587273-wm)
 （该图片来源于<http://alpha.tmit.bme.hu/meresek/twh_small.jpg>）
 
-1. 由客户端使用一个随机的端口号，向服务器端特定的端口号发送 SYN 建立连接的请求，并将 TCP 的SYN 控制为至为1。SYN（synchronous）是TCP/IP建立连接时使用的握手信号，客户端将该段的序列号设置为一个随机值。
+1. 由客户端使用一个随机的端口号，向服务器端特定的端口号发送 SYN 建立连接的请求，并将 TCP 的SYN 控制位置为1。SYN（synchronous）是TCP/IP建立连接时使用的握手信号，客户端将该段的序列号设置为一个随机值。
 2. 服务器端收到了客户端的请求，会向客户端发送一个确认的信息，表示已收到请求，这是的数据包里会将 ACK 设置为客户端请求序列号+1，同时服务器端还会向客户端发送一个 SYN 建立连接的请求，SYN 的序列号为另外一个随机的值
 3. 客户端在收到了服务器端的确认型号以及请求信号之后，也会向服务器端发送一个确认信号，确认信号的序列号为服务器端发送来的请求序列号+1。在这一点上，客户端和服务器都已收到了连接的确认。步骤1，2建立一个方向的连接参数（序列号），它是公认的。步骤2、3建立了另一个方向的连接参数（序列号），并被确认。有了这些，便建立了一个全双工通信。
 
@@ -65,7 +71,7 @@ CLOSED -> LISTEN -> SYN recv -> ESTABLISHED
 
 若是这样不正常的连接过多，需要正常连接的用户便会连接不上。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470294625485-wm)
+![4-3-2](https://dn-simplecloud.shiyanlou.com/1135081470294625485-wm)
 
 这样的不正常的连接行为便称为 SYN flood（SYN 洪水攻击）
 
@@ -75,12 +81,11 @@ CLOSED -> LISTEN -> SYN recv -> ESTABLISHED
 #使用 limt 对 syn的每秒钟最多允许3个新链接
 sudo iptables -A INPUT -p tcp --syn -m limit --limit 1/s  --limit-burst 3 -j ACCEPT
 
-#或者针对每个客户端做出限制，每个客户端限制并发数为10个，这里的十个只是为了模拟，可以自己酌情考虑
+#或者针对每个客户端作出限制，每个客户端限制并发数为10个，这里的十个只是为了模拟，可以自己酌情考虑
 sudo iptables -I INPUT -p tcp --syn --dport 80 -m connlimit --connlimit-above 10 -j REJECT
-
 ```
 
-而相对于 SYN flood 来说，CC 攻击就是做一次完整的请求，属于TCP全连接攻击，攻击者使用“合法”的源IP与访问请求，Collapsar无法判断真假只好放过，但是整个请求非常的消耗资源，如翻阅数据库呀，不停的翻页等等，一次的连接很长，消耗很多的资源的。
+而相对于 SYN flood 来说，CC 攻击就是做一次完整的请求，属于TCP全连接攻击，攻击者使用“合法”的源IP与访问请求，Collapsar 无法判断真假只好放过，但是整个请求非常的消耗资源，如翻阅数据库呀，不停的翻页等等，一次的连接很长，消耗很多的资源的。
 
 若是只有一两个，上百个这样的请求没问题，但是成千上万台做这样的请求。就会导致服务器的连接数超过上限，使得网页出现service unavailable提示，服务器 CPU 占用率很高，网络连接状态：netstat –na,若观察到大量的ESTABLISHED的连接状态 单个IP高达几十条甚至上百条，外部无法打开网站,软重启后短期内恢复正常,几分钟后又无法访问。
 
@@ -100,11 +105,11 @@ ab -n 10000000 -c 600 http://localhost/index.html
 
 首先我们来看一下当前的连接数：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470304766372-wm)
+![4-3-3](https://dn-simplecloud.shiyanlou.com/1135081470304766372-wm)
 
 使用我们的压力测试：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470304927840-wm)
+![4-3-4](https://dn-simplecloud.shiyanlou.com/1135081470304927840-wm)
 
 现在再来看看我们的连接数量：
 
@@ -114,13 +119,13 @@ netstat -an | grep SYN
 netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470304955481-wm)
+![4-3-5](https://dn-simplecloud.shiyanlou.com/1135081470304955481-wm)
 
 从图中我们可以看到 SYN 的连接爆发式的增长了
 
-然后我们增加了 iptables 之后，当我们发送了10包之后，便无法发送了
+然后我们增加了 iptables 之后，当我们发送了10 包之后，便无法发送了
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470306141781-wm)
+![4-3-6](https://dn-simplecloud.shiyanlou.com/1135081470306141781-wm)
 
 当然对于 CC 攻击这样的类型，我们不仅从 iptables 来防范他，还可以修改 TCP 的一些配置如
 
@@ -140,14 +145,14 @@ net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_max_tw_buckets = 5000
 ```
 
-tcp_cookies 可以很巧妙的来减少 SYN 的工具了，当启用 tcp_syncookies 时，内核生成一个特定的值，而不把客户的连接放到半连接的队列里。当客户端提交第三次握手的ACK包时，linux内核取出n值，进行校验，如果通过，则认为这个是一个合法的连接。
+`tcp_cookies` 可以很巧妙的来减少 `SYN` 的工具了，当启用 `tcp_syncookies` 时，内核生成一个特定的值，而不把客户的连接放到半连接的队列里。当客户端提交第三次握手的 `ACK` 包时，`linux` 内核取出 `n` 值，进行校验，如果通过，则认为这个是一个合法的连接。
 
 
-## 实验总结
+## 四、实验总结
 
 通过本实验我们了解了 iptables 的一些高级用法，以及一些网络上的攻击方式。
 
-## 参考资料
+## 五、参考资料
 
 [1][wikipedia_DDOS](https://en.wikipedia.org/wiki/Denial-of-service_attack#.28S.29SYN_flood)
 
