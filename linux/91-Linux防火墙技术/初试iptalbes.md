@@ -4,7 +4,7 @@ version: 0.1
 enable_checker: true
 ---
 
-# 初识iptables
+# 初试iptables
 
 ## 一、实验介绍
 
