@@ -1,3 +1,9 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # LVS + keepalived 实战
 
 ## 一、实验介绍
@@ -6,7 +12,7 @@
 
 注意：本节与上一节的实验环境略有差别，若是点下一个实验，继续使用上一个实验环境的同学，请退出，然后创建新环境。
 
-### 1.1 实验涉及的知识点
+#### 实验涉及的知识点
 
 - LVS + keepalived 实战
 - docker 基础操作
@@ -18,10 +24,10 @@
 我们的模拟环境是这样的一个结构：
 
 - 宿主机（本实验桌面环境）模拟客户端；
-- 启动一台 docker container 作为我们的 Load Balancer 1 (实际 IP 地址：172.17.0.2，VIP：172.17.0.10)；
-- 启动一台 docker container 作为我们的 Load Balancer 2 (实际 IP 地址：172.17.0.3，VIP：172.17.0.10)；
-- 启动一台 docker container 作为我们的 Real Server 1（RIP：172.17.0.4，VIP：172.17.0.10）；
-- 启动一台 docker container 作为我们的 Real Server 2（RIP 地址：172.17.0.2，VIP：172.17.0.10）；
+- 启动一台 docker container 作为我们的 Load Balancer 1 (VIP：192.168.0.10，作为主路由)；
+- 启动一台 docker container 作为我们的 Load Balancer 2 (VIP：192.168.0.10，作为备份路由)；
+- 启动一台 docker container 作为我们的 Real Server 1（VIP：192.168.0.10）；
+- 启动一台 docker container 作为我们的 Real Server 2（VIP：192.168.0.10）；
 
 通过这样的步骤来验证我们的实验是否成功：
 
@@ -37,6 +43,8 @@
 
 宿主机模拟我们的客户端，用浏览器来访问。两个 Load Balancer 作为我们的 VRRP 组。
 
+### 2.1 安装 ipvsadm 工具
+
 开始我们的实战：
 
 首先我们先得在宿主机上安装 ipvsadm 工具，以及使用 ipvsadm 看能否使用（若是没有这一步，在 docker 中将无法使用）：
@@ -51,325 +59,260 @@ sudo ipvsadm -l
 
 ![install-ipvsadm](https://dn-simplecloud.shiyanlou.com/2294111473264342377-wm)
 
-做好环境的准备工作之后我们需要创建两个 Load Balancer 的 docker 容器，同时为他们安装上 ipvsadm 与 keepalived：
+### 3.2 使用 docker 创建集群环境
 
+同样我们使用 docker 来模拟我们的集群环境，创建四台 container：
+
+- 启动一台 docker container 作为我们的 Load Balancer 1 (VIP：192.168.0.10，作为主路由)；
+- 启动一台 docker container 作为我们的 Load Balancer 2 (VIP：192.168.0.10，作为备份路由)；
+- 启动一台 docker container 作为我们的 Real Server 1（VIP：192.168.0.10）；
+- 启动一台 docker container 作为我们的 Real Server 2（VIP：192.168.0.10）；
+
+实际的 IP 地址请查看，以实际的为主，当前通过该顺序创建并以默认的配置参数，IP 地址会这样分配，通过如下的命令来创建：
+
+```bash
+docker run --privileged --name=LoadBalancer1 -tid ubuntu
+docker run --privileged --name=LoadBalancer2 -tid ubuntu
+docker run --privileged --name=RealServer1 -tid ubuntu
+docker run --privileged --name=RealServer2 -tid ubuntu
 ```
-#创建 Load Balancer 1
-docker run --privileged --name=load1 -ti ubuntu:latest
 
-#此时我们连接上了 load 1，更新源的信息，然后为其安装两个工具
+相关参数与命令的作用在 LVS 实战中做了详细的解释。
+
+通过 `docker ps` 我们可以验证我们成功的创建：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516776769477-wm)
+
+### 3.3 配置两台 RealServer 的环境
+
+两台配置的步骤类似，我们提供 RealServer1 的配置步骤
+
+#### 3.3.1 安装 vim 与 nginx 工具
+
+首先我们通过 `docker attach` 命令登录 RealServer1
+
+```bash
+# 通过 container 的 name 或者 ID 即可登录
+# 登录上之后换行没有反应不是卡住，回车即可看到命令提示符
+docker attach RealServer1
+```
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516777326330.png-wm)
+
+然后安装 nginx 来提供 web 服务，vim 来提供编辑器：
+
+```bash
 apt-get update
-apt-get install -y ipvsadm keepalived
-
-#当然为了严谨我们可以试验下 ipvsadm 能否工作
-ipvsadm -L
+apt-get install nginx vim
 ```
 
-![run docker load1 ](https://dn-simplecloud.shiyanlou.com/2294111473264885000-wm)
+#### 3.3.2 修改默认的 nginx 展示页面
 
-通过以上的操作我们成功的在 load1 中安装好了我们需要的工具，所以我们需要为 load2 安装上同样的工具：
+修改默认的 nginx 展示页面，将其中的 `Welcome to Nginx` 修改成 `Welcome to RealServer1`，在 RealServer2 中的操作则修改成 `Welcome to RealServer2`:
 
-```
-#首先通过 （ctrl+p） + （ctrl+q） 的快捷键脱离 load 1，当我们重新看到 shiyanlou 的抬头说明我们退出来了
-
-#创建 Load Balancer 2
-docker run --privileged --name=load2 -ti ubuntu:latest
-
-#此时我们连接上了 load 2，更新源的信息，然后为其安装两个工具
-apt-get update
-apt-get install -y ipvsadm keepalived
-
-#当然为了严谨我们可以试验下 ipvsadm 能否工作
-ipvsadm -L
-```
-
-![run docker load2](https://dn-simplecloud.shiyanlou.com/2294111473265181909-wm)
-
-![ipvsadm -l](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473265442563.png/wm)
-
-完成了两个 Load Balancer 的容器启动，我们便开始我们的 Real Server 节点的启动与部署
-
-首先是我们的 Real Server 1 节点，因为需要 nginx 的页面的读取与内容区分鉴别，以及使用 LVS/DR 模式，使用虚拟 IP 作为源地址，但是又不对该 IP 地址请求做相应，所以需要安装 nginx 以及对 arp 的响应与宣告做配置，还有路由策略的配置
-
-1. 安装 nginx 服务：提供 web 服务
-2. 修改 nginx 首页内容： 做显示上的区分，才能了解到是那台 real server 在工作
-3. 启动 nginx 服务：提供 web 服务
-4. 修改 arp 策略配置： 使得在响应包时使用 VIP 作为源地址，但是又不对内网的 VIP 请求做出响应
-5. 使得修改后的配置立即生效
-6. 配置虚拟 IP：在 lo 网卡上配置别名
-7. 添加虚拟 IP 的路由
-
-```
-#首先通过 （ctrl+p） + （ctrl+q） 的快捷键脱离 load 2，当我们重新看到 shiyanlou 的抬头说明我们退出来了
-
-#创建 real server 1
-docker run --privileged --name=realserver1 -ti ubuntu:latest
-
-#更新源 
-apt-get update
-
-#安装 nginx 服务
-apt-get install nginx
-```
-
-![run realserver1 install nginx](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473266384870.png/wm)
-
-```
-#修改首页内容，- 开头的为修改行，+ 开头为修改后的内容
+```bash
 vim /usr/share/nginx/html/index.html
-
--<h1>Welcome to Nginx！</h1>
-+<h1>11Welcome to shiyanlou! This is Real Server1</h1>
 ```
 
-![vim nginx](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473266728559.png/wm)
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516778777234-wm)
 
+完成之后不要忘记启动 nginx：
+
+```bash
+service nginx start 
 ```
-#启动 nginx 服务
-service nginx start
 
-#修改 arp 的配置
+#### 3.3.3 修改内核参数，抑制 arp
+
+修改 arp 的内核参数配置，来防止 LVS 的集群的 arp 表，从而影响负载均衡机器数据包的接收：
+
+```bash
 echo "1" > /proc/sys/net/ipv4/conf/lo/arp_ignore
 echo "1" > /proc/sys/net/ipv4/conf/all/arp_ignore
 echo "2" > /proc/sys/net/ipv4/conf/lo/arp_announce
 echo "2" > /proc/sys/net/ipv4/conf/all/arp_announce
-
-#使其立即生效
-sysctl -p
-
-#配置 VIP 在 lo 网卡的别名上
-ifconfig lo:0 172.17.0.10 broadcast 172.17.0.10 netmask 255.255.255.255 up
-
-#添加路由，让响应报文知道该何去何从
-route add -host 172.17.0.10 dev lo:0
 ```
 
-![config arp and route](https://dn-simplecloud.shiyanlou.com/2294111473267565243-wm)
+回顾以下两个内核参数配置的作用：
 
-就这样我们就完成了 real server 1 的所有配置，接下来我们只需要将同样的操作在 real server 2 上执行一遍即可，注意 nginx 首页内容记得修改：
+- `arp_ignore`：定义了本机响应 ARP 请求的级别。
+- `arp_announce`：定义了发送 ARP 请求时，源 IP 应该填什么。
 
+> **arp_ignore 部分参数：**
+>
+> `0 `表示目标 IP 是本机的，则响应 ARP 请求。默认为 0
+>
+> `1 `如果接收 ARP 请求的网卡 IP 和目标 IP 相同，则响应 ARP 请求
+>
+> **arp_announce 参数：**
+>
+> `0` 表示使用任一网络接口上配置的本地 IP 地址，通常就是待发送的 IP 数据包的源 IP 地址 。默认为 0
+>
+> `1` 尽量避免使用不属于该网络接口(即发送数据包的网络接口)子网的本地地址作为 ARP 请求的源 IP 地址。大致的意思是如果主机包含多个子网，而 IP 数据包的源 IP 地址属于其中一个子网，虽然该 IP 地址不属于本网口的子网，但是也可以作为ARP 请求数据包的发送方 IP。
+>
+> `2` 表示忽略 IP 数据包的源 IP 地址，总是选择网络接口所配置的最合适的 IP 地址作为 ARP 请求数据包的源 IP 地址(一般适用于一个网口配置了多个 IP 地址)
+
+#### 3.3.4 创建网卡别名与添加路由
+
+只有在相应 RealServer 中配置了虚拟 IP 地址，该机器才会接收并处理负载均衡机器上发来的数据包（该操作与上一步的修改内核参数都是需要超级权限的，这也就是为什么我们在创建 RealServer 的时候会添加 privileged 参数）：
+
+```bash
+# 添加网卡别名
+ifconfig lo:0 192.168.0.10 broadcast 192.168.0.10 netmask 255.255.255.255 up
+
+# 添加路由
+route add -host 192.168.0.10 dev lo:0
 ```
-#首先通过 （ctrl+p） + （ctrl+q） 的快捷键脱离 realserver1，当我们重新看到 shiyanlou 的抬头说明我们退出来了
 
-#创建 real server 2
-docker run --privileged --name=realserver2 -ti ubuntu:latest
+由此我们便完成了其中一台 RealServer 的环境配置，我们只需要在另外一台做相同的操作即可，完成两台 RealServer 的配置之后我们通过 Firefox 浏览器来验证我们的 Web 服务是否正常工作。
 
-#更新源 
+完成 RealServer 的配置之后，紧接着便是 LoadBalancer 机器的配置。
+
+### 3.4 配置两台 LoadBalancer 环境
+
+#### 3.4.1 安装 ipvsadm 与 Keepalived
+
+同样我们首先登录 LoadBalancer1 中更新源与安装相关的工具：
+
+```bash
+# 因为镜像中默认是 ubuntu 原生源，所以有时候比较慢
 apt-get update
 
-#安装 nginx 服务
-apt-get install nginx
+# 安装 ipvsadm 与 keepalived
+apt-get install ipvsadm keepalived vim
 
-#修改首页内容，- 开头的为修改行，+ 开头为修改后的内容
-vim /usr/share/nginx/html/index.html
-
-- <h1>Welcome to Nginx！</h1>
-+ <h1>22Welcome to shiyanlou! This is Real Server2</h1>
-
-#启动 nginx 服务
-service nginx start
-
-#修改 arp 的配置
-echo "1" > /proc/sys/net/ipv4/conf/lo/arp_ignore
-echo "1" > /proc/sys/net/ipv4/conf/all/arp_ignore
-echo "2" > /proc/sys/net/ipv4/conf/lo/arp_announce
-echo "2" > /proc/sys/net/ipv4/conf/all/arp_announce
-
-#使其立即生效
-sysctl -p
-
-#配置 VIP 在 lo 网卡的别名上
-ifconfig lo:0 172.17.0.10 broadcast 172.17.0.10 netmask 255.255.255.255 up
-
-#添加路由，让响应报文知道该何去何从
-route add -host 172.17.0.10 dev lo:0
+# 验证 ipvsadm
+ipvsadm -l
 ```
 
-由此我们便完成了 Real Server 的所有配置。细心的同学会发现我们似乎还没有配置 ipvsadm 的规则，因为 keepalived 与 LVS 深度结合，我们把这个规则都写入 keepalived 的配置文件中。
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516781346373-wm)
 
-接下来我们便登入 load 1 中，写其 keepalived 的配置文件，将其配置为我们的 backup，备用 Load Balancer
+紧接着在 LoadBalancer2 中做相同的操作 .
 
-```
-#首先通过 （ctrl+p） + （ctrl+q） 的快捷键脱离 realserver2，当我们重新看到 shiyanlou 的抬头说明我们退出来了
+#### 3.4.2 修改 Keepalived 的配置文件
 
-#我们登入 load 1
-docker attach load1
+因为 Keepalived 就是为 LVS 而诞生的，它会调用 IPVS 模块，所以此时我们并不需要再去通过 ipvsadm 工具来编写规则，我们直接将我们要做的配置写在配置文件中，Keepalived 会根据配置文件自动的为我们配置。
 
-#看见开头变成 root@xxxxxx 说明我们成功登入
+首先我们修改 LoadBalancer1 中的 Keepalived 配置文件：
 
-#编辑我们的配置文件
+```bash
 vim /etc/keepalived/keepalived.conf
 ```
 
-以下便是我们配置文件的内容，请勿将注释内容写入
-```
-#全局配置，在发现某个节点出故障的时候以邮件的形式同时管理员
+因为我们将 LoadBalancer1 作为我们的主路由器，所以其配置文件为：
+
+```bash
+#全局配置，在发现某个节点出故障的时候以邮件的形式通知管理员
 global_defs {
-   notification_email {
-        richardwei@localhost #通知管理员的邮箱
+   notification_email {	#设置报警邮件地址，可以设置多个
+        shiyanlouAdmin@localhost #每行一个，如果开启邮件报警，需要开启本机的 Sendmail 服务
+        shiyanlou@admin.com
    }
-   notification_email_from root
-   smtp_server 127.0.0.1 
-   smtp_connect_timeout 30
-   router_id LVS_DEVEL
+   notification_email_from root #设置邮件的发送地址
+   smtp_server 127.0.0.1 #设置 STMP 服务器地址
+   smtp_connect_timeout 30 #设置连接 SMTP 服务器的超时时间
+   router_id LVS_DEVEL	#标识，发邮件时显示在邮件主题中的信息
 }
 
-#配置 vrrp
+#配置 vrrp 实例
 vrrp_instance VI_1 {
-    state BACKUP  #设置为备用节点
-    interface eth0    #设置发送消息的网卡
-    virtual_router_id 51
-    priority 99  #设置备用节点的优先级
-    advert_int 1   #master 与 backup 之间同步检查时间间隔，单位秒
+    state MASTER  #指定 Keepalived 角色， MASTER 表示此主机是主服务器，BACKUP 表示此主机是备用服务器
+    interface eth0    #指定 HA 检测网络的接口
+    virtual_router_id 51 #虚拟路由标识，这个标识是一个数字，同一个 vrrp_instance 下，MASTER 和BACKUP 必须是一致的
+    priority 101  #定义优先级，数字越大，优先级越高。在同一个 vrrp_instance 下，MASTER 的优先级必须大于 BACKUP 的优先级
+    advert_int 1  #设定 MASTER 与 BACKUP 负载均衡器之间同步检查的时间间隔，单位是秒
     authentication { #配置 vrrp 直接的认证 
-        auth_type PASS
-        auth_pass 1111
+        auth_type PASS	#设定验证类型和密码，验证类型分为 PASS 和 AH 两种
+        auth_pass 1111	#设置验证密码，在一个 vrrp_instance 下，MASTER 与 BACKUP 必须使用相同的密码才能通信
     }   
-    virtual_ipaddress { #配置虚拟 IP
-        172.17.0.10
+    virtual_ipaddress { #配置虚拟 IP，可以设置多个，每行一个
+        192.168.0.10
     }
 }
 
-#配置虚拟 IP
-virtual_server 172.17.0.10 80 {
-    delay_loop 6 #健康检查时间
-    lb_algo rr   #ipvs 的调度算法选择 rr
-    lb_kind DR   #使用 VS/DR 模式
-    nat_mask 255.255.255.0 
-    #persistence_timeout 50
-    protocol TCP #转发协议类型
-    real_server 172.17.0.4 80 { #配置 real server 的信息
-        weight 1 #配置该节点的权重
-        HTTP_GET { #健康检查方式
-            url {  #检查的路劲
+#配置虚拟服务器
+virtual_server 192.168.0.10 80 { #配置虚拟服务器，需要指定虚拟 IP 地址和端口，IP 与端口用空格隔开
+    delay_loop 6 #设置运行情况检查时间，单位是秒
+    lb_algo rr   #设置负载调度算法，这里设置为 rr，即论叫算法
+    lb_kind DR   #设置 LVS 实现负载均衡的机制，有 NAT，TUN，DR 三个模式可选，这里选择 DR
+    #persistence_timeout 50 会话保持时间，单位是秒，一般针对动态网页很有用，这里需要这个配置
+    protocol TCP #指定协议转发类型，有 TCP 和 UDP 两种。
+    
+    real_server 192.168.0.4 80 { #配置 real server 的信息，服务节点1
+        weight 1 #配置该节点的权重，权值大小用数字表示，设置权值的大小可以分不同性能的服务器分配不同的负载，性能较低的方服务器，设置权值较低，这样能合理地利用和分配系统资源
+        HTTP_GET {	#设置健康检查
+            url {	#访问这个地址，判断状态码是否 200
               path /
           status_code 200
             }
-            connect_timeout 2 #连接超时时间
-            nb_get_retry 3   #重新连接次数
-            delay_before_retry 1 #重连时间间隔
+            connect_timeout 3	#表示3秒无响应超时
+            nb_get_retry 3	#表示重试次数
+            delay_before_retry 3	#表示重试间隔
         }
     }
-    real_server 172.17.0.5 80 {
+    real_server 192.168.0.5 80 { #配置服务节点2
         weight 1
         HTTP_GET {
             url {
               path /
               status_code 200
             }
-            connect_timeout 2
+            connect_timeout 3
             nb_get_retry 3
-            delay_before_retry 1
+            delay_before_retry 3
         }
     }
 }
-
 ```
 
-保存，这便完成了备用节点的配置，接下来我们便登入 load 2 中，写其 keepalived 的配置文件，将其配置为我们的 master，主 Load Balancer
+以上配置内容为 LoadBalancer1 的 Keepalived.conf 配置内容。在编写配置内容时。一定要注意文字和语法格式，因为 Keepalived 在启动时并不会检测配置文件的正确性，及时没有配置文件，Keepalived 也能正常启动，所以一定要保证配置文件内容的正确性。
 
-其中配置文件中只有 state 改为 MASTER 与 优先级修改比备用高即可，其他都一样
+紧接着我们在 LoadBalancer2 中做相同的配置，主需要将 "Master" 修改成 "BACKUP"，以及优先级的调整即可。
 
-```
-#首先通过 （ctrl+p） + （ctrl+q） 的快捷键脱离 load1，当我们重新看到 shiyanlou 的抬头说明我们退出来了
+#### 3.4.3 启动 Keepalived 使配置生效
 
-#我们登入 load 2
-docker attach load2
+完成两台机器的 Keepalived 的配置，便启动该服务：
 
-#看见开头变成 root@xxxxxx 说明我们成功登入
-
-#编辑我们的配置文件
-vim /etc/keepalived/keepalived.conf
+```bash
+service rsyslog start
+service keepalived start 
 ```
 
-以下便是我们配置文件的内容，请勿将注释内容写入
-```
-#全局配置，在发现某个节点出故障的时候以邮件的形式同时管理员
-global_defs {
-   notification_email {
-        richardwei@localhost #通知管理员的邮箱
-   }
-   notification_email_from root
-   smtp_server 127.0.0.1 
-   smtp_connect_timeout 30
-   router_id LVS_DEVEL
-}
+由此我们便完成了所有的配置，启动成功之后我们可以通过 `ipvsadm -l` 查看到 keepalived 自动的为我们配置好了规则：
 
-#配置 vrrp
-vrrp_instance VI_1 {
-    state MASTER  #设置为主节点
-    interface eth0    #设置发送消息的网卡
-    virtual_router_id 51
-    priority 101  #设置主节点的优先级
-    advert_int 1   
-    authentication { #配置 vrrp 直接的认证 
-        auth_type PASS
-        auth_pass 1111
-    }   
-    virtual_ipaddress { #配置虚拟 IP
-        172.17.0.10
-    }
-}
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516795303754-wm)
 
-#配置虚拟 IP
-virtual_server 172.17.0.10 80 {
-    delay_loop 6 
-    lb_algo rr   #ipvs 的调度算法选择 rr
-    lb_kind DR   #使用 VS/DR 模式
-    nat_mask 255.255.255.0 
-    #persistence_timeout 50
-    protocol TCP #使用的协议
-    real_server 172.17.0.4 80 { #配置 real server 的信息
-        weight 1 #配置该节点的权重
-        HTTP_GET {
-            url {
-              path /
-          status_code 200
-            }
-            connect_timeout 2
-            nb_get_retry 3
-            delay_before_retry 1
-        }
-    }
-    real_server 172.17.0.5 80 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /
-              status_code 200
-            }
-            connect_timeout 2
-            nb_get_retry 3
-            delay_before_retry 1
-        }
-    }
-}
+### 3.5 测试实验效果
 
-```
+#### 3.5.1 LVS 成功测试一
 
-保存之后这样我们便完成了 LVS + keepalived + docker + nginx 的高可用负载均衡集群配置了。
+我们能够通过 VIP 访问我们的 Nginx 站点，经过多次的刷新我们能够访问另一个站点的内容（以显示的内容以作区分，因为负载并不高，所以需要很多次刷新，点击地址栏，按住 F5 不放）
 
-完成配置之后我们可以通过这样的命令来启动 keepalived：
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798350280-wm)
 
-```
-service keepalived start
-```
+#### 3.5.2 LVS 成功测试二
 
-接下来我们便来验证，我们是否配置成功了：
+当我们停止当前访问节点的 nginx 服务时，我们还能通过虚拟 IP 访问我们的站点，说明 LVS 在工作，能够将请求分发给另外一台 Real Server
 
-LVS 是可以成功运行的：
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798454831-wm)
 
-![LVS is success](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473268911560.png/wm)
+#### 3.5.3 Keepalived 成功测试
 
-查看 arp 可以看到当前是 master Load Balancer 在工作：
+我们使用 `arp -a` 查看当前的虚拟 IP 指向的 MAC 地址是 Master 节点的:
 
-![MAC arp info](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473269008944.png/wm)
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798806475-wm)
 
-当我们关掉 master 节点的 keepalived，也就是停止了其 LVS 的工作，模拟其故障情况，此时我们还可访问站点，并且通过 arp 我们可以了解到是我们的 keepalived 结构解决了单点故障的问题：
+也就是我们 LoadBalancer1 节点，同时我们也可以通过 LoadBalancer1 的 `/var/log/syslog` 日志中看到当前的节点为 Master，而在 LoadBalancer2 节点中的日志我们可以看到其为 BACKUP
 
-![keepalived is work](https://doc.shiyanlou.com/document-uid113508labid1987timestamp1473269193646.png/wm)
+然后停止 Master 节点的 keepalived 服务，然后还能通过我们的虚拟 IP 访问我们的节点，并且此时通过 `arp -a` 可以看到 虚拟 IP 指向的 Backup 节点的 Mac 地址：
 
-就此我们完成了 LVS + keepalived + docker + nginx 的高可用集群负载均衡实验，通过本实验将以前学习到的知识做一个综合的应用。
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799030104.png-wm)
+
+同是我们也可以通过 LoadBalancer2 的日志中看到其 vrrp 的角色变化：
+
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799108129.png-wm)
+
+由此我们完成了 LVS + Keepalived 的配置与验证 。
 
 ## 实验总结
 

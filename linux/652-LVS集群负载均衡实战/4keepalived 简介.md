@@ -1,10 +1,16 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # keepalived 简介
 
 ## 一、实验介绍
 
 通过上节实验我们完成了 LVS 的一个负载均衡小集群的部署，当然也是实现了高可用的节点访问。但是我们的请求都是通过 Load Balancer 来分发，若是有一天 Load Balancer 不堪重负，那岂不是我们再大的集群也无用，所以我们引入了 keepalived 工具来解决我们的单点故障问题。
 
-### 1.1 实验涉及的知识点
+#### 实验涉及的知识点
 
 - keepalived 简介
 - keepalived 框架
@@ -13,9 +19,9 @@
 
 keepalived 是一个用 C 语言写的一个路由软件，这个项目的主要目标是能为 Linux 系统和基于 Linux 的基础设施平台提供在负载均衡与高可用上稳定，简单的软件。
 
-keepalived 负载均衡的框架是依赖于著名的并且被广泛使用的 Linux Virtual Server（LVS 的 ipvs）内核模块提供的 Layer 4（OSI 参考模型的第四层，传输层）上的负载均衡。keepalived 实现了一套通过对服务器池（也就是Real Server 池，Server pool）健康状态来动态的、自动维护的管理被负载均衡的服务器池的 checker。
+keepalived 负载均衡的框架是依赖于著名的并且被广泛使用的 Linux Virtual Server（LVS 的 ipvs）内核模块提供的 Layer 4（OSI 参考模型的第四层，传输层）上的负载均衡。keepalived 实现了一套通过对服务器池（也就是Real Server 池，Server pool）健康状态来动态地、自动维护的管理被负载均衡的服务器池的 checker。
 
-而 keepalived 高可用（High-available）是通过 VRRP 协议来实现的，VRRP 在路由器的故障转移中是非常基础、常用的，而 keepalived 实现了一套 hooks 为 VRRP finite state machine 提供低层，高速的协议互动。
+而 keepalived 高可用（High-available）是通过 VRRP 协议来实现的，VRRP 在路由器的故障转移中是非常基础、常用的，而 keepalived 实现了一套 hooks 为 VRRP finite state machine 提供底层，高速的协议互动。
 
 keepalived 框架可以被用于独立的亦或者是全部一起使用来提供弹性服务的基础设施，并且是一个免费，开源的软件。总的来说它能为我们提供这样一些功能：
 
@@ -34,7 +40,7 @@ keepalived 框架可以被用于独立的亦或者是全部一起使用来提供
 
 ![keepalived framwork](https://doc.shiyanlou.com/document-uid113508labid1timestamp1473316871034.png/wm)
 
-通过结构图我们了解到 keepalived 涉及到内核空间的的两个网络功能，分别是：
+通过结构图我们了解到 keepalived 涉及到内核空间的两个网络功能，分别是：
 
 - IPVS：LVS 的 IP 负载均衡技术的使用
 - NETLINK：提供高级路由及其他相关的网络功能
@@ -70,7 +76,7 @@ VRRP 协议的功能实现是将两台或多台路由器设备虚拟成一个设
 
 而上文所说的 Master，也就是我们的主路由（也就是当前工作的路由）是通过主备路由之间相互通信，通过其 route_id、优先级等来综合判定从而选举出来的，
 
-主路由会每隔 1 秒（这个值可以修改配置）发送 vrrp 包通知 Backup 路由自己还是健康的存活着，而 Backup 路由若是3秒没有收到（这个值可以修改）没有收到主路由的 vrrp 包，便会将自己切换成主路由来接替工作。
+主路由会每隔 1 秒（这个值可以修改配置）发送 vrrp 包通知 Backup 路由自己还是健康的存活着，而 Backup 路由若是3秒（这个值可以修改）没有收到主路由的 vrrp 包，便会将自己切换成主路由来接替工作。
 
 而若是原主路由突然复活了，在接收到当前主路由发来的 vrrp 包是会从中解析其优先级的值，若是自己的优先级较高便会将自己切换成主路由，并告知当前的主路由，然后开始工作。而当前的路由便会将自己切换成 Backup。
 
@@ -84,7 +90,7 @@ VRRP 协议的功能实现是将两台或多台路由器设备虚拟成一个设
 
 LVS 在后面的Server Pool 中每台都可以同时工作，而 VRRP 同时工作的机器只有一台，只有当一台出问题之后才会启用另外一台。
 
-所以我们换着方式让两个工具相互结合，让 keepalived 工作在 Load Balancer 上，做好出口路由的高可用，LVS 在后端做好负载均衡，这样大大的提高了我们的服务质量，特别是在突然的大流量冲击下。
+所以我们换着方式让两个工具相互结合，让 keepalived 工作在 Load Balancer 上，做好出口路由的高可用，LVS 在后端做好负载均衡，这样大大地提高了我们的服务质量，特别是在突然的大流量冲击下。
 
 ## 实验总结
 
