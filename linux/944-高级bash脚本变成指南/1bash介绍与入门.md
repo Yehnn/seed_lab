@@ -135,6 +135,20 @@ exit
 >
 > * 脚本正文中以`#`号开头的行都是注释语句，这些行在脚本的实际执行过程中不会被执行。这些注释语句能方便我们在脚本中做一些注释或标记，让脚本更具可读性。
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/cleanlogs.sh
+  error: /home/shiyanlou 目录下没有 cleanlogs.sh 文件
+- name: check run
+  script: |
+    #!/bin/bash
+    bash /home/shiyanlou/cleanlogs.sh
+    ! [[ -s /var/log/wtmp ]]
+  error: 运行脚本没有清除 /var/log/wtmp 内容 
+```
+
 ## 四、思考练习
 
 #### 1. 遇到权限不够的提示，为什么，如何解决？

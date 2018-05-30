@@ -36,6 +36,14 @@ echo $(( 2#101011 ))     # 数制转换（使用二进制表示），不是一�
 ```
 $ bash test.sh
 ```
+```checker
+- name: check test.sh
+  script: |
+    #!/bin/bash
+    grep echo /home/shiyanlou/test.sh
+  error: /home/shiyanlou 目录下没有 test.sh 文件
+```
+
 解释说明
 
 上面的脚本说明了如何使用`echo`打印出一段字符串和变量内容，这里采用了几种不同的方式，希望你可以理解这几种不同方式的异同
@@ -63,7 +71,21 @@ $ vim test2.sh
 ```
 $ bash test2.sh
 ```
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/test2.sh
+  error: /home/shiyanlou 目录下没有 test2.sh 文件
+- name: check result
+  script: |
+    #!/bin/bash
+    ls |grep ttt.sh
+  error: test2.sh 执行结果不对
+```
+
 查看结果
+
 ```
 $ ls
 ```
@@ -93,6 +115,19 @@ esac
 $ bash test3.sh
 abc
 ```
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/test3.sh
+  error: /home/shiyanlou 目录下没有 test3.sh 文件
+- name: check result
+  script: |
+    #!/bin/bash
+    bash /home/shiyanlou/test3.sh|grep abc
+  error: test3.sh 执行结果不对
+```
+
 解释说明
 
 上面脚本使用case语句，首先创建了一个变量初始化为b,然后使用case语句判断该变量的范围，并打印相关信息。如果你有其它编程语言的经验，这将很容易理解。
@@ -162,6 +197,14 @@ $ ls
 ```
 先创建了 back 目录，然后复制 test.sh 到 back 目录
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/back/test.sh
+  error: 没有复制 test.sh 到 /home/shiyanlou/back 目录下
+```
+
 ## 七、冒号（:）
 
 #### 1.空命令
@@ -226,7 +269,7 @@ $ echo $PATH
 
 在一个双括号结构中，? 就是C语言的三元操作符，如：
 ```
-$ vim test.sh
+$ vim test5.sh
 ```
 输入如下代码，并保存：
 ```
@@ -238,16 +281,29 @@ $ vim test.sh
 ```
 运行测试
 ```
-$ bash test.sh
+$ bash test5.sh
 8
 ```
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/test5.sh
+  error: /home/shiyanlou 目录下没有 test5.sh 文件
+- name: check result
+  script: |
+    #!/bin/bash
+    bash /home/shiyanlou/test5.sh|grep 8
+  error: test5.sh 执行结果不对
+```
+
 ## 九、美元符号（$）
 
 #### 变量替换
 
 前面已经用到了
 ```
-$ vim test.sh
+$ vim test6.sh
 ```
 ```
 #!/bin/bash
@@ -260,7 +316,20 @@ echo $var2     # 23skidoo
 ```
 运行测试
 ```
-$ bash test.sh
+$ bash test6.sh
 5
 23skidoo
 ```
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/test6.sh
+  error: /home/shiyanlou 目录下没有 test6.sh 文件
+- name: check result
+  script: |
+    #!/bin/bash
+    bash /home/shiyanlou/test6.sh|grep 5 |grep 23skidoo
+  error: test6.sh 执行结果不对
+```
+
