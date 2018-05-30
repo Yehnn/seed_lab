@@ -38,7 +38,7 @@ keepalived 框架可以被用于独立的亦或者是全部一起使用来提供
 
 我们可以通过[官网](http://www.keepalived.org/documentation.html)了解到它是这样的一个框架设计：
 
-![keepalived framwork](https://doc.shiyanlou.com/document-uid113508labid1timestamp1473316871034.png/wm)
+![4-3](https://doc.shiyanlou.com/document-uid113508labid1timestamp1473316871034.png/wm)
 
 通过结构图我们了解到 keepalived 涉及到内核空间的两个网络功能，分别是：
 
@@ -70,7 +70,7 @@ keepalived 框架可以被用于独立的亦或者是全部一起使用来提供
 
 VRRP 协议的功能实现是将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP，而在路由器组内部，通过算法多角度的选举此时的 MASTER 机器作为这个对外 IP 的拥有者，也就是 ARP 的解析，MASTER 的 MAC 地址与 IP 相互对应，其他设备不拥有该 IP，状态是 BACKUP，而 BACKUP 除了接收 MASTER 的 VRRP 状态通告信息外，不执行对外的网络功能。当主机失效时，BACKUP 将立即接管原先 MASTER 的网络功能。从而达到了无缝的切换，而用户并不会知道网络设备出现了故障。
 
-![vrrp](https://doc.shiyanlou.com/document-uid113508labid1timestamp1473319225612.png/wm)
+![4-4](https://doc.shiyanlou.com/document-uid113508labid1timestamp1473319225612.png/wm)
 
 简单来说，vrrp 就是让外界认为只有一个网关在工作（在逻辑结构上将两台虚拟成一台设备），当一般情况下，所有的网络功能都通过 Master 来处理，而其突然出问题的时候，有一个备胎能够立马接替他的工作，而不用用户手动修改自己的电脑配置
 

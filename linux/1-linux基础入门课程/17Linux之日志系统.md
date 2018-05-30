@@ -42,11 +42,11 @@ enable_checker: true
 | apt/term.log     | 使用 apt-get 时的具体操作，如 package 的下载、打开等 |
 | auth.log         | 登录认证的信息记录                                   |
 | boot.log         | 系统启动时的程序服务的日志信息                       |
-| btmp             | 错误的信息记录
+|   btmp             | 错误的信息记录  |
 | Consolekit/history | 控制台的信息记录 |
 | dist-upgrade     | dist-upgrade 这种更新方式的信息记录 |
 | dmesg            | 启动时，显示屏幕上内核缓冲信息,与硬件有关的信息 |
-| dpkg.log         | dpkg 命令管理包的日志。
+| dpkg.log         | dpkg 命令管理包的日志。|
 | faillog          | 用户登录失败详细信息记录 |
 | fontconfig.log   | 与字体配置有关的信息记录 |
 | kern.log         | 内核产生的信息记录，在自己修改内核时有很大帮助 |
@@ -135,6 +135,20 @@ sudo apt-get update
 sudo apt-get install -y rsyslog
 sudo service rsyslog start
 ps aux | grep syslog
+```
+
+```checker
+- name: check pkg
+  script: |
+    #!/bin/bash
+    apt-cache pkgnames|grep rsyslog
+  error: 没有安装 rsyslog
+  timeout: 30
+- name: check service
+  script: |
+    #!/bin/bash
+    ps aux|grep rsyslog
+  error: 没有启动 rsyslog
 ```
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081469414492628-wm)

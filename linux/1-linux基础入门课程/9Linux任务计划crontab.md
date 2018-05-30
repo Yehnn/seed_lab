@@ -56,6 +56,14 @@ sudo service rsyslog start
 sudo cron －f &
 ```
 
+```checker
+- name: check cron
+  script: |
+    #!/bin/bash
+    ps -ef |grep -v grep|grep cron
+  error: 没有启动 crontab
+```
+
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid600404labid6124timestamp1523941816405.png/wm)
 
 ### 2.3 crontab 使用

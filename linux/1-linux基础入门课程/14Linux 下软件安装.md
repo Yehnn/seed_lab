@@ -49,6 +49,15 @@ $ w3m www.shiyanlou.com/faq
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid600404labid6129timestamp1523957427121.png/wm)
 
+```checker
+- name: check pkg
+  script: |
+    #!/bin/bash
+    apt-cache pkgnames|grep w3m
+  error: 没有安装 w3m
+  timeout: 30
+```
+
 ### 2.2 apt 包管理工具介绍
 
 > APT是Advance Packaging Tool（高级包装工具）的缩写，是Debian及其派生发行版的软件包管理器，APT可以自动下载，配置，安装二进制或者源代码格式的软件包，因此简化了Unix系统上管理软件的过程。APT最早被设计成dpkg的前端，用来处理deb格式的软件包。现在经过APT-RPM组织修改，APT已经可以安装在支持RPM的系统管理RPM包。这个包管理器包含以 `apt-` 开头的多个工具，如 `apt-get` `apt-cache` `apt-cdrom` 等，在Debian系列的发行版中使用。

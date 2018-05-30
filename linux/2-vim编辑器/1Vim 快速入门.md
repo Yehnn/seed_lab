@@ -66,7 +66,7 @@ Vim具有6种基本模式和5种派生模式，我们这里只简单介绍下6�
 
 vim启动进入普通模式，处于插入模式或命令行模式时只需要按`Esc`或者`Ctrl+[`(这在vim课程环境中不管用)即可进入普通模式。普通模式中按`i`（插入）或`a`（附加）键都可以进入插入模式，普通模式中按`:`进入命令行模式。命令行模式中输入`wq`回车后保存并退出vim。
 
-![](https://doc.shiyanlou.com/document-uid49570labid16timestamp1491030562304.png/wm)
+![1-2.2](https://doc.shiyanlou.com/document-uid49570labid16timestamp1491030562304.png/wm)
 
 ### 2.3 进入vim
 
@@ -198,7 +198,7 @@ $ cp /etc/protocols .
 $ vim protocols
 ```
 
-![](https://doc.shiyanlou.com/document-uid49570labid16timestamp1491030616700.png/wm)
+![1-2.7.1](https://doc.shiyanlou.com/document-uid49570labid16timestamp1491030616700.png/wm)
 
 ```checker
 - name: check file

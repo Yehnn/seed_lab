@@ -2,6 +2,7 @@
 show: step
 version: 0.1
 enable_checker: true
+
 ---
 
 # LVS + keepalived 实战
@@ -39,7 +40,7 @@ enable_checker: true
 
 我们整体的网络结构如图所示：
 
-![struct](https://dn-simplecloud.shiyanlou.com/1135081473327585218-wm)
+![5-2](https://dn-simplecloud.shiyanlou.com/1135081473327585218-wm)
 
 宿主机模拟我们的客户端，用浏览器来访问。两个 Load Balancer 作为我们的 VRRP 组。
 
@@ -57,9 +58,9 @@ sudo apt-get install ipvsadm
 sudo ipvsadm -l
 ```
 
-![install-ipvsadm](https://dn-simplecloud.shiyanlou.com/2294111473264342377-wm)
+![5-2.1](https://dn-simplecloud.shiyanlou.com/2294111473264342377-wm)
 
-### 3.2 使用 docker 创建集群环境
+### 2.2 使用 docker 创建集群环境
 
 同样我们使用 docker 来模拟我们的集群环境，创建四台 container：
 
@@ -81,13 +82,13 @@ docker run --privileged --name=RealServer2 -tid ubuntu
 
 通过 `docker ps` 我们可以验证我们成功的创建：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516776769477-wm)
+![5-2.2](https://dn-simplecloud.shiyanlou.com/1135081516776769477-wm)
 
-### 3.3 配置两台 RealServer 的环境
+### 2.3 配置两台 RealServer 的环境
 
 两台配置的步骤类似，我们提供 RealServer1 的配置步骤
 
-#### 3.3.1 安装 vim 与 nginx 工具
+#### 2.3.1 安装 vim 与 nginx 工具
 
 首先我们通过 `docker attach` 命令登录 RealServer1
 
@@ -97,7 +98,7 @@ docker run --privileged --name=RealServer2 -tid ubuntu
 docker attach RealServer1
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516777326330.png-wm)
+![5-2.3.1](https://dn-simplecloud.shiyanlou.com/uid/113508/1516777326330.png-wm)
 
 然后安装 nginx 来提供 web 服务，vim 来提供编辑器：
 
@@ -106,7 +107,7 @@ apt-get update
 apt-get install nginx vim
 ```
 
-#### 3.3.2 修改默认的 nginx 展示页面
+#### 2.3.2 修改默认的 nginx 展示页面
 
 修改默认的 nginx 展示页面，将其中的 `Welcome to Nginx` 修改成 `Welcome to RealServer1`，在 RealServer2 中的操作则修改成 `Welcome to RealServer2`:
 
@@ -114,7 +115,7 @@ apt-get install nginx vim
 vim /usr/share/nginx/html/index.html
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516778777234-wm)
+![5-2.3.2](https://dn-simplecloud.shiyanlou.com/1135081516778777234-wm)
 
 完成之后不要忘记启动 nginx：
 
@@ -122,7 +123,7 @@ vim /usr/share/nginx/html/index.html
 service nginx start 
 ```
 
-#### 3.3.3 修改内核参数，抑制 arp
+#### 2.3.3 修改内核参数，抑制 arp
 
 修改 arp 的内核参数配置，来防止 LVS 的集群的 arp 表，从而影响负载均衡机器数据包的接收：
 
@@ -152,7 +153,7 @@ echo "2" > /proc/sys/net/ipv4/conf/all/arp_announce
 >
 > `2` 表示忽略 IP 数据包的源 IP 地址，总是选择网络接口所配置的最合适的 IP 地址作为 ARP 请求数据包的源 IP 地址(一般适用于一个网口配置了多个 IP 地址)
 
-#### 3.3.4 创建网卡别名与添加路由
+#### 2.3.4 创建网卡别名与添加路由
 
 只有在相应 RealServer 中配置了虚拟 IP 地址，该机器才会接收并处理负载均衡机器上发来的数据包（该操作与上一步的修改内核参数都是需要超级权限的，这也就是为什么我们在创建 RealServer 的时候会添加 privileged 参数）：
 
@@ -168,9 +169,9 @@ route add -host 192.168.0.10 dev lo:0
 
 完成 RealServer 的配置之后，紧接着便是 LoadBalancer 机器的配置。
 
-### 3.4 配置两台 LoadBalancer 环境
+### 2.4 配置两台 LoadBalancer 环境
 
-#### 3.4.1 安装 ipvsadm 与 Keepalived
+#### 2.4.1 安装 ipvsadm 与 Keepalived
 
 同样我们首先登录 LoadBalancer1 中更新源与安装相关的工具：
 
@@ -185,11 +186,11 @@ apt-get install ipvsadm keepalived vim
 ipvsadm -l
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516781346373-wm)
+![5-2.4.1](https://dn-simplecloud.shiyanlou.com/1135081516781346373-wm)
 
 紧接着在 LoadBalancer2 中做相同的操作 .
 
-#### 3.4.2 修改 Keepalived 的配置文件
+#### 2.4.2 修改 Keepalived 的配置文件
 
 因为 Keepalived 就是为 LVS 而诞生的，它会调用 IPVS 模块，所以此时我们并不需要再去通过 ipvsadm 工具来编写规则，我们直接将我们要做的配置写在配置文件中，Keepalived 会根据配置文件自动的为我们配置。
 
@@ -269,7 +270,7 @@ virtual_server 192.168.0.10 80 { #配置虚拟服务器，需要指定虚拟 IP 
 
 紧接着我们在 LoadBalancer2 中做相同的配置，主需要将 "Master" 修改成 "BACKUP"，以及优先级的调整即可。
 
-#### 3.4.3 启动 Keepalived 使配置生效
+#### 2.4.3 启动 Keepalived 使配置生效
 
 完成两台机器的 Keepalived 的配置，便启动该服务：
 
@@ -280,40 +281,40 @@ service keepalived start
 
 由此我们便完成了所有的配置，启动成功之后我们可以通过 `ipvsadm -l` 查看到 keepalived 自动的为我们配置好了规则：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516795303754-wm)
+![5-2.4.3](https://dn-simplecloud.shiyanlou.com/1135081516795303754-wm)
 
-### 3.5 测试实验效果
+### 2.5 测试实验效果
 
-#### 3.5.1 LVS 成功测试一
+#### 2.5.1 LVS 成功测试一
 
 我们能够通过 VIP 访问我们的 Nginx 站点，经过多次的刷新我们能够访问另一个站点的内容（以显示的内容以作区分，因为负载并不高，所以需要很多次刷新，点击地址栏，按住 F5 不放）
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798350280-wm)
+![5-2.5.1](https://dn-simplecloud.shiyanlou.com/1135081516798350280-wm)
 
-#### 3.5.2 LVS 成功测试二
+#### 2.5.2 LVS 成功测试二
 
 当我们停止当前访问节点的 nginx 服务时，我们还能通过虚拟 IP 访问我们的站点，说明 LVS 在工作，能够将请求分发给另外一台 Real Server
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798454831-wm)
+![5-2.5.2](https://dn-simplecloud.shiyanlou.com/1135081516798454831-wm)
 
-#### 3.5.3 Keepalived 成功测试
+#### 2.5.3 Keepalived 成功测试
 
 我们使用 `arp -a` 查看当前的虚拟 IP 指向的 MAC 地址是 Master 节点的:
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081516798806475-wm)
+![5-2.5.3](https://dn-simplecloud.shiyanlou.com/1135081516798806475-wm)
 
 也就是我们 LoadBalancer1 节点，同时我们也可以通过 LoadBalancer1 的 `/var/log/syslog` 日志中看到当前的节点为 Master，而在 LoadBalancer2 节点中的日志我们可以看到其为 BACKUP
 
 然后停止 Master 节点的 keepalived 服务，然后还能通过我们的虚拟 IP 访问我们的节点，并且此时通过 `arp -a` 可以看到 虚拟 IP 指向的 Backup 节点的 Mac 地址：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799030104.png-wm)
+![5-2.5.3-2](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799030104.png-wm)
 
 同是我们也可以通过 LoadBalancer2 的日志中看到其 vrrp 的角色变化：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799108129.png-wm)
+![5-2.5.3-3](https://dn-simplecloud.shiyanlou.com/uid/113508/1516799108129.png-wm)
 
 由此我们完成了 LVS + Keepalived 的配置与验证 。
 
-## 实验总结
+## 三、实验总结
 
 通过本实验的学习，我们将以前学习到的看似不相关的知识点串联前来，完成我们的高可用集群负载均衡，让我们的服务更加的可靠，即使是某个站点出现故障也不会被用户察觉到。

@@ -76,7 +76,7 @@ sudo apt-get install ipvsadm
 sudo ipvsadm -L
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516011723528.png-wm)
+![3-2.4.1](https://dn-simplecloud.shiyanlou.com/uid/108299/1516011723528.png-wm)
 
 #### 2.4.2 创建服务器池成员
 
@@ -97,7 +97,7 @@ docker run --privileged --name=RealServer2 -tdi ubuntu
 >
 >  ubuntu：指定容器镜像，这里使用 ubuntu 镜像
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid113508labid2124timestamp1516732770433.png/wm)
+![3-2.4.2](https://doc.shiyanlou.com/document-uid113508labid2124timestamp1516732770433.png/wm)
 
 创建命令执行完成后，目前有两个 container：
 
@@ -133,7 +133,7 @@ service nginx start
 vi /usr/share/nginx/html/index.html
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516013480902.png-wm)
+![3-2.4.3](https://dn-simplecloud.shiyanlou.com/uid/108299/1516013480902.png-wm)
 
 > 按 `i` 键插入，按 `esc` 再输入 `:wq` 保存退出。
 >
@@ -147,15 +147,15 @@ vi /usr/share/nginx/html/index.html
 vi /usr/share/nginx/html/index.html
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516013537528.png-wm)
+![3-2.4.3-2](https://dn-simplecloud.shiyanlou.com/uid/108299/1516013537528.png-wm)
 
 完成两台服务器的配置之后，我们通过 `service nginx start` 启动服务器中 nginx 服务。
 
 至此我们完成两台 Web 服务器的配置，我们可以打开宿主机 firefox 浏览器，地址栏分别输入两个 IP 地址，来检验我们的配置成功：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid2124timestamp1527582859419.png/wm)
+![3-2.4.3-3](https://doc.shiyanlou.com/document-uid8797labid2124timestamp1527582859419.png/wm)
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid2124timestamp1527582859854.png/wm)
+![3-2.4.3-4](https://doc.shiyanlou.com/document-uid8797labid2124timestamp1527582859854.png/wm)
 
 #### 2.4.4 配置调度器规则
 
@@ -208,17 +208,17 @@ rr：轮询算法(LVS 实现了 8 种调度算法)
 上面命令添加了两个服务器 RealServer1 和 RealServer2
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516026881486.png-wm)
+![3-2.4.4](https://dn-simplecloud.shiyanlou.com/uid/108299/1516026881486.png-wm)
 
 #### 2.4.5 测试配置
 
 打开浏览器，输入 VIP 地址：`120.26.15.9`：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516026980496.png-wm)
+![3-2.4.5](https://dn-simplecloud.shiyanlou.com/uid/108299/1516026980496.png-wm)
 
 可以发现，我们访问 VIP 地址，得到的是 RealServer1 的 Nginx 响应页面。多次刷新页面，页面也会发生变化：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516027089606.png-wm)
+![3-2.4.5-2](https://dn-simplecloud.shiyanlou.com/uid/108299/1516027089606.png-wm)
 
 > 因为访问压力比较小，调度算法不会请求切换服务器，可以按住 F5 快速多次刷新查看页面变化效果
 
@@ -361,7 +361,7 @@ route add -host 192.168.0.10 dev lo:0
 service networking restart
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029742820.png-wm)
+![3-3.4.2](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029742820.png-wm)
 
 同两台 Web 服务器中都做该配置，即完成了所有 Web 服务器所需的配置工作。
 
@@ -381,11 +381,11 @@ apt-get install -y ipvsadm
 ipvsadm -L #查看 ipvsadm 能否正常使用
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516028854500.png-wm)
+![3-3.4.3](https://dn-simplecloud.shiyanlou.com/uid/108299/1516028854500.png-wm)
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516028894171.png-wm)
+![3-3.4.3-2](https://dn-simplecloud.shiyanlou.com/uid/108299/1516028894171.png-wm)
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029004118.png-wm)
+![3-3.4.3-3](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029004118.png-wm)
 
 创建 eth0 的别名并绑定 VIP 地址，作为集群同时使用：
 
@@ -395,7 +395,7 @@ ifconfig eth0:0 192.168.0.10 netmask 255.255.255.0 up
 
 查看网卡信息：`ifconfig`
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029261794.png-wm)
+![3-3.4.3-4](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029261794.png-wm)
 
 在 LoadBalancer 中添加 IPVS 规则：
 
@@ -424,7 +424,7 @@ rr：轮询算法(LVS 实现了 8 种调度算法)
 上面命令添加了两个集群服务器 RealServer1 和 RealServer2
 ```
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031321919.png-wm)
+![3-3.4.3-5](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031321919.png-wm)
 
 使用两组组合快捷键 （ctrl+p）+（ctrl+q），脱离当前容器环境。
 
@@ -434,11 +434,11 @@ rr：轮询算法(LVS 实现了 8 种调度算法)
 
 打开宿主环境的 firefox 浏览器，地址栏输入 VIP 地址：`192.168.0.10`：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031462752.png-wm)
+![3-3.4.4](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031462752.png-wm)
 
 此时由 **RealServer1** 的 Nginx 响应页面，多次刷新页面，页面发生变化：
 
-![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031530603.png-wm)
+![3-3.4.4-2](https://dn-simplecloud.shiyanlou.com/uid/108299/1516031530603.png-wm)
 
 页面结果由 **RealServer2** 的 Nginx web 服务器响应。
 

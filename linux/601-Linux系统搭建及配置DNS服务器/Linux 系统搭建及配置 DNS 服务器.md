@@ -37,7 +37,7 @@ DNS 是 Domain Name System（域名系统）的简称，DNS 是一个分层的�
 
 不同域直接通过 `.` 来分割，域名与国外人命名一般，名在前，姓在后，越是大的域越在后面。也就是说靠前的是后面的子集，最右边的是根域可以忽略不写（因为其无名，nameless），在顶级域名的点后面，根域紧接着的就是顶级域名（top-level domains），紧跟着的就是二级域名(second-level)，就这样依此类推 +1，在 DNS 的配置时我们需要留着顶级域名后面的 `.`，在平时使用的时候因为浏览器会帮助我们自动填充，所以我们可以忽略不写，例如 `www.shiyanlou.com` 不用写成 `www.shiyanlou.com.`。
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid113508labid1986timestamp1510191991239.png)
+![2](https://doc.shiyanlou.com/document-uid113508labid1986timestamp1510191991239.png)
 
 - 主机名：一般代表公司或者组织的主机名或者某个服务名，一般在最左边；例如 `www.shiyanlou.com` 中 `www` 是三级域名也是主机名了，一般这样的比较常见
 - 二级域名（second-level domains）：一般代表公司或者组织的名字，例如 `www.shiyanlou.com` 中的 `shiyanlou`，例如 `www.baidu.com` 中的 `baidu`
@@ -53,7 +53,7 @@ DNS 是 Domain Name System（域名系统）的简称，DNS 是一个分层的�
 
 我们通过下图来了解整个过程：
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid113508labid1986timestamp1510197302739.png)
+![3](https://doc.shiyanlou.com/document-uid113508labid1986timestamp1510197302739.png)
 (此图来自于[ictedu](http://www.ictedu.info/e-learning/redhat-linux-course/04-dns-server/me-shume-detaje-mbi-dns/how-dns-query-works))
 
 通过浏览器访问 `www.shiyanlou.com`：
@@ -108,7 +108,7 @@ IP地址  域名或者hostname
 
 例如我们当前机器中的 hosts 文件 `cat /etc/hosts`:
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527486954991.png)
+![3.1](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527486954991.png)
 
 第二行中 `::1` 是 IPv6 的本地地址表示方式，类似于 IPv4 中 `127.0.0.1` 后面紧跟着的就是主机名。
 
@@ -118,7 +118,7 @@ IP地址  域名或者hostname
 
 系统设定的 DNS 服务器配置文件位于 `/etc/resolv.conf`:
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527487094511.png)
+![3.1-2](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527487094511.png)
 
 `nameserver` 后面对应的便是内网中的 DNS 服务器地址，一般会配置两个，防止一个不可用而导致无法域名解析。
 
@@ -191,7 +191,7 @@ BIND 的配置由多个文件组成，这些文件包含在主配置文件中`na
 cat /etc/bind/named.conf
 ```
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527488516741.png/wm)
+![4.3](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527488516741.png/wm)
 
 有关各配置详细解释可参考 [BIND 官方配置项文档](https://ftp.isc.org/isc/bind/9.9.4/doc/arm/Bv9ARM.ch06.html) 
 
@@ -370,7 +370,7 @@ sudo named-checkzone shiyanlou.example.com /etc/bind/zones/db.shiyanlou.example.
 sudo named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.192.168
 ```
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527496483672.png)
+![4.3.6-1](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527496483672.png)
 
 做到这里，离成功已经不远了:-)，我们重启 BIND service
 
@@ -378,7 +378,7 @@ sudo named-checkzone 168.192.in-addr.arpa /etc/bind/zones/db.192.168
 sudo service bind9 restart
 ```
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527496521741.png)
+![4.3.6-2](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527496521741.png)
 
 ```checker
 - name: check options
@@ -471,7 +471,7 @@ sudo resolvconf -u
 nslookup host1.shiyanlou.example.com
 ```
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527497092104.png/wm)
+![5-1](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527497092104.png/wm)
 
 再测试反向解析，通过 ip 地址找到它的网址。**如果你的反向域名文件写错了，或者放置的位置不对，就会报错，可以在上文重新看看操作**
 
@@ -479,7 +479,7 @@ nslookup host1.shiyanlou.example.com
 nslookup 192.168.42.1
 ```
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527497092608.png/wm)
+![5-2](https://doc.shiyanlou.com/document-uid8797labid1986timestamp1527497092608.png/wm)
 
 好了，到此为止，一个简单的 DNS 服务器就搭建好了，你可以试试添加更多的 ip 地址，快来试试自己的 DNS 服务器吧！
 

@@ -119,7 +119,7 @@ $ vim protocols
 - 在普通模式下，任意跳转到一行，使用 `w` 跳转到一个单词的开头，然后使用 `dw` 删除这个单词
 - 在普通模式下，使用 `e` 跳转到一个单词的结尾，并使用 `~` 将游标所在字母变成大写或小写
 
-![](https://doc.shiyanlou.com/document-uid49570labid17timestamp1491030698462.png/wm)
+![2-2.2.2](https://doc.shiyanlou.com/document-uid49570labid17timestamp1491030698462.png/wm)
 
 ### 2.3 复制粘贴和剪切
 
@@ -151,7 +151,7 @@ $ vim protocols
 `ddp` ,就这么简单，即实现了快速交换光标所在行与它下面的行
 
 
-![](https://doc.shiyanlou.com/document-uid49570labid17timestamp1491030759468.png/wm)
+![2-2.3.2](https://doc.shiyanlou.com/document-uid49570labid17timestamp1491030759468.png/wm)
 
 ## 三、实验总结
 

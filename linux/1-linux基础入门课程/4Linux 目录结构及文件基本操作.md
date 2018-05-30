@@ -129,6 +129,14 @@ $ cd ~
 $ touch test
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/test
+  error: /home/shiyanlou 目录下没有 test
+```
+
 #### 新建目录
 
 使用 `mkdir`（make directories）命令可以创建一个空目录，也可同时指定创建目录的权限属性。
@@ -149,6 +157,19 @@ $ mkdir -p father/son/grandson
 
 后面的目录路径，以绝对路径的方式表示也是可以的。
 
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/mydir
+  error: /home/shiyanlou 目录下没有目录 mydir
+- name: check dir2
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/father/son/grandson
+  error: /home/shiyanlou 目录下没有创建多级目录
+```
+
 ### 2. 复制
 
 #### 复制文件
@@ -159,6 +180,14 @@ $ mkdir -p father/son/grandson
 
 ```
 $ cp test father/son/grandson
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/father/son/grandson/test
+  error: 没有复制 test 到/home/shiyanlou/father/son/grandson 目录
 ```
 
 是不是很方便啊，如果在图形界面则需要先在源目录复制文件，再进到目的目录粘贴文件，而命令行操作步骤就一步到位了嘛。
@@ -173,6 +202,14 @@ $ cp test father/son/grandson
 
 ```
 $ cp -r father family
+```
+
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/family/father
+  error: 没有复制 father 目录到/home/shiyanlou/family 目录
 ```
 
 ### 3. 删除
@@ -195,12 +232,28 @@ $ rm test
 $ rm -f test
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ! ls /home/shiyanlou/test
+  error: 没有删除 test 文件
+```
+
 #### 删除目录
 
 跟复制目录一样，要删除一个目录，也需要加上 `-r` 或 `-R` 参数：
 
 ```
 $ rm -r family
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ! ls /home/shiyanlou/family
+  error: 没有删除 family 目录
 ```
 
 ### 4. 移动文件与文件重命名
@@ -218,6 +271,13 @@ $ mv file1 Documents
 
 ![](https://doc.shiyanlou.com/linux_base/4-8.png/wm)
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/Documents/file1
+  error: 没有移动 file1 到/home/shiyanlou/Documents 目录
+```
 
 #### 重命名文件
 
@@ -240,11 +300,29 @@ $ touch file{1..5}.txt
 # 批量将这 5 个后缀为 .txt 的文本文件重命名为以 .c 为后缀的文件:
 $ rename 's/\.txt/\.c/' *.txt
 
-# 批量将这 5 个文件，文件名改为大写:
+# 批量将这 5 个文件，文件名和后缀改为大写:
 $ rename 'y/a-z/A-Z/' *.c
 ```
 
 简单解释一下上面的命令，`rename` 是先使用第二个参数的通配符匹配所有后缀为 `.txt` 的文件，然后使用第一个参数提供的正则表达式将匹配的这些文件的 `.txt` 后缀替换为 `.c`，这一点在我们后面学习了 `sed` 命令后，相信你会更好地理解。
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/father/son/grandson/test
+  error: 没有复制 test 到/home/shiyanlou/father/son/grandson 目录
+- name: check 后缀
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/*.c
+  error: 没有修改后缀
+- name: check 大写
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou | grep -E '[A-Z]+[1-5].C'
+  error: 没有修改为大写
+```
 
 ### 5. 查看文件
 
