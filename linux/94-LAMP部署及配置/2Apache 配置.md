@@ -1,10 +1,16 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # Apache 配置
 
 ## 一、实验简介
 
 通过上一节的实验，我们学会了如何去部署一个 LAMP 环境。搭建好后的环境只是一个简单的默认配置，通过本实验我们将深入了解 Apache 的相关配置参数。
 
-### 1.1 相关知识点
+#### 相关知识点
 
 - Apache 一般优化配置
 - Apache 日志格式配置
@@ -23,7 +29,7 @@ $ vim /etc/apache2/apache2.conf
 
 Apache 的主要配置文件是 `/etc/apache2/apache2.conf`，与其他的配置文件相同，`#` 开头的部分为注释，一般在注释中都是一些对配置文件的解说与介绍。
 
-```
+```bash
 #在注释中我们看到这么一条,指定apache服务器的配置文件存放的根目录。这是默认值
 ServerRoot "/etc/apache2"
 
@@ -42,7 +48,7 @@ KeepAliveTimeout 5
 
 在配置文件中我们看到了一些环境变量如错误日志文件的位置，运行的用户名等等。
 
-```
+```bash
 # These need to be set in /etc/apache2/envvars
 User ${APACHE_RUN_USER}
 Group ${APACHE_RUN_GROUP}
@@ -61,12 +67,12 @@ Include /etc/phpmyadmin/apache.conf
 
 在这个配置文件中还有一个特别重要的配置选项，那就是日志格式的配置,首先日志的输出是有等级的区别的。
 
-LogLevel记录日志等级有：
+`LogLevel` 记录日志等级有：
 
- - error 错误情况
- - warn 警告情况
- - info 普通信息
- - debug 出错级别信息
+ - `error` 错误情况
+ - `warn` 警告情况
+ - `info` 普通信息
+ - `debug` 出错级别信息
 
 在配置文件中默认为 `warn` 级别：
 
@@ -82,7 +88,6 @@ LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combine
 LogFormat "%h %l %u %t \"%r\" %>s %O" common
 LogFormat "%{Referer}i -> %U" referer
 LogFormat "%{User-agent}i" agent
-
 ```
 
 其中各个选项对应的含义如下：
@@ -106,7 +111,7 @@ LogFormat "%{User-agent}i" agent
 
 在配置文件中我们还看到有 `<Directory>` `<DirectoryMatch>` 等等这样的参数，直接在配置文件中进行的配置选项会在整个服务器中生效，如果你希望让某些配置仅对服务器的部分目录或者文件生效，也就是对所做的这部分配置控制在某个作用域范围内，我们便可使用这个配置选项。
 
-我们可以通过这样的一个例子来认识 <Directory> 选项的作用。
+我们可以通过这样的一个例子来认识 `<Directory>` 选项的作用。
 
 首先我们将访问文件的根目录更改为从 `/var/www/html` 改成 `/home/shiyanlou`。是否还记得我们在上节实验中提到了 apache 的文件根目录的配置选项 `DocumentRoot`。在新版本的 apache 中将该项移至在单独的虚拟主机选项配置文件中。
 
@@ -115,13 +120,21 @@ LogFormat "%{User-agent}i" agent
 $ sudo vim /etc/apache2/sites-enabled/000-default.conf
 ```
 
-在该配置文件中修改DocumentRoot，让其访问/home/shiyanlou
+在该配置文件中修改 `DocumentRoot`，让其访问 `/home/shiyanlou`
 
 ```
 DocumentRoot /home/shiyanlou
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471921981672-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep shiyanlou /etc/apache2/sites-enabled/000-default.conf
+  error: 没有配置 /etc/apache2/sites-enabled/000-default.conf 文件
+```
+
+![2-4-1](https://dn-simplecloud.shiyanlou.com/1135081471921981672-wm)
 
 然后保存退出，并重启 apache 服务让其生效。
 
@@ -129,7 +142,7 @@ DocumentRoot /home/shiyanlou
 $ sudo service apache2 restart 
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471922118063-wm)
+![2-4-2](https://dn-simplecloud.shiyanlou.com/1135081471922118063-wm)
 
 若是在末尾得到 `OK` 的标志标识成功重启，若是得到 `Fail` 的标志，表示重启失败，并告诉你失败的原因，有语法错误的文件与行数。
 
@@ -140,7 +153,7 @@ You don't have permission to access / on this server.
 #你没有权限访问服务器上的 `/` 目录
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471922817560-wm)
+![2-4-3](https://dn-simplecloud.shiyanlou.com/1135081471922817560-wm)
 
 可是我们设置的是 `/home/shiyanlou` 这个目录，为什么说我们没有权限访问 `/` 目录，我们返回去看我们的主配置文件。
 
@@ -159,7 +172,7 @@ $ sudo vim /etc/apache2/apache2.conf
 </Directory>
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471922897985-wm)
+![2-4-4](https://dn-simplecloud.shiyanlou.com/1135081471922897985-wm)
 
 该配置项也就是上文我们所提到的添加一些配置项但是只对部分的目录或者文件生效，而 `<Directory>` 的意思便是对部分的目录做出配置，它的语法格式是：
 
@@ -175,11 +188,11 @@ $ sudo vim /etc/apache2/apache2.conf
 
 `Options` 是指定一些参数，而常用的参数有这些：
 
-- None:不支持任何选项。
-- Indexes：允许文件索引，意思所有的文件以索引的形式在网页上呈现。
-- FollowSynLinks： 允许符号链接指向的源文件。
-- Includes： 允许执行服务器包含（ssi）。
-- ExecCGI：允许执行CGI脚本。
+- `None`:不支持任何选项。
+- `Indexes`：允许文件索引，意思所有的文件以索引的形式在网页上呈现。
+- `FollowSynLinks`： 允许符号链接指向的源文件。
+- `Includes`： 允许执行服务器包含（ssi）。
+- `ExecCGI`：允许执行CGI脚本。
 
 `AllowOverride` 是指确定允许存在于 `.htaccess` 文件中的指令类型。通常利用 Apache 的 rewrite 模块对 URL 进行重写的时候， rewrite 规则会写在 .htaccess 文件里。一般设置为 `None` 来保证网站的安全性。
 
@@ -192,7 +205,7 @@ Require all granted
 Require all denied
 ```
 
-而反观我们的默认配置文件中 `/` 目录是无条件拒绝访问的，所以我们之前就曝出没有权限访问的错误，我们只需要单独问 `/home/shiyanlou` 目录配置一下给予权限访问即可。
+而反观我们的默认配置文件中 `/` 目录是无条件拒绝访问的，所以我们之前就曝出没有权限访问的错误，我们只需要单独向 `/home/shiyanlou` 目录配置一下给予权限访问即可。
 
 我们在配置文件中添加这么几行来允许我们当前设置的 DocumentRoot 可以访问。
 
@@ -201,6 +214,14 @@ Require all denied
 		AllowOverride None
 		Require all granted
 </Directory>
+```
+
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep shiyanlou /etc/apache2/apache2.conf
+  error: /etc/apache2/apache2.conf 没有配置 Drectory
 ```
 
 若是只是这样的话你会发现和之前是一样的报错，这是因为在该目录下没有 `index.html` 这样的索引网页文件，所以我们该目录下添加这样一个文件即可访问了。
@@ -215,9 +236,19 @@ $ vim /home/shiyanlou/index.html
 hello shiyanlou
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471938196407-wm)
+配置完成后记得重启下 apache ，然后再访问页面：
+
+![2-4-5](https://dn-simplecloud.shiyanlou.com/1135081471938196407-wm)
 
 但是我们若是想要读取里面的其他文件的话，我们可以修改成这样，并且删除 index.html 这个文件。
+
+```checker
+- name: check index.html
+  script: |
+    #!/bin/bash
+    ! ls /home/shiyanlou/index.html
+  error: index.html 没有删除
+```
 
 ```
 $ vim /etc/apache2/apache2.conf
@@ -232,7 +263,15 @@ $ vim /etc/apache2/apache2.conf
 </Directory>
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471938354374-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep -A 3 shiyanlou /etc/apache2/apache2.conf|grep Follow
+  error: /etc/apache2/apache2.conf 没有配置 Option
+```
+
+![2-4-6](https://dn-simplecloud.shiyanlou.com/1135081471938354374-wm)
 
 并且重启下我们的 apache 来使得配置文件生效：
 
@@ -242,7 +281,7 @@ $ rm -rf index.html
 $ sudo service apache2 restart
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471938475485-wm)
+![2-4-7](https://dn-simplecloud.shiyanlou.com/1135081471938475485-wm)
 
 若是遇到某些敏感的文件，不适合允许所有的人随意的访问，我们还可以使用 `require` 参数来限制只允许某些 ip 访问，修改之后记得重启 apache2 服务哦。
 
@@ -256,12 +295,20 @@ Require ip 192.168
 Require local
 #或者是
 Require ip localhost
-Require ::1
+Require ip ::1
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471941359662-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep -A 5 shiyanlou /etc/apache2/apache2.conf|grep ip
+  error: /etc/apache2/apache2.conf 没有配置 Require
+```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471941404205-wm)
+![2-4-8](https://dn-simplecloud.shiyanlou.com/1135081471941359662-wm)
+
+![2-4-9](https://dn-simplecloud.shiyanlou.com/1135081471941404205-wm)
 
 还有很多高级的用法，如上文提到的设置用户认证登陆等等，有兴趣深入学习可以多看看[官方文档](http://httpd.apache.org/docs/current/mod/mod_authz_core.html#require)。
 
@@ -280,7 +327,7 @@ Deny from all（或者ip）
 
 `Order` 后面跟的 `Allow` 与 `Deny` 的顺序的两个作用：
 
-- 哪个参数放在前面那个参数的规则便先生效，比如 `Order Allow,Deny` 的话则 allow 的规则先生效，deny的规则后生效，其实他们的谁先生效并不会有什么影响
+- 哪个参数放在前面那个参数的规则便先生效，比如 `Order Allow,Deny` 的话则 allow 的规则先生效，deny 的规则后生效，其实他们的谁先生效并不会有什么影响
 - 在缺省的情况下（也就是没有Allow from与Deny from的具体内容的话），谁在后面的话，默认拒绝或者生效所有，比如 `Order Allow,Deny` 的话便会拒绝所有，反之的话，则允许所有
 
 我们可以在 `/home/shiyanlou/Code` 上做实验，在配置文件中添加这样的代码。
@@ -294,11 +341,19 @@ Deny from all（或者ip）
 </Directory>
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471944702489-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep -A 5 Code /etc/apache2/apache2.conf|grep Order
+  error: /etc/apache2/apache2.conf 没有配置 Order
+```
+
+![2-4-10](https://dn-simplecloud.shiyanlou.com/1135081471944702489-wm)
 
 然后重启服务，让其生效之后我们可以看到这样的效果：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081471944938285-wm)
+![2-4-11](https://dn-simplecloud.shiyanlou.com/1135081471944938285-wm)
 
 与 `<Directory>` 类似的但是侧重点不同的参数还有 `<DirectoryMatch>`、`<Files>`、`<FilesMatch>`、`<Location>`、`<LocationMatch>` 这些功能将不再一一列举，有兴趣的同学可以看看官方文档<http://httpd.apache.org/docs/current/mod/core.html#directory>。
 
@@ -318,6 +373,8 @@ apache 为我们提供了一个网站运行平台，若是在一个物理主机�
 - 基于端口的虚拟主机
 - 基于域名的虚拟主机
 
+### 5.1 基于 IP 地址的虚拟主机
+
 基于IP的虚拟主机用于当我们有多的 IP 地址资源的时候，比如我们有多张网卡的时候，或者设置网卡别名都可以的（网卡别名在本实验环境中无法实现）。
 
 在本实验环境中我们可以做这样的一个时间，我们用 `ifconfig` 命令可以看到我们有两张网卡，一个是 `lo` 本地的回环网卡以及对外通信的 `eth0` 网卡。
@@ -326,7 +383,7 @@ apache 为我们提供了一个网站运行平台，若是在一个物理主机�
 
 ```
 #设置站点虚拟主机的配置文件
-sudo vim /etc/apache/sites-enable/000-default.conf
+sudo vim /etc/apache2/sites-enabled/000-default.conf
 ```
 
 在这个配置文件中我们增加这样的一些内容（因为这个方式比较取巧，所以我们的把 eth0 的地址配置放在上面），记住这里的 `eth0` 的 ip 地址是我电脑上的，你们需要填写自己的 eth0 的 ip 地址。
@@ -343,17 +400,35 @@ sudo vim /etc/apache/sites-enable/000-default.conf
 </VirtualHost>
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472009569330-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep shiyanlou /etc/apache2/sites-enabled/000-default.conf
+  error: 没有配置 /etc/apache2/sites-enabled/000-default.conf
+```
+
+![2-5-1](https://dn-simplecloud.shiyanlou.com/1135081472009569330-wm)
 
 当然这样的前提是在上面的小例子的基础上，也就是添加了 `/home/shiyanlou` 的访问权限的。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472009671487-wm)
+![2-5-2](https://dn-simplecloud.shiyanlou.com/1135081472009671487-wm)
+
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep -A 5 shiyanlou /etc/apache2/apache2.conf|grep all
+  error: /etc/apache2/apache2.conf 没有配置 /home/shiyanlou 访问权限
+```
 
 配置完成之后我们重启 apache 服务，再试试访问 `192.168.42.2` 与 `127.0.0.1` 这两个地址的效果。
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472009671487-wm)
+![2-5-3](https://dn-simplecloud.shiyanlou.com/1135081472009671487-wm)
 
 这便是基于 ip 地址的不同通过虚拟主机来实现两个站点。
+
+### 5.2 基于端口的虚拟主机
 
 除了基于 IP 的不同，我们还可以基于端口的不同来实现两个站点，针对端口的不同无非就是监听两个不同的端口，做出不同的响应。
 
@@ -369,13 +444,21 @@ sudo vim /etc/apache2/ports.conf
 Listen 8080
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472011750354-wm)
+```checker
+- name: check port
+  script: |
+    #!/bin/bash
+    grep 8080 /etc/apache2/ports.conf
+  error: 没有配置 /etc/apache2/ports.conf 监听端口
+```
+
+![2-5-4](https://dn-simplecloud.shiyanlou.com/1135081472011750354-wm)
 
 接下来便是对虚拟主机的配置了:
 
 ```
 #设置站点虚拟主机的配置文件
-sudo vim /etc/apache/sites-enable/000-default.conf
+sudo vim /etc/apache2/sites-enabled/000-default.conf
 ```
 
 ```
@@ -389,17 +472,27 @@ sudo vim /etc/apache/sites-enable/000-default.conf
 </VirtualHost>
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472011878080-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep 8080 /etc/apache2/sites-enabled/000-default.conf
+  error: 没有配置 /etc/apache2/sites-enabled/000-default.conf 
+```
+
+![2-5-6](https://dn-simplecloud.shiyanlou.com/1135081472011878080-wm)
 
 然后我们保存配置，重启 apache 服务，在分别来访问 `127.0.0.1:80` 与 `127.0.0.1:8080` 这两个地址，可以得到这样我们所预期的结果：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472011878080-wm)
+![2-5-7](https://dn-simplecloud.shiyanlou.com/1135081472011878080-wm)
+
+### 5.3 基于域名的虚拟主机
 
 除了以上的两种方式我们还可基于域名来做虚拟主机的配置，同样我们需要对我们的站点配置文件做这样的修改。
 
 ```
 #设置站点虚拟主机的配置文件
-sudo vim /etc/apache/sites-enable/000-default.conf
+sudo vim /etc/apache2/sites-enabled/000-default.conf
 ```
 
 ```
@@ -417,7 +510,15 @@ sudo vim /etc/apache/sites-enable/000-default.conf
 
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472012536104-wm)
+```checker
+- name: check config
+  script: |
+    #!/bin/bash
+    grep shiyanlou1 /etc/apache2/sites-enabled/000-default.conf
+  error: /etc/apache2/sites-enabled/000-default.conf 配置不对
+```
+
+![2-5-8](https://dn-simplecloud.shiyanlou.com/1135081472012536104-wm)
 
 当然这样的域名是不存在的，我们需要在 hosts 文件中添加该域名的地址映射。
 
@@ -432,11 +533,19 @@ sudo vim /etc/hosts
 192.168.42.2 www.shiyanlou1.com
 ```
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472012737755-wm)
+```checker
+- name: check host
+  script: |
+    #!/bin/bash
+    grep shiyanlou1 /etc/hosts
+  error: 没有配置 /etc/hosts 文件
+```
+
+![2-5-9](https://dn-simplecloud.shiyanlou.com/1135081472012737755-wm)
 
 同样完成之后我们需要重启 apache 服务，我们可以得到这样的效果：
 
-![实验楼](https://dn-simplecloud.shiyanlou.com/1135081472012303942-wm)
+![2-5-10](https://dn-simplecloud.shiyanlou.com/1135081472012303942-wm)
 
 ## 实验总结
 

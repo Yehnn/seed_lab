@@ -1,10 +1,16 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # PHP与Mysql 配置
 
 ## 一、实验简介
 
-通过上一节的实验，我们学会了如何去配置 Apache 环境。使用一些 apache 意想不到的功能，这节将带领大家简单的了解一下 PHP 与 Mysql 的配置参数。
+通过上一节的实验，我们学会了如何去配置 Apache 环境。使用一些 apache 意想不到的功能，这节将带领大家简单地了解一下 PHP 与 Mysql 的配置参数。
 
-### 1.1 相关知识点
+#### 相关知识点
 
 - PHP 常用配置
 - MySQL 一般优化配置
@@ -18,7 +24,7 @@ PHP 的配置文件在 `/etc/php5/` 中，并且使用 apt-get 装的话，针�
 - fpm: 专门针对在 FastCGI process manager对 php 使用时的配置文件
 - mods-available: 专门针对在其他程序模块中的配置
 
-并且我们还可以在每个文件夹下面看见 php.ini 文件与 conf.d 文件夹。由此我们可以得知 php 的配置文件氛围两部分：
+并且我们还可以在每个文件夹下面看见 php.ini 文件与 conf.d 文件夹。由此我们可以得知 php 的配置文件分为两部分：
 
 - php.ini 这个主要的配置文件；
 - conf.d 这个文件夹下面的配置文件是额外的配置文件，配置某个扩展的配置文件。
@@ -54,7 +60,7 @@ PHP 的配置文件在 `/etc/php5/` 中，并且使用 apt-get 装的话，针�
     mysql.allow_persistent = On #允许持久连接
     mysql.cache_size = 2000  #缓存大小
     mysql.max_persistent = -1  #持久连接的最大数目 -1不限制
-    mysql.max_links = -1  #最大链接 
+    mysql.max_links = -1  #最大连接 
     mysql.connect_timeout = 60  #连接超时时间
 
 	#session相关
@@ -86,7 +92,7 @@ mysql 的配置文件在这个文件中 `/etc/mysql/my.cnf`。
 
 在配置 MySQL 之前我们先要了解到 MyISAM 与 InnoDB 两个常用的表存储引擎，
 
-> **MyISAM**是MySQL关系数据库管理系统的默认储存引擎。这种MySQL表存储结构从旧的ISAM（Indexed Sequential Access Method，MySQL5.0已经不支持ISAM了）代码扩展出许多有用的功能。在新版本的MySQL中，InnoDB引擎由于其对事务，参照完整性，以及更高的并发性等优点开始广泛的取代MyISAM。
+> **MyISAM**是MySQL关系数据库管理系统的默认储存引擎。这种MySQL表存储结构从旧的ISAM（Indexed Sequential Access Method，MySQL5.0已经不支持ISAM了）代码扩展出许多有用的功能。在新版本的MySQL中，InnoDB引擎由于其对事务，参照完整性，以及更高的并发性等优点开始广泛地取代MyISAM。
 
 > **InnoDB**是MySQL存储引擎。MySQL 5.5和以后使用它的默认。它提供标准的符合 ACID 事务特性，随着国外重点支持（声明引用完整性）。它包括作为标准在大多数双星由MySQL AB分布，唯一的例外是一些OEM版本。
 
@@ -107,7 +113,7 @@ InnoDB将所有缓存都放在 “buffer pool” 中, 缓存池的大小通过 i
 
 MySQL 5.5(以及带插件的 5.1版本)允许您指定 块大小(block size)为 8 KB或4 KB. MySQL 5.5可以有多个缓冲池,因为每个缓存池有一个互斥锁, 所以设置多个池可以缓解一些互斥锁瓶颈。
 
-一般情况下主机不是太差，默认配置即可，但是也要根据站点的情况作相应的处理，具体的一些调优参数大家可以参看这篇[博文](http://www.ha97.com/4110.html)。
+一般情况下主机不是太差，默认配置即可，但是也要根据站点的情况做相应的处理，具体的一些调优参数大家可以参看这篇[博文](http://www.ha97.com/4110.html)。
 
 ##四、 LAMP常用调优方法
 
