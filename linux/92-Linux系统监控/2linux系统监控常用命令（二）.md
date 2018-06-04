@@ -12,7 +12,7 @@ enable_checker: true
 
 ### 1.服务管理程序：sysv-rc-conf
 
-　　Linux 系统任何时候都运行在一个指定的运行级上，并且不同的运行级的程序和服务都不同，所要完成的工作和要达到的目的都不同，系统可以在这些运行级之间进行切换，以完成不同的工作。sysv-rc-conf是一个强大的服务管理程序，用于查看程序和服务的运行级别。
+Linux 系统任何时候都运行在一个指定的运行级上，并且不同的运行级的程序和服务都不同，所要完成的工作和要达到的目的都不同，系统可以在这些运行级之间进行切换，以完成不同的工作。sysv-rc-conf是一个强大的服务管理程序，用于查看程序和服务的运行级别。
 
 Ubuntu 的系统运行级别：
 ```
@@ -33,20 +33,20 @@ $ sudo sysv-rc-conf
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430792194009/wm)
+![2-1](https://doc.shiyanlou.com/userid42227labid973time1430792194009/wm)
 
-　　操作界面十分简洁，你可以用鼠标点击，也可以用键盘方向键定位，用空格键选择在启动级中开启或关闭程序，用Ctrl+N翻下一页，用Ctrl+P翻上一页，用Q退出。
+操作界面十分简洁，你可以用鼠标点击，也可以用键盘方向键定位，用空格键选择在启动级中开启或关闭程序，用Ctrl+N翻下一页，用Ctrl+P翻上一页，用Q退出。
 
-　　对程序进行启动级的操作也可以用update-rc.d命令实现。
+对程序进行启动级的操作也可以用update-rc.d命令实现。
 
-　　例如：删除apache2随机器启动的服务,并查看其它命令选项
+例如：删除apache2随机器启动的服务,并查看其它命令选项
 ```
 $ sudo update-rc.d -f apache2 remove
 $ sudo update-rc.d 
 ```
 
 ### 2. 监视每个进程使用的网络带宽：NetHogs
-　　NetHogs是一个开放源源代码的很小程序（与Linux下的top命令很相似），它密切监视着系统上每个进程的网络活动。同时还追踪着每个程序或者应用所使用的实时网络带宽。
+NetHogs是一个开放源源代码的很小程序（与Linux下的top命令很相似），它密切监视着系统上每个进程的网络活动。同时还追踪着每个程序或者应用所使用的实时网络带宽。
 
 ```
 # 安装 nethogs
@@ -65,7 +65,7 @@ $ sudo nethogs
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430793208313/wm)
+![2-2-1](https://doc.shiyanlou.com/userid42227labid973time1430793208313/wm)
 
 用Q退出nethogs的界面。
 
@@ -78,12 +78,12 @@ $ sudo su
 ```
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430793603418/wm)
+![2-2-2](https://doc.shiyanlou.com/userid42227labid973time1430793603418/wm)
 
 打开主文件夹，查看nethogs.txt里面的内容。(由于实验环境对字符的支持问题，可能会出现乱码)。
 
 ### 3. 监视网络带宽：iftop
-　　iftop是另一个在控制台运行的开放源代码系统监控应用，它显示了系统上通过网络接口的应用网络带宽使用（源主机或者目的主机）的列表，这个列表定期更新。iftop用于监视网络的使用情况，而'top'用于监视CPU的使用情况。iftop是'top'工具系列中的一员，它用于监视所选接口，并显示两个主机间当前网络带宽的使用情况。
+iftop是另一个在控制台运行的开放源代码系统监控应用，它显示了系统上通过网络接口的应用网络带宽使用（源主机或者目的主机）的列表，这个列表定期更新。iftop用于监视网络的使用情况，而'top'用于监视CPU的使用情况。iftop是'top'工具系列中的一员，它用于监视所选接口，并显示两个主机间当前网络带宽的使用情况。
 ```
 $ sudo apt-get install iftop
 
@@ -91,7 +91,7 @@ $ sudo iftop
 ```
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430794164800/wm)
+![2-3-1](https://doc.shiyanlou.com/userid42227labid973time1430794164800/wm)
 
 
 界面相关说明:
@@ -121,7 +121,7 @@ rates：分别表示过去 2s 10s 40s 的平均流量
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430794475596/wm)
+![2-3-2](https://doc.shiyanlou.com/userid42227labid973time1430794475596/wm)
 
 
 ### 4. System Monitor（图形化监视）
@@ -136,23 +136,21 @@ $ gnome-system-monitor
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430811338557/wm)
-
-----------
+![2-4-1](https://doc.shiyanlou.com/userid42227labid973time1430811338557/wm)
 
 
 资源监控是对历史资源使用的统计，将其绘制成图展现，从图中可以看出CPU使用率的变化，存储占用率变化，带宽占用率变化。
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430811346901/wm)
+![2-4-2](https://doc.shiyanlou.com/userid42227labid973time1430811346901/wm)
 
 ----------
 
 
 由于实验环境的原因，文件监控包括hosts，hostname等。
 
-![](https://doc.shiyanlou.com/userid42227labid973time1430811325871/wm)
+![2-4-3](https://doc.shiyanlou.com/userid42227labid973time1430811325871/wm)
 
 ----------
 
@@ -161,7 +159,7 @@ $ gnome-system-monitor
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid973time1430811858641/wm)
+![2-4-4](https://doc.shiyanlou.com/userid42227labid973time1430811858641/wm)
 
 ###参考文档：
 

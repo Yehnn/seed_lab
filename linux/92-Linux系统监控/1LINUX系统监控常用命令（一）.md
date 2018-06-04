@@ -26,7 +26,7 @@ $ top
 ```
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430721156300/wm)
+![1-2.1-1](https://doc.shiyanlou.com/userid42227labid972time1430721156300/wm)
 
 在图中依次可以看到进程PID,进程用户，CPU使用率，内存使用率、交换内存使用大小等等信息。top命令提供了实时的对系统处理器的状态监视.它将显示系统中CPU最“敏感”的任务列表.
 
@@ -37,7 +37,7 @@ $ man top
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430721622675/wm)
+![1-2.1-2](https://doc.shiyanlou.com/userid42227labid972time1430721622675/wm)
 
 ### 2.2 虚拟内存监控vmstat
 
@@ -52,7 +52,7 @@ $ vmstat 2 2
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430722488865/wm)
+![1-2.2-1](https://doc.shiyanlou.com/userid42227labid972time1430722488865/wm)
 
 
 如果要求vmstat每2秒采集数据，一直采集，直到结束程序（Ctrl+c）。则省略采集次数：
@@ -99,7 +99,7 @@ $ lsof
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430723481770/wm)
+![1-2.3](https://doc.shiyanlou.com/userid42227labid972time1430723481770/wm)
 
 此命令运行的结果较长，截图部分。
 
@@ -128,7 +128,7 @@ $ sudo tcpdump -i eth0 -c 3
 操作截图：
 
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430724440342/wm)
+![1-2.4](https://doc.shiyanlou.com/userid42227labid972time1430724440342/wm)
 
 
 ###2.5 网络状态统计：netstat
@@ -149,9 +149,9 @@ $ netstat -i　
 ```
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430725014841/wm)
+![1-2.5-1](https://doc.shiyanlou.com/userid42227labid972time1430725014841/wm)
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430725052309/wm)
+![1-2.5-2](https://doc.shiyanlou.com/userid42227labid972time1430725052309/wm)
 
 
 ###2.6 进程监控：Htop 
@@ -165,7 +165,7 @@ $ sudo apt-get install htop
 $ htop
 ```
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430725413865/wm)
+![1-2.6-1](https://doc.shiyanlou.com/userid42227labid972time1430725413865/wm)
 
 ###2.7 监控Linux磁盘I/O ：iotop
 
@@ -184,7 +184,7 @@ $ iostat
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430728053366/wm)
+![1-2.8-1](https://doc.shiyanlou.com/userid42227labid972time1430728053366/wm)
 
 各项含义：
 avg-cpu段:
@@ -232,9 +232,9 @@ $ sudo iptraf
 
 操作截图（**注意图片中下面的提示操作信息。**）：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430728942721/wm)
+![1-2.9-1](https://doc.shiyanlou.com/userid42227labid972time1430728942721/wm)
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid972time1430728963781/wm)
+![1-2.9-2](https://doc.shiyanlou.com/userid42227labid972time1430728963781/wm)
 
 
 查看命令帮助信息,根据需要选择合适的参数，进行监控。此处便不再赘述命令参数：

@@ -77,7 +77,7 @@ if __name__=='__main__':
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431321343703/wm)
+![4-3.1-1](https://doc.shiyanlou.com/userid42227labid999time1431321343703/wm)
 
 
 运行此python文件：
@@ -89,7 +89,7 @@ $ python cpu.py
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431321430227/wm)
+![4-3.1-2](https://doc.shiyanlou.com/userid42227labid999time1431321430227/wm)
 
 
 程序简要解析：
@@ -134,7 +134,7 @@ print "loadavg",load_stat()['lavg_15']
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431321956113/wm)
+![4-3.2-1](https://doc.shiyanlou.com/userid42227labid999time1431321956113/wm)
 运行结果脚本：
 ```
 $ python sys_load.py
@@ -142,7 +142,7 @@ $ python sys_load.py
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431321962740/wm)
+![4-3.2-2](https://doc.shiyanlou.com/userid42227labid999time1431321962740/wm)
 
 
 脚本简要解析：
@@ -193,7 +193,7 @@ if __name__=='__main__':
 操作截图：
 
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431322304225/wm)
+![4-3.3-1](https://doc.shiyanlou.com/userid42227labid999time1431322304225/wm)
 
 
 运行脚本：
@@ -203,7 +203,7 @@ $ Python mem.py
 
 操作截图：l
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431322435024/wm)
+![4-3.3-2](https://doc.shiyanlou.com/userid42227labid999time1431322435024/wm)
 
 代码简要解析：
 
@@ -272,7 +272,7 @@ while   True:
 ```
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431324218776/wm)
+![4-3.4-1](https://doc.shiyanlou.com/userid42227labid999time1431324218776/wm)
 
 运行结果：
 ```
@@ -281,7 +281,7 @@ while   True:
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid999time1431324130818/wm)
+![4-3.4-2](https://doc.shiyanlou.com/userid42227labid999time1431324130818/wm)
 
 对于有多个网卡啊主机，可以利用如下命令查看其它网卡流量,例如 eth1，由于本实验环境只有一个网卡，所有只能跟踪eth0。
 ```

@@ -47,20 +47,20 @@ $ sudo apt-get install nagios3 apache2 php5 libapache2-mod-php5 postfix
 
 点击“TAB”键选择确定：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431307259433/wm)
+![3-1.1-1](https://doc.shiyanlou.com/userid42227labid998time1431307259433/wm)
 
 回车确定：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431307295708/wm)
+![3-1.1-2](https://doc.shiyanlou.com/userid42227labid998time1431307295708/wm)
 
 填写邮件服务器域名，此处选择默认主机名
 ，直接“TAB+回车”确定：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431307392587/wm)
+![3-1.1-3](https://doc.shiyanlou.com/userid42227labid998time1431307392587/wm)
 
 填写Nagios管理员密码：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431307468079/wm)
+![3-1.1-4](https://doc.shiyanlou.com/userid42227labid998time1431307468079/wm)
 
 
 ### 1.2 安装完毕,查看配置文件分布
@@ -74,7 +74,7 @@ $ tree
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431307626805/wm)
+![3-1.2](https://doc.shiyanlou.com/userid42227labid998time1431307626805/wm)
 
 ### 1.3 访问测试
 
@@ -101,12 +101,12 @@ http://127.0.0.1/nagios3/
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431308045851/wm)
+![3-1.3-1](https://doc.shiyanlou.com/userid42227labid998time1431308045851/wm)
 
 ----------
 
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431308107770/wm)
+![3-1.3-2](https://doc.shiyanlou.com/userid42227labid998time1431308107770/wm)
 
 
 ## 二、使用
@@ -115,7 +115,7 @@ http://127.0.0.1/nagios3/
 
 操作截图：
 
-![图片描述信息](https://doc.shiyanlou.com/userid42227labid998time1431310641299/wm)
+![3-2](https://doc.shiyanlou.com/userid42227labid998time1431310641299/wm)
 
 当然根据左边的目录可查看相应的部分。
 
