@@ -1,11 +1,16 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
+
 ## 一、实验说明
 
 本节实验为 Git 入门第二个实验，继续练习最常用的git命令。
 
+#### 实验准备
 
-### 1.1 实验准备
-
-在进行该实验之前，可以先clone一个练习项目`gitproject`:
+在进行该实验之前，可以先 clone 一个练习项目`gitproject` :
 
 ```
 $ git clone https://github.com/shiyanlou/gitproject
@@ -13,10 +18,18 @@ $ git clone https://github.com/shiyanlou/gitproject
 
 本节中的实验操作都是在该项目中完成。
 
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/gitproject
+  error: 没有克隆仓库
+```
 ##二、比较内容
 
+下面将学习如何比较提交，分支等内容。
 
-###1.比较提交 - Git Diff
+###2.1 比较提交 - Git Diff
 
 现在我们对项目做些修改：
 
@@ -26,6 +39,19 @@ $ cd gitproject
 $ echo "new line" >> README.md
 # 添加新的文件file1
 $ echo "new file" >> file1
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/gitproject/README.md
+  error: 没有创建文件 README.md
+- name: check content
+  script: |
+    #!/bin/bash
+    grep file /home/shiyanlou/gitproject/README.md
+  error: README.md 中没有添加指定内容
 ```
 
 使用`git status`查看当前修改的状态：
@@ -104,7 +130,7 @@ $ git commit -m 'update code'
 提交后`git diff`与`git diff --cached`都不会有任何输出了。
 
 
-###2.比较分支
+###2.2 比较分支
 
 可以用 git diff 来比较项目中任意两个分支的差异。
 
@@ -143,9 +169,9 @@ index 0000000..80e7991
 +new file2
 ```
 
-git diff 是一个难以置信的有用的工具，可以找出你项目上任意两个提交点间的差异。可以使用`git help diff`详细查看其他参数和功能。
+`git diff` 是一个难以置信的有用的工具，可以找出你项目上任意两个提交点间的差异。可以使用`git help diff`详细查看其他参数和功能。
 
-###3.更多的比较选项
+###2.3 更多的比较选项
 
 如果你要查看当前的工作目录与另外一个分支的差别，你可以用下面的命令执行:
 
@@ -197,13 +223,15 @@ $ git diff test --stat
 
 ##三、分布式的工作流程
 
-###1.分布式的工作流程
+下面我们学习 git 的分布式工作流程。
 
-你目前的项目在`/home/shiyanlou/gitproject`目录下，这是我们的git 仓库(repository)，另一个用户也想与你协作开发。他的工作目录在这台机器上，如何让他提交代码到你的git仓库呢？
+###3.1 分布式的工作流程
+
+你目前的项目在`/home/shiyanlou/gitproject`目录下，这是我们的git 仓库(repository)，另一个用户也想与你协作开发。他的工作目录在这台机器上，如何让他提交代码到你的 git 仓库呢？
 
 首先，我们假设另一个用户也用shiyanlou用户登录，只是工作在不同的目录下开发代码，实际工作中不太可能发生，大部分情况都是多个用户，这个假设只是为了让实验简化。
 
-该用户需要从git仓库进行克隆：
+该用户需要从 git 仓库进行克隆：
 
 ```
 # 进入到临时目录
@@ -215,9 +243,17 @@ $ ls -l myrepo
 -rw-rw-r-- 1 shiyanlou shiyanlou  9 Dec 22 08:24 file1
 ```
 
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/myrepo
+  error: 没有克隆仓库为 myrepo
+```
+
 这就建了一个新的叫"myrepo"的目录，这个目录里包含了一份gitproject仓库的克隆。这份克隆和原始的项目一模一样，并且拥有原始项目的历史记录。
 
-在myrepo做了一些修改并且提交:
+在 myrepo 做了一些修改并且提交:
 
 
 ```
@@ -229,6 +265,14 @@ $ echo "newcontent" > newfile
 # 提交修改
 $ git add newfile
 $ git commit -m "add newfile"
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+    ls /home/shiyanlou/myrepo/newfile
+  error: 没有创建文件 newfile
 ```
 
 myrepo修改完成后，如果我们想合并这份修改到`gitproject`的git仓库该如何做呢？
@@ -252,7 +296,7 @@ Fast-forward
  create mode 100644 newfile
 
 # 查看当前目录文件
-$ ls                                                                                                    [8:28:02]
+$ ls                                                                                         
 README.md  file1  newfile
 ```
 
@@ -338,7 +382,7 @@ $ git clone localhost:/home/shiyanlou/gitproject test
 
 这个命令会提示你输入shiyanlou用户的密码，用户密码随机，可以点击屏幕上方的`SSH`按钮查看。
 
-###2.公共Git仓库
+###3.2 公共Git仓库
 
 开发过程中，通常大家都会使用一个公共的仓库，并clone到自己的开发环境中，完成一个阶段的代码后可以告诉目标仓库的维护者来`pull`自己的代码。
 
@@ -355,7 +399,7 @@ $ git pull /path/to/other/repository
 $ git clone ssh://yourhost/~you/repository
 ```
 
-###3.将修改推到一个公共仓库
+###3.3 将修改推到一个公共仓库
 
 通过http或是git协议，其它维护者可以通过远程访问的方式抓取(fetch)你最近的修改，但是他们 没有写权限。如何将本地私有仓库的最近修改主动上传到公共仓库中呢？
 
@@ -373,7 +417,7 @@ $ git push ssh://yourserver.com/~you/proj.git master
 
 `git push`命令的目地仓库可以是`ssh`或`http/https`协议访问。
 
-###4.当推送代码失败时要怎么办
+###3.4 当推送代码失败时要怎么办
 
 如果推送(push)结果不是快速向前`fast forward`，可能会报像下面一样的错误：
 
@@ -393,7 +437,9 @@ $ git push ssh://yourserver.com/~you/proj.git master
 
 ##四、Git标签
 
-###1.轻量级标签
+下面学习 git 标签相关内容。
+
+###4.1 轻量级标签
 
 我们可以用 git tag不带任何参数创建一个标签(tag)指定某个提交(commit):
 
@@ -410,6 +456,15 @@ $ git tag stable-1 8c315325
 # 查看当前所有tag
 $ git tag
 stable-1
+```
+
+```checker
+- name: check tag
+  script: |
+    #!/bin/bash
+    cd /home/shiyanlou/gitproject
+    git tag|grep stable
+  error: 没有新建标签 stable-1
 ```
 
 这样，我们可以用stable-1 作为提交 `8c315325` 的代称。
@@ -435,7 +490,7 @@ stable-2
 ```
 
 
-###2.签名的标签
+###4.2 签名的标签
 
 签名标签可以让提交和标签更加完整可信。如果你配有`GPG key`，那么你就很容易创建签名的标签。首先你要在你的 `.git/config` 或 `~/.gitconfig` 里配好key。
 
