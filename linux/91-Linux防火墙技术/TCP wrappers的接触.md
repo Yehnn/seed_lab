@@ -10,7 +10,7 @@ enable_checker: true
 
 TCP wrappers 是 Linux 中两大防护措施的其中之一，这层保护通过定义哪些主机允许或不允许连接到网络服务上来实现。TCP Wrappers为多种不同的服务提供访问把关，通过本实验我们将初试TCP wrappers的使用。
 
-### 实验涉及的知识点
+#### 实验涉及的知识点
 
 - Tcp wrappers的认识
 - Tcp wrappers的使用

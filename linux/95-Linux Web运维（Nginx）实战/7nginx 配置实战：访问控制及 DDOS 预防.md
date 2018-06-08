@@ -1,17 +1,26 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 # nginx 配置实战：访问控制及 DDOS 预防
+
 ##一、实验介绍
-### 1.1 实验内容
+#### 1.1 实验内容
 本节实验讲解了nginx的访问控制，可以有效的防治ddos工具，并有ab命令做压力测试,大家不要觉的难，其实我们要改的东西比较简单，只是前面在进行原理讲解，可以直接看实验步骤，然后回头看指令的用法
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 - nginx访问控制配置
 - ab命令
 - log排查
 
-### 1.3 适合人群
+#### 1.3 适合人群
 本节实验设计了更多的关于nginx的配置内容，更加深入的了解了nginx的功能和配置，适合运维人员或者感兴趣的同学学习
 
 ## 二、实验原理
+
+下面介绍有关实验的原理。
 
 ### 2.1 访问控制配置
 
@@ -59,8 +68,6 @@ location / {
 
 ngx\_http\_access\_module 配置允许的地址能访问，禁止的地址被拒绝。这只是很简单的访问控制，而在规则很多的情况下，使用 ngx\_http\_geo\_module 模块变量更合适。这个模块大家下来可以了解 : [ngx_http_geo_module](http://nginx.org/en/docs/http/ngx_http_geo_module.html)
 
-
-
 ### 2.2 DDOS 预防配置
 
 DDOS 的特点是分布式，针对带宽和服务攻击，也就是四层流量攻击和七层应用攻击，相应的防御瓶颈四层在带宽，七层的多在架构的吞吐量。对于七层的应用攻击，我们还是可以做一些配置来防御的，使用 nginx 的 http\_limit\_conn 和 http\_limit\_req 模块通过限制连接数和请求数能相对有效的防御。
@@ -69,8 +76,10 @@ ngx_http_limit_conn_module 可以限制单个 IP 的连接数
 
 ngx_http_limit_req_module 可以限制单个 IP 每秒请求数
 
-**配置方法：**  
-**2.2.1 限制每秒请求数**  
+**配置方法：** 
+
+#### **2.2.1 限制每秒请求数** 
+
 ngx_http_limit_req_module模块通过漏桶原理来限制单位时间内的请求数，一旦单位时间内请求数超过限制，就会返回503错误。配置需要在两个地方设置：
 
 nginx.conf的http段内定义触发条件，可以有多个条件
@@ -89,12 +98,13 @@ http {
      }
 ```
 `参数说明`  
-- $binary_remote_addr  二进制远程地址,这个参数就些这个就好了，不需要改  
-- zone=one:10m    定义zone名字叫one，并为这个zone分配10M内存，用来存储会话（二进制远程地址），1m内存可以保存16000会话
-- rate=10r/s;     限制频率为每秒10个请求
-- burst=5         允许超过频率限制的请求数不多于5个，假设1、2、3、4秒请求为每秒9个，那么第5秒内请求15个是允许的，反之，如果第一秒内请求15个，会将5个请求放到第二秒，第二秒内超过10的请求直接503，类似多秒内平均速率限制。
-- nodelay         超过的请求不被延迟处理，设置后15个请求在1秒内处理。
-  **2.2.2 限制 IP 连接数**
+- `$binary_remote_addr`  二进制远程地址,这个参数就些这个就好了，不需要改  
+- `zone=one:10m`    定义zone名字叫one，并为这个zone分配10M内存，用来存储会话（二进制远程地址），1m内存可以保存16000会话
+- `rate=10r/s;`     限制频率为每秒10个请求
+- `burst=5`   允许超过频率限制的请求数不多于5个，假设1、2、3、4秒请求为每秒9个，那么第5秒内请求15个是允许的，反之，如果第一秒内请求15个，会将5个请求放到第二秒，第二秒内超过10的请求直接503，类似多秒内平均速率限制。
+- `nodelay`         超过的请求不被延迟处理，设置后15个请求在1秒内处理。
+
+#### **2.2.2 限制 IP 连接数**
 
 上一章讲过，我们就直接写出来
 
@@ -110,7 +120,7 @@ http {
            }
      }
 ```
-** 2.2.3白名单设置**
+####  **2.2.3 白名单设置** 
 
 http\_limit\_conn 和 http\_limit\_req 模块限制了单 IP 单位时间内的连接和请求数，但是如果 Nginx 前面有 lvs 或者 haproxy 之类的负载均衡或者反向代理，nginx 获取的都是来自负载均衡的连接或请求，这时不应该限制负载均衡的连接和请求，就需要 geo 和 map 模块设置白名单：
 
@@ -143,7 +153,7 @@ geo 模块定义了一个默认值是 1 的变量 whiteiplist，当在 ip 在白
 下面我们就来测一下刚刚的配置是否起到了作用。
 
 ### 3.1 安装所有测试所需的软件
-（apt 安装 php5-fpm，apt 安装 apach-u）
+（apt 安装 php5-fpm，apt 安装 apache2-utils）
 
 ```
 sudo apt-get update # 更新环境
@@ -156,8 +166,32 @@ sudo apt-get install php5-fpm
 
 安装好以后 分别启动 php5 和 nginx。
 
+```
+sudo service nginx start
+sudo service php5-fpm start
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+    ps -ef |grep -v grep|grep nginx
+  error: 没有启动 nginx
+- name: check php
+  script: |
+    #!/bin/bash
+    cat /etc/nginx/sites-available/default|grep -v '#'|grep php
+    nginx -t
+  error: /etc/nginx/sites-available/default 没有配置 php
+- name: check service
+  script: |
+    #!/bin/bash
+    ps -ef|grep -v grep|grep php5
+  error: 没有启动php5-fpm
+```
 
 ### 3.2 测试访问
+
 写一个测试的 php 文件，修改 nginx 配置文件，使其能正常访问。
 
 在`/usr/share/nginx/html`目录下写一个 test.php,内容如下：
@@ -166,6 +200,7 @@ sudo apt-get install php5-fpm
 
 ![图片描述信息](https://doc.shiyanlou.com/userid20406labid453time1422935650428/wm)
 
+> 如果显示 `404 notfound` 则是因为之前配置过端口号 9000，在访问时输入 `localhost:9000/test.php` 即可。后文同理。
 
 ### 3.3 修改配置
 
@@ -201,9 +236,10 @@ http {
 
 ```
 
+### 3.4 测试
 
+修改配置文件后，使用命令 ab 测试，。
 
-### 3.4 修改配置文件后，使用命令 ab 测试，。
 ```
 shiyanlou:/$ ab -n 10 -c 10  http://localhost/test.php
 ```
@@ -262,8 +298,6 @@ sudo tail /var/log/nginx/error.log
 2017/03/08 11:28:50 [error] 1430#0: *163 limiting requests, excess: 5.995 by zone "one", client: ::1, 
 2017/03/08 11:28:50 [error] 1430#0: *164 limiting requests, excess: 5.995 by zone "one", client: ::1, 
 ```
-
-
 
 
 ## 四、实验总结

@@ -1,21 +1,27 @@
+---
+show: step
+version: 0.1
+enable_checker: true
+---
+
 #LNMP 系统安装
 
 
 ## 一、实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 本节实验带领大家安装好`LNMP`环境，入门学习nginx，为后面的课程做准备
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 - 安装nginx
 - 安装mysql
 - 安装php
 
 ## 二、实验原理
-### 1.1 什么是 LNMP？  
+#### 什么是 LNMP？  
 首先这里要简单介绍下 LAMP 和 LNMP。这两个都是在网站服务器架构中的系统环境。
 上节中我们简单介绍过：
->**LAMP**指的是：Linux+Apache+MySQL+Perl/PHP/Python  
+>**LAMP**指的是：Linux+Apache+MySQL+Perl/PHP/Python 
 >**LNMP**指的是：Linux+Nginx+MySQL+PHP
 
 
@@ -23,14 +29,14 @@
 
 **这就是 LNMP 的组成**：
 
-![img](https://doc.shiyanlou.com/userid19824labid404time1421828735183/wm)
+![img](https://doc.shiyanlou.com/userid19824labid404time1421828735183)
 
 
 ##三、实验步骤
-###**LNMP 系统安装(L-N-M-P)**
+####**LNMP 系统安装(L-N-M-P)**
 
 **前期准备（环境要求，库依赖）**
-如果你的物理机上用 apt-get 安装了老版的 nginx，或者你的 nginx 有问题，可以使用 apt-get purge nginx 命令删除已安装的 nginx
+如果你的物理机上用 apt-get 安装了老版的 nginx，或者你的 nginx 有问题，可以使用 `sudo apt-get purge nginx` 命令删除已安装的 nginx
 
 针对后面的 nginx 源码编译安装（`如果选择 apt-get 的方式则不需要`），我们在这里会有简单的库依赖列表.需要读者参照解决。
 >**ssl**功能需要[openssl](http://www.openssl.org/source/)库
@@ -47,12 +53,13 @@ Linux 是一类 Unix 计算机操作系统的统称，是目前最流行的免�
 
 ###3.2 N(Nginx 安装)
 在 LNMP 中的作用或角色：Nginx 是一个高性能的 HTTP 和反向代理服务器，也是一个 IMAP/POP3/SMTP 代理服务器。 
-####**安装方式**
+####3.2.1 **安装方式**
 决定因素：主要针对不同人群、不同需求，对于一般新手而言 apt-get 就够了;如果你乐于折腾，需要定制，那就源码安装吧(这里只会简单叙述)。强烈建议 apt-get 直接安装
 
 ####（1）直接 apt-get 安装
 ```
-sudo apt-get install nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 ```
 ![img](https://doc.shiyanlou.com/userid19824labid404time1421838294474/wm)
 
@@ -60,11 +67,11 @@ sudo apt-get install nginx
 这里要是安装失败的，很可能就是源的问题了。现在的软件源比较完整，基本都包含了 nginx，如果源列表实在没有， 进入系统设置-软件更新切换另一个源就好了，ubuntu 官方源（国内速度较慢）、souhu 源、163 都有（都试过，最后记得 update 一下列表，不然不会生效）。ubuntu 因为安全策略，一般是禁用了 root 用户，所以每次执行命令时一般需要加上 sudo 去操作。操作过程中，小编建议在安装过程中使用 sudo 而不是直接切换到 root 用户，这样虽然表面繁琐，但是安全。
 
 ####（2）源码安装
-这个方法比较繁琐这里简单阐述下，因为 ubuntu 默认的策略是什么库都不安装，经过上面的库依赖解决，可以从中了解到 nginx 依赖的库有哪些，并且可以定制安装组建或者不安装组建，开机启动或开机不启动等等。
+这个方法比较繁琐这里简单阐述下，因为 ubuntu 默认的策略是什么库都不安装，经过上面的库依赖解决，可以从中了解到 nginx 依赖的库有哪些，并且可以定制安装组件或者不安装组件，开机启动或开机不启动等等。
 切到 /usr/local/src
 到[nginx 源](http://nginx.org/download/)下载最新
 解压编译安装就好
-####**完成安装后的测试**
+####3.2.2 **完成安装后的测试**
 所有的启动配置文件都在``/etc/init.d/nginx``这个目录下，所以相关操作都可以在这个文件夹启动命令
 这其实就是一个启动脚本
 ```
@@ -74,6 +81,14 @@ sudo /etc/init.d/nginx start
 ```
  sudo service nginx start
 ```
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+    ps -ef |grep -v grep|grep nginx
+  error: 没有启动 nginx
+```
+
 启动完毕后，打开浏览器，访问 http://localhost **一定要刷新以确认**
 
 ![img](https://doc.shiyanlou.com/userid19824labid404time1421838347800/wm)
@@ -100,74 +115,34 @@ sudo /etc/init.d/nginx restart
 sudo service nginx restart
 ```
 
-####**nginx 安装后的初级配置**
+####3.2.3 **nginx 安装后的初级配置**
 在后面的章节中，关于 nginx 的配置有较详细的讲解及实战。这里只是基础的配置
 
 ```
 sudo vim /etc/nginx/sites-available/default
 ```
-PHP 重要配置 location ~ .php$ {} ，所以要让 php 与 nginx 一起工作，就得在这个配置文件中放出这个模块。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+PHP 需要配置 `location ~ .php$ {} `，所以要让 php 与 nginx 一起工作，就得在这个配置文件中放出这个模块。
 
 
 **如图修改（54 行开始）**
 把  注释去掉-- vim技巧：ctrl+v进入列编辑，选中要删除的#，再按d删除
-![img](https://doc.shiyanlou.com/userid19824labid404time1421909940221/wm)
+![img](https://doc.shiyanlou.com/userid19824labid404time1421909940221)
 
 紧接着测试配置文件
 
 ![img](https://doc.shiyanlou.com/userid19824labid404time1421908465302/wm)
 
+```checker
+- name: check php
+  script: |
+    #!/bin/bash
+    cat /etc/nginx/sites-available/default|grep -v '#'|grep php
+    nginx -t
+  error: 配置不正确
+```
+
 测试成功以后记得重载配置文件
+
 ```
 sudo service nginx reload
 ```
@@ -182,13 +157,26 @@ sudo service nginx reload
 
 在 LNMP 中的**作用或角色**：Mysql 是一个小型关系型数据库管理系统
 mysql 的安装分为服务端与客户端
-服务端安装
+
+服务端安装(**由于实验楼环境中已经装有 Mysql。安装部分就省略掉。**)
+
 ```
 sudo apt-get install mysql-server mysql-client
 ```
-然后你会看见输入密码的界面，你只需接下来输入管理员密码就行。由于实验楼环境中已经装有 Mysql。安装部分就省略掉。需要使用`sudo service mysql start`启动 mysql，mysql 用户为`root`，密码为空。
+然后你会看见输入密码的界面，你只需接下来输入管理员密码就行。
+
+只需要在环境中使用`sudo service mysql start`启动 mysql，mysql 用户为`root`，密码为空。
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+    ps -ef|grep -v grep|grep mysql
+  error: 没有启动mysql
+```
 
 **修改 mysql 的配置文件** 
+
 ```
 sudo vim /etc/mysql/my.cnf
 ```
@@ -197,9 +185,9 @@ sudo vim /etc/mysql/my.cnf
 ![img](https://doc.shiyanlou.com/userid19824labid404time1421838626190/wm)
 
 ### 3.4 P(php5 安装)
-在 LNMP 中的作用或角色：nginx 本身不能处理 PHP，它只是个 web 服务器，当接收到请求后，如果是 php 请求，则发给 php 解释器处理，并把结果返回给客户端.php-fpm 是一个守护进程（FastCGI 进程管理器）用于替换 PHP FastCGI 的大部分附加功能，对于高负载网站是非常有用的。
+在 `LNMP` 中的作用或角色：`nginx` 本身不能处理 `PHP`，它只是个 `web` 服务器，当接收到请求后，如果是 `php` 请求，则发给 `php` 解释器处理，并把结果返回给客户端.`php-fpm` 是一个守护进程（`FastCGI` 进程管理器）用于替换 `PHP FastCGI` 的大部分附加功能，对于高负载网站是非常有用的。
 ```
-sudo apt-get install php5-fpm
+sudo apt-get install -y php5-fpm
 ```
 **安装好以后连同上面的 nginx 一同测试**
 现在创建一个探针文件保存在 /usr/share/nginx/html 目录下(**这个目录就是刚刚 nginx 配置文件中 root 目录**)，以便测试。
@@ -214,19 +202,29 @@ sudo vim /usr/share/nginx/html/phpinfo.php
 sudo service php5-fpm start
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+    ps -ef|grep -v grep|grep php5
+  error: 没有启动php5-fpm
+```
+
 然后访问 http://localhost/phpinfo.php （**记得刷新**）
 
 接下来你就会看见：
 
 ![img](https://doc.shiyanlou.com/userid19824labid404time1421866943438/wm)
 
+### 3.5 修改各模块配置文件
 
-### 3.5 回头再修改各个模块配置文件，达到能互相支持的目的 
+回头再修改各个模块配置文件，达到能互相支持的目的
+
 **首先：**
 （1）.**要想让 php5 支持 Mysql**，还需要安装一系列的配套模块。
 在刚才打开的网页中，这是没有装模块的界面,搜索可以看出，里面没有任何 mysql 的启动信息
 
-![img](https://doc.shiyanlou.com/userid19824labid404time1421867095195/wm)
+![img](https://doc.shiyanlou.com/userid19824labid404time1421867095195)
 
 你需要安装 php5-mysql 模块
 ```
@@ -244,10 +242,11 @@ sudo service php5-fpm restart
 
 **(2).改变监听端口**
 
-在某些情况下我们需要改变服务器的端口，因为套接字是通过绑定ip端口连接的，那就只需要将刚才的 nginx 的 default（所在目录/etc/nginx/sites-available/）配置中的**端口**打开，然后改成你想要监听的端口
+在某些情况下我们需要改变服务器的端口，因为套接字是通过绑定 ip 端口连接的，那就只需要将刚才的 nginx 的 `default`（所在目录`/etc/nginx/sites-available/`）配置中的**端口**打开，然后改成你想要监听的端口
 
-**这是 nginx 的 default**  
-/etc/nginx/sites-available/default
+**这是 nginx 的 default** 
+
+`/etc/nginx/sites-available/default`
 
 ```
 server {
@@ -270,13 +269,20 @@ sudo service nginx reload
 接下来重启 nginx 和 php 就好了
 ```
 sudo service nginx restart
-
 ```
+```checker
+- name: check nginx port
+  script: |
+    #!/bin/bash
+    netstat -lunat|grep 9000
+  error: 监听端口未改变或者没有重启 nginx
+```
+
 好了以后直接刷新刚才的页面 http://localhost:9000/phpinfo.php （**记得刷新**）就完成了
 
 
 ##四、实验总结
-到这里 LNMP 的总体基本框架也就搭建好了，相信你已经对整个框架已经有所了解，边看边动手会学的更多哦。
+到这里 LNMP 的总体基本框架也就搭建好了，相信你已经对整个框架已经有所了解，边看边动手会学得更多哦。
 ####`注意事项`
 1. 如果运行不正常，用service nginx status查看运行状态
 2. 启动/重启/关闭 nginx记得加sudo，不然失败
