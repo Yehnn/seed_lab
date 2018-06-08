@@ -1,22 +1,37 @@
+<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # HAProxy + Keepalived 搭建高可用负载系统 
 
 ## 1. 实验介绍
 
+<<<<<<< HEAD
 #### 1.1 实验内容
 
 在本实验中我们将为大家介绍另一款与 LVS 功能类似的软件--HAProxy，通过 HAproxy 与 Keepalived 的联合，搭建高可用服务。
 
 #### 1.2 实验知识点
+=======
+### 1.1 实验内容
+
+在本实验中我们将为大家介绍另一款与 LVS 功能类似的软件--HAProxy，通过 HAproxy 与 Keepalived 的联合，搭建高可用服务。
+
+### 1.2 实验知识点
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 + HAProxy 工具简介
 + HAProxy + Keepalived 搭建高可用服务
 
+<<<<<<< HEAD
 #### 1.3 推荐阅读
+=======
+### 1.3 推荐阅读
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - [HAProxy 官方文档](http://www.haproxy.org/#desc)
 
@@ -42,7 +57,11 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 
 ## 3. HAproxy + Keepalived 实验说明
 
+<<<<<<< HEAD
 #### 3.1 环境介绍
+=======
+### 3.1 环境介绍
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 整个集群系统的结构拓扑图如下所示：
 
@@ -81,7 +100,11 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 
 一旦 HAProxy-master 发生故障，Keepalived 会将负载请求任务切换到 HAProxy-backup 服务器，实现负载均衡的高可用。
 
+<<<<<<< HEAD
 #### 3.2 实验步骤
+=======
+### 3.2 实验步骤
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 主要有以下的步骤：
 
@@ -91,7 +114,11 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 - 配置 Keepalived 实现高可用的负载调度器
 - 分别测试负载负载均衡的可用性以及负载调度器的可靠性
 
+<<<<<<< HEAD
 #### 3.3 测试步骤
+=======
+### 3.3 测试步骤
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 通过这样的方式来测试我们内容的分发与 keepalived 的高可用：
 
@@ -101,8 +128,11 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 
 ## 4. HAproxy + Keepalived 实验
 
+<<<<<<< HEAD
 下面我们将会开始 HAproxy + Keepalived 实验。
 
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 4.1 创建服务器集群
 
 通过如下的命令创建的我们的 container，按照顺序启动才能与我们所罗列的自列表中的 IP 地址相同：

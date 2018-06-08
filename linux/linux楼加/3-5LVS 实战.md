@@ -1,27 +1,41 @@
+<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # LVS 实战
 
 ## 1. 实验介绍
 
+<<<<<<< HEAD
 #### 1.1 实验简介
+=======
+### 1.1 实验简介
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 在前面的实验中，我们介绍了关于 LVS 的相关知识，LVS 的工作原理，以及 LVS 实现虚拟服务器的三种 IP 负载方式：通过 NAT 实现虚拟服务器（VS/NAT），通过 IP 隧道实现虚拟服务器（VS/TUN），通过直接路由实现虚拟服务器（VS/DR）。
 
 本节实验，我们将会在实验环境中实现 **LVS/NAT** 和 **LVS/DR** 两种实现虚拟服务器的方式。LVS/TUN 模式不是很常用，且在环境中不方便实现，这里暂时不讲解这部分实现。
 
+<<<<<<< HEAD
 #### 1.2 知识点
+=======
+### 1.2 知识点
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - LVS 实战：实现 LVS/NAT 模式
 - LVS 实战：实现 LVS/DR 模式
 
 ## 2. LVS/NAT 搭建
 
+<<<<<<< HEAD
 下面我们将会学习LVS/NAT 搭建。
 
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 2.1 集群环境搭建
 
 在本实验环境中我们没有办法为大家提供多台服务器来模拟集群环境，由此我们 docker 工具来创建多个 container 来模拟集群所需要的多台服务器。
@@ -225,8 +239,11 @@ https://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/2-1.mp4
 
 ## 3. LVS/DR 搭建
 
+<<<<<<< HEAD
 下面我们将会学习LVS/DR 搭建。
 
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 3.1 集群环境搭建
 
 与 NAT 方式相同，我们将通过 docker 来模拟我们的集群环境。

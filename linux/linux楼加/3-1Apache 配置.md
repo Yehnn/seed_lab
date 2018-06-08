@@ -65,8 +65,11 @@ Nginx 同样作为一款免费、开源的 Web 服务器软件，备受市场认
 
 ### 3.1 Apache 的安装
 
+<<<<<<< HEAD
 **在本实验环境中已经为大家安装好了 Apache，所以大家不需要再一次的安装了。**以下只是做个介绍。
 
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 Apache 的安装方式有两种：
 
 - 安装包管理工具安装
@@ -111,6 +114,10 @@ sudo apt-get install apache2
 - 通过 make 编译源码
 - 通过 make install 安装编译好的源码
 
+<<<<<<< HEAD
+=======
+在本实验环境中已经为大家安装好了 Apache，所以大家不需要再一次的安装了。
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 ### 3.2 Apache 的配置
 
@@ -120,7 +127,11 @@ sudo apt-get install apache2
 
 默认的配置文件位于 `/etc/apache2` 中（当然在 Red Hat 系列中，Apache 名为 httpd，所以位于 `/etc/httpd` 中），我们来查看配置文件夹的结构：
 
+<<<<<<< HEAD
 ![3-3-1-3.2.1](https://dn-simplecloud.shiyanlou.com/1135081517272969024-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517272969024-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - apache2.conf：是 Apache 的主要配置文件，全局的一些配置都会在这里面
 - ports.conf：是 Apache 监听端口的配置文件，由主配置文件所包含读取
@@ -170,7 +181,11 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/1-1.mp4
 cat /etc/apache2/apache2.conf |grep -v -E "^#|^$" |less
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.2-1](https://dn-simplecloud.shiyanlou.com/1135081517277963104-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517277963104-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 1.配置指令
 
@@ -234,7 +249,11 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/1-2.mp4
 less /etc/apache2/ports.conf
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.3](https://dn-simplecloud.shiyanlou.com/1135081517280940271-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517280940271-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 通过 `Listen` 指令指定了默认 Apache 启动时监听的端口是 80 端口。
 
@@ -248,7 +267,11 @@ less /etc/apache2/ports.conf
 less /etc/apache2/sites-available/000-default.conf
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4](https://dn-simplecloud.shiyanlou.com/1135081517281262914-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517281262914-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 所有的站点信息都是通过 `<VirtualHost>` 来包含。配置多个 `<VirtualHost>` 即可创建多个虚拟主机，访问多个虚拟主机可以通过这样的方式来区分：
 
@@ -263,6 +286,7 @@ less /etc/apache2/sites-available/000-default.conf
 ```bash
 sudo vim /etc/apache2/ports.conf
 ```
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -274,12 +298,19 @@ sudo vim /etc/apache2/ports.conf
 既然是基于端口配置，就需要先让我们的服务监听在新增的端口上：
 
 ![3-3-1-3.2.4-2](https://dn-simplecloud.shiyanlou.com/1135081517288920862-wm)
+=======
+
+既然是基于端口配置，就需要先让我们的服务监听在新增的端口上：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517288920862-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 2.修改站点配置文件
 
 ```bash
 sudo vim /etc/apache2/sites-available/000-default.conf
 ```
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -291,12 +322,19 @@ sudo vim /etc/apache2/sites-available/000-default.conf
 新增加一个 VirtualHost，匹配所有访问 8080 端口的请求，为了看出区别我们修改了其 DocumentRoot 目录，该配置项的作用就是指定访问该 VirtualHost 时对应文件系统的目录（为了看到完整的配置项，我们通过 grep 不显示注释内容）：
 
 ![3-3-1-3.2.4-3](https://dn-simplecloud.shiyanlou.com/1135081517289195006-wm)
+=======
+
+新增加一个 VirtualHost，匹配所有访问 8080 端口的请求，为了看出区别我们修改了其 DocumentRoot 目录，该配置项的作用就是指定访问该 VirtualHost 时对应文件系统的目录（为了看到完整的配置项，我们通过 grep 不显示注释内容）：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517289195006-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 3.在 /var/www 目录下增加新增站点默认显示内容
 
 ```bash
 echo "Hello Louplus2" | sudo tee /var/www/index.html
 ```
+<<<<<<< HEAD
 ```checker
 - name: check file
   script: |
@@ -304,6 +342,8 @@ echo "Hello Louplus2" | sudo tee /var/www/index.html
 	ls /var/www/index.html
   error: /var/www 目录下没有 index.html 文件
 ```
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 4.重新加载配置文件使其生效
 
@@ -313,7 +353,11 @@ sudo service apache2 reload
 
 5.验证
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4-4](https://dn-simplecloud.shiyanlou.com/1135081517289352930-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517289352930-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们可以看到在访问不同端口的时候，展现出了不同的内容。
 
@@ -330,7 +374,11 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/1-3.mp4
 
 1.首先访问我们的站点：
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4-5](https://dn-simplecloud.shiyanlou.com/1135081517282402122-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517282402122-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们可以看到不管是以内网地址，还是环回地址访问都没有问题。
 
@@ -351,11 +399,19 @@ sudo service apache2 reload
 
 3.验证
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4-6](https://dn-simplecloud.shiyanlou.com/1135081517282641344-wm)
 
 我们可以看到只有访问 `127.0.0.1` 的时候才能看到我们默认的展示页面，而访问其他两个地址我们只能看到目录的索引列表，这是因为我们在主配置文件中配置了 `/var/www` 目录的 Indexes，可以在没有 `index.html` 文件的时候展示目录的索引列表。若是我们删除该配置的 `Indexes` 指令项，我们就看到这样的结果了：
 
 ![3-3-1-3.2.4-7](https://dn-simplecloud.shiyanlou.com/1135081517283302603-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517282641344-wm)
+
+我们可以看到只有访问 `127.0.0.1` 的时候才能看到我们默认的展示页面，而访问其他两个地址我们只能看到目录的索引列表，这是因为我们在主配置文件中配置了 `/var/www` 目录的 Indexes，可以在没有 `index.html` 文件的时候展示目录的索引列表。若是我们删除该配置的 `Indexes` 指令项，我们就看到这样的结果了：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517283302603-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 注意：默认在没有找到相关的 `VirtualHost` 匹配的配置时访问的目录是 `/var/www`，这是默认的配置，我们可以通过这样的命令查看到：
 
@@ -363,7 +419,11 @@ sudo service apache2 reload
 apache2ctl -S
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4-8](https://dn-simplecloud.shiyanlou.com/1135081517290196511-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517290196511-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 其中的 `Main DocumenRoot` 指定的就是主访问的根目录。
 
@@ -386,6 +446,7 @@ sudo vim /etc/apache2/sites-available/000-default.conf
 
 我们增加了一个 `VirtualHost`，并配置各自的 `ServerName`，为了凸显第二个站点的区别，我们同时修改第二个站点的 `DocumentRoot`，该配置项的作用就是指定访问该 VirtualHost 时对应文件系统的目录（为了看到完整的配置项，我们通过 grep 不显示注释内容）：
 
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -395,6 +456,9 @@ sudo vim /etc/apache2/sites-available/000-default.conf
 ```
 
 ![3-3-1-3.2.4-9](https://dn-simplecloud.shiyanlou.com/1135081517287764499-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517287764499-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 2.在 /var/www 目录下增加新增站点默认显示内容
 
@@ -407,6 +471,7 @@ echo "Hello Louplus2" | sudo tee /var/www/index.html
 ```bash
 sudo vim /etc/hosts
 ```
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -416,6 +481,10 @@ sudo vim /etc/hosts
 ```
 
 ![3-3-1-3.2.4-10](https://dn-simplecloud.shiyanlou.com/1135081517287978077-wm)
+=======
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517287978077-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 4.重新加载配置文件
 
@@ -425,7 +494,11 @@ sudo service apache2 reload
 
 5.验证
 
+<<<<<<< HEAD
 ![3-3-1-3.2.4-11](https://dn-simplecloud.shiyanlou.com/1135081517288115872-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517288115872-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们可以看到，展现出了不同的信息，当然若是我们访问了一个域名也指向了该机器，但是 VirtualHost 中找不到对应的 ServerName 就会使用相关端口的第一个 VirtualHost 配置。
 
@@ -466,7 +539,11 @@ Apache 以 root 用户来运行，攻击者可以通过其来获得服务器的 
 cat /etc/apache2/envvars |grep APACHE_RUN
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.5-1](https://dn-simplecloud.shiyanlou.com/uid/276733/1517308141160.png-wm)
+=======
+![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1517308141160.png-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们可以看到运行的用户与用户组默认是以 `www-data` 用户与组来运行的。
 
@@ -474,7 +551,11 @@ cat /etc/apache2/envvars |grep APACHE_RUN
 
 当我们访问一个不存在的页面或者遇到后端服务崩溃的时候我们会看到一个错误页面，例如：
 
+<<<<<<< HEAD
 ![3-3-1-3.2.5-2](https://dn-simplecloud.shiyanlou.com/1135081517296399899-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517296399899-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们访问了一个不存在的页面，给我提示了 `Not Found` 错误信息，同时在下方中显示了我 Apache 的版本信息，与我使用的系统版本。
 
@@ -484,7 +565,11 @@ cat /etc/apache2/envvars |grep APACHE_RUN
 grep -R ServerSignature /etc/apache2/
 ```
 
+<<<<<<< HEAD
 ![3-3-1-3.2.5-3](https://dn-simplecloud.shiyanlou.com/1135081517296794630-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517296794630-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们可以看到在 `conf-available/security.conf` 中该配置项是打开的，我们修改该配置项：
 
@@ -494,6 +579,7 @@ sudo vim /etc/apache2/conf-available/security.conf
 
 将该配置的 on 改成 off：
 
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -507,6 +593,13 @@ sudo vim /etc/apache2/conf-available/security.conf
 然后通过 `sudo service apache2 reload` 使我们的配置生效，我们再来看错误的页面变化：
 
 ![3-3-1-3.2.5-5](https://dn-simplecloud.shiyanlou.com/1135081517297093942-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517297033204-wm)
+
+然后通过 `sudo service apache2 reload` 使我们的配置生效，我们再来看错误的页面变化：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517297093942-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 3.Apache 的访问控制
 
@@ -540,6 +633,7 @@ sudo htpasswd -c /var/www/.htpasswd shiyanlou
 ```bash
 sudo vim /etc/apache2/apache2.conf
 ```
+<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -549,6 +643,10 @@ sudo vim /etc/apache2/apache2.conf
 ```
 
 ![3-3-1-3.2.5-6](https://dn-simplecloud.shiyanlou.com/1135081517301122088-wm)
+=======
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517301122088-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 增加了 Auth 模块相关的配置：
 
@@ -562,7 +660,11 @@ sudo vim /etc/apache2/apache2.conf
 
 3.验证
 
+<<<<<<< HEAD
 ![3-3-1-3.2.5-7](https://dn-simplecloud.shiyanlou.com/1135081517301386635-wm)
+=======
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517301386635-wm)
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 这样我们在登录的时候就需要提供用户名密码了。
 

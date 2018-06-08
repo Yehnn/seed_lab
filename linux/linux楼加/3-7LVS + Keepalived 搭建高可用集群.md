@@ -1,23 +1,38 @@
+<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # LVS + Keepalived 搭建高可用集群
 
 ## 1. 实验介绍
 
+<<<<<<< HEAD
 #### 1.1 实验内容
 
 本节实验中，我们将学习如何使用 LVS(Linux Virtual Server) 搭配高可用集群软件 Keepalived 共同搭建高可用性集群系统。LVS 可以实现后端服务器的负载均衡，Keepalived 则可以实现调度器的高可用，防止单点故障。
 
 #### 1.2 实验知识点
+=======
+### 1.1 实验内容
+
+本节实验中，我们将学习如何使用 LVS(Linux Virtual Server) 搭配高可用集群软件 Keepalived 共同搭建高可用性集群系统。LVS 可以实现后端服务器的负载均衡，Keepalived 则可以实现调度器的高可用，防止单点故障。
+
+### 1.2 实验知识点
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - LVS/DR + Keepalived 搭建与配置
 
 ## 2. LVS/DR + Keepalived 实验说明
 
+<<<<<<< HEAD
 #### 2.1 环境介绍
+=======
+### 2.1 环境介绍
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 LVS/DR + Keepalived 是再原来的 LVS/DR 之上做的扩展，所以是在原来的基础之上增加了一个 LoadBalancer，环境结构如下：
 
@@ -29,7 +44,11 @@ LVS/DR + Keepalived 是再原来的 LVS/DR 之上做的扩展，所以是在原�
 
 宿主机模拟我们的客户端，用浏览器来访问。两个 Load Balancer 作为我们的 VRRP 组。
 
+<<<<<<< HEAD
 #### 2.2 实验步骤
+=======
+### 2.2 实验步骤
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 我们将通过这样的一些步骤来完成此次的实验：
 
@@ -46,7 +65,11 @@ LVS/DR + Keepalived 是再原来的 LVS/DR 之上做的扩展，所以是在原�
     + 启动 Keepalived 使配置生效
 - 测试实验效果
 
+<<<<<<< HEAD
 #### 2.3 测试步骤
+=======
+### 2.3 测试步骤
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - LVS 成功测试一：我们能够通过 VIP 访问我们的 Nginx 站点，经过多次的刷新我们能够访问另一个站点的内容（以显示的内容以作区分，因为负载并不高，所以需要很多次刷新，点击地址栏，按住 F5 不放）
 
@@ -56,8 +79,11 @@ LVS/DR + Keepalived 是再原来的 LVS/DR 之上做的扩展，所以是在原�
 
 ## 3. LVS/DR + Keepalived 实验
 
+<<<<<<< HEAD
 下面我们将会开始 LVS/DR + Keepalived 实验。
 
+=======
+>>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 3.1 配置宿主机
 
 与之前 LVS 实战步骤相同，首先更新源并安装 ipvsadm 工具：
