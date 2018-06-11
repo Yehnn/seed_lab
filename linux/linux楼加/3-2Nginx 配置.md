@@ -1,30 +1,19 @@
-<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # Nginx 配置
 
 ## 1. 实验介绍
 
-<<<<<<< HEAD
 #### 1.1 实验内容
-=======
-### 1.1 实验内容
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 在本实验中将带领大家学习继 Apache 之后迅猛崛起的 Web 服务工具：Nginx。
 
 Nginx 以其高效处理并发连接而迅速崛起，加上其高扩展性、高可靠性、低内存消耗等等优势不断吞噬市场的占有率，同样因其强大的功能与繁多的配置项我们没有办法做到面面俱到，我们仅从简单的配置与常用的使用来入门 Nginx 的使用。 
 
-<<<<<<< HEAD
 #### 1.2 实验知识点
-=======
-### 1.2 实验知识点
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 + Nginx 简介
   + Nginx 是什么
@@ -37,11 +26,7 @@ Nginx 以其高效处理并发连接而迅速崛起，加上其高扩展性、�
   + Nginx 实现负载均衡
   + Nginx 与 PHP 搭建服务
 
-<<<<<<< HEAD
 #### 1.3 推荐阅读
-=======
-### 1.3 推荐阅读
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 + [Nginx 官方文档](https://nginx.org/en/docs/)
 
@@ -49,32 +34,21 @@ Nginx 以其高效处理并发连接而迅速崛起，加上其高扩展性、�
 
 ## 2. Nginx 简介
 
-<<<<<<< HEAD
 #### 2.1 Nginx 是什么
-=======
-### 2.1 Nginx 是什么
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 Nginx 是一个高性能的网页服务器，能够反向代理 `HTTP`、 `HTTPS`、`SMTP`、 `POP3`、 `IMAP` ，也可以作为一个负载均衡器和 HTTP 缓存。是一个免费的、开源的、高性能的 HTTP 服务器。
 
 Nginx 以其高性能、稳定性、丰富的特性、以及简单配置和低资源消耗而著称。Nginx 是由 `Igor Sysoev` 开发设计来供俄罗斯的大型门户网站和搜索引擎 Rambler 的使用。此软件在 BSD-like 协议下发行，可以在 UNIX、GNU/Linux、BSD、Mac OS X、Solaris，和 Microsoft Windows 等操作系统中运行。
 
-<<<<<<< HEAD
 #### 2.2 Nginx 的优势
-=======
-### 2.2 Nginx 的优势
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 与传统的服务器不同，`Nginx` 不依赖线程来处理请求。相反，它使用了一个更具可扩展性的事件驱动（异步）体系结构。这种体系结构使用较小的内存量，但更重要的是，在负载下可预测。即使你不希望同时处理数千个请求，但仍然可以从 `Nginx` 的高性能和小内存占用中受益。`Nginx` 在所有方向都可以扩展：从最小的 `VPS（Virtual Private Servers）`到大型的服务器集群。
 
 ## 3. Nginx 安装与配置
 
-<<<<<<< HEAD
 下面我们将会学习Nginx 安装与配置。
 
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 3.1 Nginx 的安装
 
 Nginx 的安装方式同样分为两种：
@@ -384,7 +358,6 @@ server {
 ```bash
 echo "Shiyanlou Louplus" > /home/shiyanlou/index.html
 ```
-<<<<<<< HEAD
 ```checker
 - name: check file
   script: |
@@ -392,8 +365,6 @@ echo "Shiyanlou Louplus" > /home/shiyanlou/index.html
 	ls /home/shiyanlou/index.html
   error: /home/shiyanlou 目录下没有 index.html 文件
 ```
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 3.在让配置生效之前我们可以通过这样的命令来检查我们的配置文件是否有误：
 
@@ -401,7 +372,6 @@ echo "Shiyanlou Louplus" > /home/shiyanlou/index.html
 # 该命令可以简单检查配置文件中的语法问题
 sudo nginx -t
 ```
-<<<<<<< HEAD
 ```checker
 - name: check nginx conf
   script: |
@@ -409,9 +379,6 @@ sudo nginx -t
 	nginx -t
   error: nginx 配置有误
 ```
-=======
-
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 若是无误会输出 `successful` 的提示，若是有误则会提示语法错误的位置，以便于我们根据需求修改
 
 4.在确认配置文件无误之后我们便让配置文件生效：
@@ -424,7 +391,6 @@ reload 是一个优雅的查新加载配置文件的做法，在不用中断 ngi
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517349296358-wm)
 
-<<<<<<< HEAD
 ```checker
 - name: check url
   script: |
@@ -433,8 +399,6 @@ reload 是一个优雅的查新加载配置文件的做法，在不用中断 ngi
   error: http://localhost:81 访问失败
 ```
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 在默认的负载均衡上，nginx 还支持一些调度算法来配置：
 
 + 最少连接负载均衡：下一个请求被分配给连接数最少的服务器
@@ -488,16 +452,13 @@ Nginx 一般为用户提供静态文件服务，动态的页面服务本生并�
 ```bash
 sudo service php5-fpm start
 ```
-<<<<<<< HEAD
 ```checker
 - name: check service
   script: |
     #!/bin/bash
-	ps -ef|grep -v grep|grep php5-fpm
+	ps -ef|grep -v grep|grep php-fpm
   error: 没有启动 php5-fpm
 ```
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 2.创建 php 访问页面
 
@@ -510,7 +471,6 @@ phpinfo();
 ?>
 ```
 
-<<<<<<< HEAD
 ```checker
 - name: check file
   script: |
@@ -519,8 +479,6 @@ phpinfo();
   error: /usr/share/nginx/html 目录下没有 index.php 文件
 ```
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 3.配置 nginx
 
 ```bash
@@ -552,7 +510,6 @@ server {
 }
 ```
 
-<<<<<<< HEAD
 ```checker
 - name: check content
   script: |
@@ -561,8 +518,6 @@ server {
   error: /etc/nginx/conf.d/php.conf 内容不对
 ```
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 4.重新加载 nginx 配置文件
 
 ```bash
@@ -575,7 +530,6 @@ sudo service nginx reload
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517348967217-wm)
 
-<<<<<<< HEAD
 ```checker
 - name: check url
   script: |
@@ -583,8 +537,6 @@ sudo service nginx reload
 	wget --spider -q -o /dev/null  --tries=1 -T 5 http://localhost:801/index.php
   error: http://localhost:801/index.php 访问失败
 ```
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 Nginx 与 PHP 搭建服务操作视频：
 

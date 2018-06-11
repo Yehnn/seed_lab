@@ -1,41 +1,26 @@
-<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # HAProxy + Keepalived 搭建高可用负载系统 
 
-## 1. 实验介绍
+## 一、实验介绍
 
-<<<<<<< HEAD
 #### 1.1 实验内容
 
 在本实验中我们将为大家介绍另一款与 LVS 功能类似的软件--HAProxy，通过 HAproxy 与 Keepalived 的联合，搭建高可用服务。
 
 #### 1.2 实验知识点
-=======
-### 1.1 实验内容
-
-在本实验中我们将为大家介绍另一款与 LVS 功能类似的软件--HAProxy，通过 HAproxy 与 Keepalived 的联合，搭建高可用服务。
-
-### 1.2 实验知识点
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 + HAProxy 工具简介
 + HAProxy + Keepalived 搭建高可用服务
 
-<<<<<<< HEAD
 #### 1.3 推荐阅读
-=======
-### 1.3 推荐阅读
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 - [HAProxy 官方文档](http://www.haproxy.org/#desc)
 
-## 2. HAproxy 简介
+## 二、HAproxy 简介
 
 HAProxy 是一个免费，非常快速和可靠的解决方案，为基于 TCP 和 HTTP 的应用程序提供高可用、负载均衡和代理。 它特别适合高流量的网站和拥有世界上访问量最大的网站。多年来，它已经成为标准开源负载平衡器，现在已经与大多数主流 Linux 发行版一起发布，并且通常默认部署在云平台上。
 
@@ -55,13 +40,9 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 
 接下来我们将通过这样的一个实验带领大家认识 HAProxy。
 
-## 3. HAproxy + Keepalived 实验说明
+## 三、HAproxy + Keepalived 实验说明
 
-<<<<<<< HEAD
 #### 3.1 环境介绍
-=======
-### 3.1 环境介绍
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 整个集群系统的结构拓扑图如下所示：
 
@@ -100,11 +81,7 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 
 一旦 HAProxy-master 发生故障，Keepalived 会将负载请求任务切换到 HAProxy-backup 服务器，实现负载均衡的高可用。
 
-<<<<<<< HEAD
 #### 3.2 实验步骤
-=======
-### 3.2 实验步骤
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 主要有以下的步骤：
 
@@ -114,11 +91,7 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 - 配置 Keepalived 实现高可用的负载调度器
 - 分别测试负载负载均衡的可用性以及负载调度器的可靠性
 
-<<<<<<< HEAD
 #### 3.3 测试步骤
-=======
-### 3.3 测试步骤
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 通过这样的方式来测试我们内容的分发与 keepalived 的高可用：
 
@@ -126,13 +99,10 @@ HAProxy 是一款专做负载均衡的软件，其主要作用与 LVS 非常的�
 - 关闭与重新启动查看 keepalived 的状态变化
 - 通过 HAProxy 的监控平台查看相关的信息
 
-## 4. HAproxy + Keepalived 实验
+## 四、HAproxy + Keepalived 实验
 
-<<<<<<< HEAD
 下面我们将会开始 HAproxy + Keepalived 实验。
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 4.1 创建服务器集群
 
 通过如下的命令创建的我们的 container，按照顺序启动才能与我们所罗列的自列表中的 IP 地址相同：
@@ -281,7 +251,7 @@ Keepavlied 配置视频:
 http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/2-keepalived-config.mp4
 @`
 
-### 4.4 HAProxy 的配置
+### 4.5 HAProxy 的配置
 
 配置 HAProxy 的内容相对较多，不过也不是很复杂，可以很容易理解。在 HAProxy-master 与 HAProxy-backup 服务器上，两者的 HAProxy 配置完全相同，只要在其中一台机器配置好，再将内容复制到另外一台机器上即可。我们这里以 HAProxy-master 为示例，HAProxy-backup 操作步骤与配置内容完全相同。
 
@@ -296,7 +266,7 @@ vim /etc/haproxy/haproxy.cfg
 
 打开配置文件，可以看到里面包含了两部分的配置内容，一个是全局的配置信息(global)，和默认的配置信息(defaults)。这是默认的配置文件内容，我们需要在这个基础上做自己的配置。
 
-### 4.4.1 HAProxy 配置文件讲解
+### 4.6 HAProxy 配置文件讲解
 
 HAProxy 的配置非常灵活丰富。根据实际的功能和用途，HAProxy 的配置文件主要分为 5 个部分，但不是所有的心都是必须的，可以根据实际需求做灵活配置，默认的配置文件，包含了 global 部分和 defaults 部分：
 
@@ -310,7 +280,7 @@ HAProxy 的配置非常灵活丰富。根据实际的功能和用途，HAProxy �
 
 - listen 配置部分：此部分是 frontend 与backend 部分的结合体。
 
-### 4.4.1 HAProxy 配置文件修改后
+### 4.7 HAProxy 配置文件修改后
 
 以下内容为修改好的 HAProxy 配置文件，大家可以结合注释理解，只需要将 frontend 、backend 和 listen 部分添加到你自己的服务器上即可，因为默认已经有 global 和 defaults。
 
@@ -401,7 +371,7 @@ HAProxy 配置视频:
 http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/3-haproxy-config.mp4
 @`
 
-### 4.5 修改 hosts 文件
+### 4.8 修改 hosts 文件
 
 前面介绍过，我们将会有三个域名：
 
@@ -427,7 +397,7 @@ vim /etc/hosts
 
 上图中，我添加了三条本地 DNS 域名解析记录，三个域名都对应 `192.168.0.10` 即 VIP。通过任何一个域名访问，都会指向 VIP 地址，到达 HAProxy 负载均衡层。配置完成之后，保存退出。
 
-### 4.6 服务运行
+### 4.9 服务运行
 
 完成所有的配置之后，分别启动 HAProxy-master 和 HAProxy-backup 启动 Keepalived：
 
@@ -480,7 +450,7 @@ HAProxy 启动视频:
 http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/4-running-haproxy.mp4
 @`
 
-## 5. 配置测试
+## 五、配置测试
 
 在地址栏输入域名：`www.shiyanlou.com`
 
@@ -559,7 +529,7 @@ service haproxy start
 
 上面三张图，分别展示不同域名访问，根据 ACL 规则，得到了相应得服务器的响应，由此便得到了我们期望的结果
 
-### 6. 使用 Web 监控平台管理 HAProxy
+## 六、使用 Web 监控平台管理 HAProxy
 
 在配置文件中，我们配置了一个 listen 的部分，即是 web 管理控制台。在新版的 HAProxy 中，自带了一个基于 Web 的监控平台，通过这个平台，可以实时查看此集群系统中所有后端服务器的运行状态，监控页面上会通过不同的颜色来展示服务器故障信息，极大地方便的运维人员的维护工作。
 
@@ -583,7 +553,7 @@ Squid 配置 ACL 及监控页面:
 http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/5-fix-and-monitor.mp4
 @`
 
-## 6. 总结
+## 七、总结
 
 本实验中我们接触了一个新的负载均衡软件 HAProxy，并通过实践的方式学习了：
 

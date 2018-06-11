@@ -1,20 +1,13 @@
-<<<<<<< HEAD
 ---
 show: step
 version: 1.0
 enable_checker: true
 ---
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 # Keepalived 原理与工作机制
 
 ## 一、实验介绍
 
-<<<<<<< HEAD
 #### 1.1 内容简介
-=======
-### 1.1 内容简介
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 Keepalived 是 Linux 下的一个轻量级的高可用集群软件，可用于实现网络或服务器的高可用性。Keepalived 通过虚拟路由冗余协议（VRRP）实现高可用功能，它的部署和使用非常简单。
 
@@ -22,32 +15,21 @@ Keepalived 也是 LVS 的扩展项目，因此 LVS 与 Keepalived 之间具备�
 
 本节实验内容将会介绍 Keepalived 的相关理论知识，包括它的结构体系与工作原理，VRRP 协议介绍。
 
-<<<<<<< HEAD
 #### 1.2 实验知识点
-=======
-### 1.2 实验知识点
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 * Keepalived 功能了解
 * 虚拟路由冗余协议（VRRP）讲解
 * Keepalived 体系结构
 * Keepalived 集群监控
 
-<<<<<<< HEAD
 #### 1.3 推荐阅读
-=======
-### 1.3 推荐阅读
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 
 本文部分内容参考[ Keepalived 官方网站](http://keepalived.org/doc/introduction.html) 提供的使用文档。
 
-## 2. 实验内容
+## 二、实验内容
 
-<<<<<<< HEAD
 下面介绍实验基础知识。
 
-=======
->>>>>>> 3fa8bdf764cf14bf952ed26152bb4addb11c4e0c
 ### 2.1 Keepalived 用途
 
 Keepalived 是一款优秀的高可用软件。最初是为 LVS 设计的，用来监控集群系统中各个服务节点的运行状态。Keepalived 是一个类似于 Layer3，Layer4，Layer5 交换机制的软件，工作在 TCP/IP 参考模型的 **第3层（网络层）、第4层（传输层）和第5层（应用层）**。它的作用是检测每个服务器节点的状态，如果其中某一个服务节点出现故障，Keepalived 将会检测到此故障节点，并将它从集群系统中删除。当故障节点恢复正常后，Keepalived 又会自动将此节点加入集群系统中。以上过程，不需要人工干预，需要人工操作的只是将故障节点修复正常即可。
@@ -128,7 +110,7 @@ NETLINK 模块主要提供一些高级路由及其一些相关的网络功能，
 
   在应用层中，Keepalived 会根据用户设定检测服务器的相关服务和程序是否正常运行。若检测结果与用户设定不相符，则判断定对应的服务器节点为异常情况，将它从服务器集群中删除。
 
-## 3. 实验总结
+## 三、实验总结
 
 本次实验中，我们对高可用集群软件 Keepalived 进行了深入学习。了解了什么是 VRRP 协议，以及它的工作流程；了解了 Keepalived 的体系结构，以及 Keepalived 如何对后端服务器集群做状态监控与故障隔离。
 
