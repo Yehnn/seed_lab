@@ -7,11 +7,11 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在本节内容中，我们将学习 MongoDB 的一些用于备份的实用工具。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + 导入
 
@@ -96,6 +96,13 @@ $ mongoexport --db shiyanlou001 --collection users --out users.json
 
 查看 `users.json` 中的数据，可以发现里面保存了 `users` 集合中的所有文档。
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/users.json
+  error: /home/shiyanlou 目录下没有 users.json 文件
+```
 
 ```bash
 $ cat users.json
@@ -148,6 +155,14 @@ $ mongoimport --db shiyanlou001 --collection users --file users.json --drop
 2017-11-27T10:22:35.380+0800    imported 4 documents
 ```
 
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.getCollectionNames()"|grep users
+  error: 没有导入 users 集合
+```
+
 MongoDB 数据导出导入操作视频：
 
 `@
@@ -192,6 +207,14 @@ dump
       |--- users.metadata.json
 
 2 directories, 4 files
+```
+
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/dump/shiyanlou001
+  error: 没有备份成功
 ```
 
 如上所示，并未备份 `local` 数据库（即本地数据库）中的内容，默认的 `IP` 是 `localhost` 和 `PORT` 是 `27017`，默认输出为当前目录下的 `dump` 目录 。

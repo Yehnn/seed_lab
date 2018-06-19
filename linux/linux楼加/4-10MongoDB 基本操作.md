@@ -7,17 +7,19 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在本节内容中，我们将介绍 `MongoDB` 的一些基本操作，比如数据库的创建，查看等，集合的创建，查看和删除等，文档的增删改查。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + 数据库的操作
 + 集合的操作
 + 文档的增删改查
 
 ## 2. 数据库
+
+接下来学习 MongoDB 有关操作。
 
 ### 2.1 查看
 
@@ -81,13 +83,24 @@ shiyanlou001
 }
 ```
 
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db.adminCommand('listDatabases')"|grep shiyanlou001
+  error: 没有创建 shiyanlou001 数据库
+```
+
 > `acknowledged` ：执行命令返回的状态，为 `true` 说明执行成功。
 >
 > `insertedId` ：在 MongoDB 中，存储于集合中的每一个文档都需要一个唯一的 `_id` 字段作为 `primary_key`。如果一个插入文档操作遗漏了``_id``  字段，`MongoDB` 会自动为``_id`` 字段生成一个 `ObjectId` 。
 
 现在你使用 `show dbs` 去查看有哪些数据库，会发现多了一个名叫 `shiyanlou001` 的数据库。
 
+
 ## 3. 集合
+
+下面我们将会学习集合操作。
 
 ### 3.1 创建
 
@@ -96,6 +109,14 @@ shiyanlou001
 ```
 > db.createCollection("shiyanlou_col1")
 { "ok" : 1 }
+```
+
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.getCollectionNames()"|grep shiyanlou_col1
+  error: 没有创建集合 shiyanlou_col1
 ```
 
 > 提示信息 `{ "ok" : 1 }` 显示我们创建成功
@@ -137,6 +158,15 @@ db.createCollection(<name>, { capped: <boolean>,
 { "ok" : 1 }
 ```
 
+
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.getCollectionNames()"|grep shiyanlou_col2
+  error: 没有创建集合 shiyanlou_col2
+```
+
 ### 3.2 查看
 
 我们可以通过 `show collections` 来查看数据库中的集合
@@ -166,7 +196,22 @@ true
 users
 ```
 
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	! mongo --eval "db=db.getSiblingDB('shiyanlou001');db.getCollectionNames()"|grep shiyanlou_col1
+  error: 没有删除集合 shiyanlou_col1
+- name: check mongo
+  script: |
+    #!/bin/bash
+	! mongo --eval "db=db.getSiblingDB('shiyanlou001');db.getCollectionNames()"|grep shiyanlou_col2
+  error: 没有删除集合 shiyanlou_col2
+```
+
 ## 4. 文档
+
+下面我们将会学习文档操作。
 
 ### 4.1 插入
 
@@ -212,6 +257,14 @@ db.collection.insertMany([ <document 1> , <document 2>, ... ])
     ObjectId("5a163208c63ea7db33dba273")
     ]
 }
+```
+
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.users.find()"|grep -e Tom -e Jim -e Cat
+  error: 创建文档不成功
 ```
 
 ### 4.2 查询
@@ -450,6 +503,24 @@ db.collection.updateMany(
 { "_id" : ObjectId("5a163208c63ea7db33dba273"), "name" : "Cat", "addr" : [ "SZ", "CD" ], "ages" : 22 }
 ```
 
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.users.find()"|awk -F':|,' '{print $6}'|grep 22
+  error: 没有修改 age 为 22
+- name: check mongo
+  script: |
+    #!/bin/bash
+	! mongo --eval "db=db.getSiblingDB('shiyanlou001');db.users.find({"name": "Tom"})"|grep email
+  error: 没有删除 Tom 的 email 字段
+- name: check mongo
+  script: |
+    #!/bin/bash
+	mongo --eval "db=db.getSiblingDB('shiyanlou001');db.users.find()"|grep ages
+  error: 没有修改所有的 age 字段名为 ages
+```
+
 除了可以更新文档，还可以使用替代文档，例如使用新数据替换姓名为 `Tom` 的文档。
 
 ```bash
@@ -485,6 +556,14 @@ db.collection.deleteMany()
 { "acknowledged" : true, "deletedCount" : 3 }
 > db.users.find()
 >
+```
+
+```checker
+- name: check mongo
+  script: |
+    #!/bin/bash
+	! mongo --eval "db=db.getSiblingDB('shiyanlou001');db.users.find()"|grep Jim
+  error: 没有删除 users 集合的所有文档
 ```
 
 MongoDB 数据库、集合、文档基本操作视频：

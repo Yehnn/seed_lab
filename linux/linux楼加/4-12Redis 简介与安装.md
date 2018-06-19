@@ -7,11 +7,11 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验开始将给大家讲解另一个数据库—— Redis 。此次内容主要是简单介绍什么是 Redis ，以及如何进行安装。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Redis 简介
 
@@ -25,13 +25,13 @@ enable_checker: true
 
 ## 2.  Redis 简介
 
-### 2.1 Redis 是什么
+#### 2.1 Redis 是什么
 
 `Redis(REmote DIctionary Server)` 是一个由 Salvatore Sanfilippo 编写的 `key-value` 存储系统。Redis 提供了一些丰富的数据结构，以及对这些数据结构的操作。由于 Redis 的数据都存储在内存中，因此访问速度非常快，所以 Redis 大量用于缓存系统中来存储热点数据，这样可以极大的提高网站的响应速度。
 
 Redis 常被称作是一款数据结构服务器（data structure server）。Redis 的键值可以包括字符串（`strings`）类型，同时它还包括哈希（`hashes`）、列表（`lists`）、集合（`sets`）和有序集合（`sorted sets`）等数据类型。对于这些数据类型，可以执行原子操作，例如：对字符串进行附加操作（append）；递增哈希中的值；向列表中增加元素；计算集合的交集、并集与差集等。
 
-### 2.2 Redis 的优点
+#### 2.2 Redis 的优点
 
 + 支持数据的持久化，通过配置可以将内存中的数据保存在磁盘中，Redis 重启以后再将数据加载到内存中；
 
@@ -42,6 +42,8 @@ Redis 常被称作是一款数据结构服务器（data structure server）。Re
 + 支持发布/订阅功能，数据过期功能；
 
 ## 2. 安装
+
+下面我们将会学习安装 Redis。
 
 ### 2.1 编译安装
 
@@ -75,6 +77,14 @@ $ src/redis-cli
 
 ```bash
 $ sudo service redis-server start
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep redis-server
+  error: 没有启动 redis-server
 ```
 
 注意：由于实验楼使用的是 Docker 容器的实验环境，所以不具备 ulimit 的权限，当启动 Redis 服务器的时候会报错，但不会影响服务器的正常启动，可以忽略这个报错信息。真实的服务器环境中不会有这个报错。

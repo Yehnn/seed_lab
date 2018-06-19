@@ -44,6 +44,7 @@ Let's Encrypt 提供了 [certbot](https://certbot.eff.org/) 工具来简化证�
 在要配置证书的服务器上执行以下命令来安装 certbot 以及相关插件。
 
 ```bash
+$ cd /usr/lib/python3/dist-packages
 $ sudo apt-get update
 $ sudo apt-get install software-properties-common
 

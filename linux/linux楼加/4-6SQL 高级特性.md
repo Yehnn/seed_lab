@@ -7,11 +7,11 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节内容，我们将补充之前提到的约束的内容，并学习有关索引和触发器的知识。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + 约束
 + 索引
@@ -59,6 +59,14 @@ mysql> DESC test1;
 | field2 | int(11) | NO   | PRI | 0       |       |
 +--------+---------+------+-----+---------+-------+
 2 rows in set (0.00 sec)
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "desc test1"|grep "field1"|grep "PRI"
+  error: field1 字段不为主键
 ```
 
 这时，我们可以向其中插入两条重复的数据：
@@ -221,6 +229,19 @@ mysql> DESC test2;
 | field1 | int(11) | YES  |     | NULL    |       |
 | field2 | int(11) | YES  | UNI | NULL    |       |
 +--------+---------+------+-----+---------+-------+
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "desc test1"|grep "field2"|grep "UNI"
+  error: field2 字段不为唯一
+- name: check sql
+  script: |
+    #!/bin/bash
+	! mysql -u root shiyanlou001 -e "desc test1"|grep "field2"|grep "UNI"
+  error: field1 的唯一键没有被删除
 ```
 
 ### 2.3 外键
@@ -402,6 +423,7 @@ Index_comment:
 
 ```
 
+
 这里我们简单介绍索引中各列所代表的含义：
 
 + `Table`
@@ -533,6 +555,19 @@ Index_comment:
 
 ```
 
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "show tables"|grep "test_index"
+  error: 没有创建 test_index 表
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "show index from test_index"|grep "index_fileld2"
+  error: 没有创建索引 index_field2
+```
+
 ### 3.2 删除索引
 
 对于索引的删除，我们可以使用如下语法：
@@ -562,6 +597,14 @@ mysql> ALTER TABLE test_index DROP INDEX index_field2;
 Query OK, 0 rows affected (0.05 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	! mysql -u root shiyanlou001 -e "show index from test_index"|grep "index_fileld2"
+  error: 没有删除索引 index_field2
 ```
 
 索引操作视频：
@@ -650,6 +693,14 @@ mysql> SELECT * FROM test_trigger;
 1 row in set (0.00 sec)
 ```
 
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "show triggers"|grep "before_insert"
+  error: 没有创建触发器 before_insert
+```
+
 ### 4.2 查看
 
 我们可以通过如下语句，查看当前数据库中定义的触发器：
@@ -693,6 +744,14 @@ DROP TRIGGER trigger_name
 ```bash
 mysql> DROP TRIGGER before_insert;
 Query OK, 0 rows affected (0.00 sec)
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	! mysql -u root shiyanlou001 -e "show triggers"|grep "before_insert"
+  error: 没有删除触发器 before_insert
 ```
 
 ## 5. 总结

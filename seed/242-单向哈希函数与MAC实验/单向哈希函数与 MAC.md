@@ -131,8 +131,8 @@ with tempfile.NamedTemporaryFile() as fa:
 - name: check hash.py
   script: |
     #!/bin/bash
-    ls /home/shiyanlou/hack.py
-  error: /home/shiyanlou 目录没有 hack.py 文件
+    ls /home/shiyanlou/hash.py
+  error: /home/shiyanlou 目录没有 hash.py 文件
 ```
 
 ###实验 4：单向特性（One-Way）与避免冲突特性（Collision-Free）的对比
@@ -258,11 +258,11 @@ $ gcc -I /usr/include/openssl -L /usr/lib/ssl -o hash hash.c -lcrypto -ldl
 ```
 
 ```checker
-- name: check hack.c
+- name: check hash.c
   script: |
     #!/bin/bash
-    ls /home/shiyanlou/hack.c
-  error: /home/shiyanlou 目录下没有 hack.c 文件
+    ls /home/shiyanlou/hash.c
+  error: /home/shiyanlou 目录下没有 hash.c 文件
 ```
 
 ##四、作业

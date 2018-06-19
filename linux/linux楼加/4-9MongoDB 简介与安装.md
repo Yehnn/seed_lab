@@ -7,13 +7,13 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 `MongoDB` 是一个高性能，高伸缩，易部署，易使用，存储方便的 `NoSQL` 数据库，它非常适合实时地插入，更新与查询数据。使用于对数据库性能要求较高，灵活性要求更强，数据模型比较简单的场景。本实验将带领大家学习 `MongoDB`。
 
 > `NoSQL` 是对不同于传统的关系数据库的数据库管理系统的统称。和传统的关系型数据库相比，它不使用 `SQL` 作为查询语言，并且数据存储不是以表格形式，而是以一种键值对的方式。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + `MongoDB` 的简介
 + `MongoDB` 的安装与启动
@@ -54,6 +54,14 @@ $ sudo apt-get install -y mongodb
 
 ```bash
 $ sudo service mongod start
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep mongo
+  error: 没有启动 mongodb
 ```
 
 ### 3.3 常用命令行参数

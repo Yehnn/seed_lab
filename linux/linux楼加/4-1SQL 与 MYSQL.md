@@ -83,7 +83,13 @@ $ sudo service mysql status
 ```bash
 $ sudo service mysql start
 ```
-
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep mysql
+  error: 没有启动 mysql
+```
 ### 3.3 连接及退出服务器
 
 在启动 Mysql 服务之后，我们就可以连接到 Mysql 服务中，在连接时，通常需要提供用户名与对应的密码。如果需要远程连接到其他机器的 Mysql 服务，还需要指定主机名。大致的格式如下：
@@ -262,6 +268,13 @@ character-set-server=utf8
 
 ```bash
 $ sudo service mysql restart
+```
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -uroot -e "show variables like 'character%'"|grep character_set_server|grep utf8
+  error: 没有配置 character-set-server=utf8
 ```
 
 这时，`mysql` 的默认的数据库的字符集为 `utf8`。

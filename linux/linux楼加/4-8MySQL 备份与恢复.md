@@ -7,11 +7,11 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在本节内容中，我们将学习 MySQL 备份与恢复的一些相关知识
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + 导出表的数据
 
@@ -21,7 +21,7 @@ enable_checker: true
 
 ## 2. 概述
 
-### 2.1 方法介绍
+#### 2.1 方法介绍
 
 在第一周 Linux 相关内容的学习中，我们有提到过备份的一些知识。
 
@@ -37,7 +37,7 @@ enable_checker: true
 
 + 使用二进制日志进行备份
 
-### 2.2 创建示例表和数据库
+#### 2.2 创建示例表和数据库
 
 在开始学习备份相关的操作时，我们需要创建相应的示例表和数据库。这里直接使用前面的选课数据库用作演示示例。相应的创建步骤可以参考本周第五个实验，数据的搜索部分的相关知识。
 
@@ -73,6 +73,15 @@ $ sudo cp -rf ~/mysql /var/lib/mysql
 ```
 $ sudo chown -R mysql:mysql /var/lib/mysql
 $ sudo service mysql restart
+```
+
+```checker
+- name: check priv
+  script: |
+    #!/bin/bash
+	stat -c %U /var/lib/mysql|grep mysql
+	stat -c %G /var/lib/mysql|grep mysql
+  error: /var/lib/mysql 的所属者和所属组不是 mysql
 ```
 
 该命令执行成功后，就可以正确的使用该数据库了。例如我们通过如下语句，查看 `shiyanlou001` 数据库中的表：
@@ -136,6 +145,14 @@ mysql> SHOW VARIABLES LIKE "secure_file%";
 $ sudo rm /var/lib/mysql/shiyanlou001/student.txt
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	! ls /var/lib/mysql/shiyanlou001/student.txt
+  error: 没有删除 /var/lib/mysql/shiyanlou001/student.txt 文件
+```
+
 2. 修改 `/etc/mysql/my.cnf` 配置文件，并在其中加入一行内容：
 
 ```
@@ -152,12 +169,33 @@ sudo mkdir /var/lib/mysql-files
 sudo chown mysql.root -R /var/lib/mysql-files
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /var/lib/mysql-files
+  error: /var/lib 目录下没有 mysql-files 目录
+- name: check priv
+  script: |
+    #!/bin/bash
+	stat -c %U /var/lib/mysql-files|grep mysql
+  error: /var/lib/mysql-files 所属者不是 mysql
+```
+
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid377240labid4104timestamp1516013080509.png/wm)
 
 3. 重启 MySQL
 
 ```bash
 $ sudo service mysql restart
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep mysql
+  error: 没有启动 mysql
 ```
 
 如上所示，上述操作执行成功后，可以通过如下语句查看该变量设置的值：
@@ -309,6 +347,14 @@ mysql> select * from import_student;
 | 1005 | shiyanlou1005 | man   |    17 |
 +------+---------------+-------+-------+
 5 rows in set (0.00 sec)
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root -p 123456 shiyanlou001 -e "select * from import_student"|grep "man"
+  error: 导入数据不成功
 ```
 
 如上所示，导入成功。

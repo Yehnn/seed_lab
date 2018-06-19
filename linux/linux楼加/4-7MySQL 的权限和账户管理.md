@@ -7,11 +7,11 @@ enable_checker: true
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验我们将带领大家学习 MySQL 的访问控制及用户的管理。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + MySQL 的权限
 
@@ -215,6 +215,14 @@ mysql> SELECT Host,User,Password FROM mysql.user;
 6 rows in set (0.00 sec)
 ```
 
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "select User from mysql.user"|grep "syl001"
+  error: 没有创建 syl001 用户
+```
+
 #### 直接修改 mysql.user 表
 
 如下所示，我们直接使用 `mysql.user` 表进行操作，插入一条数据：
@@ -254,6 +262,14 @@ mysql> DROP USER "syl002"@"localhost";
 Query OK, 0 rows affected (0.00 sec)
 ```
 
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	! mysql -u root shiyanlou001 -e "select User from mysql.user"|grep "syl002"
+  error: 没有删除 syl002 用户
+```
+
 此时，再次查看 `mysql.user` 表，可以发现 `syl002@localhost` 已经被删除。
 
 ### 3.4 修改密码
@@ -291,6 +307,14 @@ mysql> SELECT Host,User,Password FROM mysql.user;
 | localhost | debian-sys-maint | *C6B4BF1D2B688BB0C6DFBD20FD5457C4D583D3A1 |
 | localhost | syl001           | *FFB8814DBE01A23A0780B2DFF96C426CA67A9752 |
 +-----------+------------------+-------------------------------------------+
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root -p 123456
+  error: 设置密码不成功
 ```
 
 需要说明的是，如果在安装 MySQL 的时候分配了 root 密码，那么前四个由 MySQL 创建的用户的密码就会是一样的。
@@ -349,6 +373,19 @@ Database changed
 mysql> create table test(name varchar(10), age int);
 Query OK, 0 rows affected (0.35 sec)
 
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root -p 123456 -e "show databases"|grep "shiyanlou002"
+  error: 没有创建数据库 shiyanlou002
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root -p 123456 shiyanlou002 -e "show tables"|grep "test"
+  error: 没有在 shiyanlou002 中创建 test 表
 ```
 
 这时，我们新打开一个终端，避免后面来回切换用户。
