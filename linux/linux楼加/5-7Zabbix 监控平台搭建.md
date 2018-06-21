@@ -257,6 +257,29 @@ $ sudo apt-get install -y zabbix-frontend-php
 $ sudo apt-get install -y zabbix-agent
 ```
 
+```checker
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l zabbix-server-mysql
+  error: 没有安装 zabbix-server-mysql
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l zabbix-proxy-mysql
+  error: 没有安装 zabbix-proxy-mysql
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l zabbix-frontend-php
+  error: 没有安装 zabbix-frontend-php
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l zabbix-frontend-php
+  error: 没有安装 zabbix-frontend-php
+```
+
 3.**安装初始化数据库 Mysql**
 
 在 MySQL 上创建 Zabbix 初始化数据库和用户。
@@ -266,6 +289,14 @@ $ sudo apt-get install -y zabbix-agent
 ```bash
 $ sudo service mysql start # 启动 MySQL 服务
 $ mysql -uroot
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep mysql
+  error: 没有启动 mysql
 ```
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1timestamp1514531032245.png/wm)
@@ -278,6 +309,14 @@ mysql> create database zabbix character set utf8 collate utf8_bin;
 mysql> grant all privileges on zabbix.* to zabbix@localhost identified by '<password>'; # <password> 记得修改，这里我的密码是 `zabbix`。
 
 mysql> quit;
+```
+
+```checker
+- name: check sql
+  script: |
+    #!/bin/bash
+	mysql -u root shiyanlou001 -e "show databases"|grep "zabbix"
+  error: 没有创建 zabbix 数据库
 ```
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1timestamp1514531074814.png/wm)
@@ -313,6 +352,14 @@ DBUser=zabbix
 DBPassword=zabbix
 ```
 
+```checker
+- name: check content
+  script: |
+    #!/bin/bash
+	grep DBName /etc/zabbix/zabbix_server.conf | grep zabbix
+  error: /etc/zabbix/zabbix_server.conf 内容不对
+```
+
 注：DBPassword 中使用的是 MySQL 的 Zabbix 数据库密码。
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1timestamp1514531163471.png/wm)
@@ -324,10 +371,26 @@ DBPassword=zabbix
 sudo service zabbix-server start
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep zabbix-server
+  error: 没有启动 zabbix-server
+```
+
 启动 zabbix-agent 代理
 
 ```
 sudo service zabbix-agent start
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep zabbix-agent
+  error: 没有启动 zabbix-agent
 ```
 
 6.**Zabbix 前端配置**
@@ -339,6 +402,14 @@ Zabbix 前端的 Apache 配置文件位于 `/etc/apache2/conf-enabled/zabbix.con
 ```
 $ sudo service apache2 start
 $ sudo vim /etc/apache2/conf-enabled/zabbix.conf
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep apache2
+  error: 没有启动 apache2
 ```
 
 配置文件如下：

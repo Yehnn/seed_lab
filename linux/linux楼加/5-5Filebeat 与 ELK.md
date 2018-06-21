@@ -68,6 +68,14 @@ harvester 负责对单个日志文件的内容读取与采集。每个 harvester
 sudo apt-get install filebeat
 ```
 
+```checker
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l filebeat
+  error: 没有安装 filebeat
+```
+
 编辑 Filebeat 的配置文件，默认路径为：`/etc/filebeat/filebeat.yml`：
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1517033927138.png-wm)
@@ -130,6 +138,14 @@ sudo apt-get install filebeat
 sudo vim /etc/filebeat/filebeat.yml
 ```
 
+```checker
+- name: check content
+  script: |
+    #!/bin/bash
+	grep output /etc/filebeat/filebeat.yml|grep Logstash
+  error: /etc/filebeat/filebeat.yml|grep Logstash 内容不对
+```
+
 修改 output 的配置为 Logstash。找到 81 行左右，注释 Elasticsearch 部分，应用 Logstash 的 output 配置：
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1517034317413.png-wm)
@@ -145,6 +161,14 @@ sudo vim /etc/filebeat/filebeat.yml
 ````sh
 sudo service filebeat start
 ````
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep filebeat
+  error: 没有启动 filebeat
+```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1517034720384.png-wm)
 

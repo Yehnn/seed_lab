@@ -418,6 +418,14 @@ scrape_configs:
         - perf_schema.tablelocks
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep prometheus
+  error: 没有启动 prometheus
+```
+
 上面的配置里添加了两个 job，一个用来采集 MySQL 全局状态，另一个用来采集 MySQL 性能相关指标。
 
 大约几秒钟后，我们就可以在 Prometheus 的 Web 控制台里查询到 MySQL 相关的度量指标。

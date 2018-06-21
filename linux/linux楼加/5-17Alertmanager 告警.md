@@ -99,6 +99,19 @@ cp simple.yml alertmanager.yml
 ./alertmanager
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep alertmanager
+  error: 没有启动 alertmanager
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/alertmanager-0.15.0-rc.1.linux-amd64/alertmanager.yml
+  error: /home/shiyanlou/alertmanager-0.15.0-rc.1.linux-amd64 目录下没有 alertmanager.yml 文件
+```
+
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5956timestamp1528873154019.png/wm)
 
 `alertmanager` 命令默认会加载同目录下的配置文件 `alertmanager.yml`，如果找不到配置文件会报错。也可以通过 `--config.file` 参数来显示指定要使用的配置路径，支持相对路径。
@@ -130,15 +143,15 @@ cp simple.yml alertmanager.yml
 
 配置文件描述中会使用下面这些占位符：
 
-- \<duration>: 时长，格式符合正则表达式 [0-9]+(ms|[smhdwy])
-- \<labelname>: 标签名，格式符合正则表达式 [a-zA-Z_][a-zA-Z0-9_]*
-- \<labelvalue>: 标签值，可包含任意 Unicode 字符
-- \<filepath>: 文件路径
-- \<boolean>: 布尔值，true 或 false
-- \<string>: 普通字符串
-- \<secret>: 保密字符串，比如密码
-- \<tmpl_string>: 模板字符串，使用前需要进行变量替换
-- \<tmpl_secret>: 模板密码，使用前需要进行变量替换
+- `<duration>`: 时长，格式符合正则表达式 [0-9]+(ms|[smhdwy])
+- `<labelname>`: 标签名，格式符合正则表达式 [a-zA-Z_][a-zA-Z0-9_]*
+- `<labelvalue>`: 标签值，可包含任意 Unicode 字符
+- `<filepath>`: 文件路径
+- `<boolean>`: 布尔值，true 或 false
+- `<string>`: 普通字符串
+- `<secret>`: 保密字符串，比如密码
+- `<tmpl_string>`: 模板字符串，使用前需要进行变量替换
+- `<tmpl_secret>`: 模板密码，使用前需要进行变量替换
 
 顶层配置文件格式如下：
 

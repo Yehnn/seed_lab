@@ -44,6 +44,14 @@ sudo cp /etc/logstash/conf.d/logstash-shipper.conf /etc/logstash/conf.d/logstash
 sudo vim /etc/logstash/conf.d/logstash-indexer.conf
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /etc/logstash/conf.d/logstash-indexer.conf
+  error: /etc/logstash/conf.d 目录下没有 logstash-indexer.conf 文件
+```
+
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516943413784.png-wm)
 
 将 input 的 file 部分修改为 Redis：

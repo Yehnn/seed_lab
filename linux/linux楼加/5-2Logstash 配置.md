@@ -61,6 +61,29 @@ sudo service elasticsearch status
 sudo service redis-server status
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep logstash
+  error: 没有启动 logstash
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep kibana
+  error: 没有启动 kibana
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep elasticsearch
+  error: 没有启动 elasticsearch
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep redis
+  error: 没有启动 redis-server
+```
+
 Logstash 默认会安装到 `/usr/share/logstash` 或 `/opt/logstash` 目录下，取决于安装方法。我们后续的步骤默认安装目录为 `/opt/logstash`，如果你是按照先前的 dpkg 的方式安装的，则安装目录为 `/usr/share/logstash`。
 
 主要执行命令都安装在 `/opt/logstash/bin` 目录下。进入到此目录，执行下面一条命令：
@@ -131,6 +154,14 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/4-1.mp4
 ```sh
 cd /etc/logstash/conf.d
 sudo vim logstash-shipper.conf
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /etc/logstash/conf.d/logstash-shipper.conf
+  error: /etc/logstash/conf.d 目录下没有 logstash-shipper.conf 文件
 ```
 
 添加以下内容：
