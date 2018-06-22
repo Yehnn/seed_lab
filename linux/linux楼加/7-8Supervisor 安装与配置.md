@@ -1,12 +1,17 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Supervisor 安装与配置
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验和大家一起来学习另一个运维管理方式——Supervisor。Supervisor 是一个 `client/server` 模式的系统，他允许用户在类 Unix 的操作系统上控制多个进程。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Supervisor 简介
 
@@ -16,7 +21,7 @@
 
 + Supervisor 配置
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [Supervisor 官方文档](http://supervisord.org/index.html)
 
@@ -24,11 +29,11 @@
 
 ## 2. Supervisor 简介
 
-### 2.1 概述
+#### 2.1 概述
 
 Supervisor 是一个 `client/server` 模式的系统，他允许用户在类 Unix 的操作系统上控制多个进程。在许多 `VPS(Virtual Private Servers)` 环境中，我们想要运行一些小程序、shell 脚本，应用程序或者是一些大型的软件包，通常会为这些程序编写一个初始化脚本，但是这就可能会耗费很多的管理时间。而 Supervisor 作为一个进程管理工具可以通过提供一个一致的接口来管理这些长时间运行的程序，同时对它们进行监听和控制。
 
-### 2.2 特点
+#### 2.2 特点
 
 + 简单
 
@@ -50,7 +55,7 @@ Supervisor 有一个简单的事件通知协议，任何语言编写的程序都
 
 除了 Windows 以外，Supervisor 支持在 `Linux`、`Mac OS X`、`Solaris` 和 `FreeBSD` 上进行测试和运行。
 
-### 2.3 组件
+#### 2.3 组件
 
 + Supervisord
 
@@ -144,6 +149,8 @@ http://labfile.oss.aliyuncs.com/courses/980/week10/7-1.mp4
 @`
 
 ## 4. Supervisor 的配置
+
+下面我们将会学习 Supervisor 的配置。
 
 ### 4.1 配置文件说明
 

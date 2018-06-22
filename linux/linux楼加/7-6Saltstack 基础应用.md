@@ -1,18 +1,23 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Saltstack 基础应用
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验节点的是一种全新的运维管理系统——`Saltstack` ，它非常的简单，能够在几分钟内运行起来，足以用速度来取代复杂性，并且可以扩展来管理数以万计的服务器，同时在几秒内就能和每个系统进行通信。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Saltstack 执行命令
 
 + Saltstack 组件详解
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [SaltStack 官方文档](https://docs.saltstack.com/en/latest/contents.html)
 

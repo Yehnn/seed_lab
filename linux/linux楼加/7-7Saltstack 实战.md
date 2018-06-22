@@ -1,17 +1,22 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Saltstack 实战
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在本实验中，将带领大家通过使用 Saltstack 安装 Nginx，并配置 Nginx 的方式进一步熟悉使用 Saltstack，同时补充上一章节我们所未能讲解的知识点。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Jinja2 介绍
 + Saltstack 实战
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [SaltStack 官方文档](https://docs.saltstack.com/en/latest/contents.html)
 
@@ -102,6 +107,8 @@ git: git-core
 注：一般来说，尽可能保证 salt state 简单，如果编写的 Jinja 过于复杂可以考虑将任务分解成多个 Salt state，或者为任务编自定义的执行模块。
 
 ## 3. Saltstack 实战
+
+下面我们将会开始 Saltstack 实战。
 
 ### 3.1 实战需求
 

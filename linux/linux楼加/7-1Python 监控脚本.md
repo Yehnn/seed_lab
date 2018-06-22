@@ -1,18 +1,23 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Python 监控脚本
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本实验中我们将使用 python 实现 netstat 端口信息的查看。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 - 了解实验目的
 - 解析实现功能
 - 实现 netstat 功能
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 - [netstat 实现原理](https://github.com/ecki/net-tools/blob/master/netstat.c)
 - [psutil 实现 netstat](https://github.com/giampaolo/psutil/blob/master/scripts/netstat.py)
@@ -23,7 +28,7 @@
 - [proc 官方说明](https://github.com/torvalds/linux/blob/master/Documentation/filesystems/proc.txt)
 - [fd 的源码](https://github.com/torvalds/linux/blob/master/fs/proc/fd.c)
 
-### 1.4 效果展示
+#### 1.4 效果展示
 
 1.在非 root 权限情况下执行脚本：
 
@@ -52,6 +57,8 @@
 二者的区别并不是本实验的重点，而选择 `netstat` 只是为了在自己建立运维平台时想获取端口信息，或者在自定义显示端口信息时提供一种思路，同时因为其实现简单，能帮助我们快速上手。
 
 ## 3. netstat 功能实现
+
+下面我们将会学习netstat 功能实现。
 
 ### 3.1 netstat 简单解析
 

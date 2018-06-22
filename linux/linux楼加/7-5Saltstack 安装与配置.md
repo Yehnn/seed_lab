@@ -1,12 +1,17 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Saltstack 安装与配置
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验节点的是一种全新的运维管理系统——Saltstack ，它非常的简单，能够在几分钟内运行起来，足以用速度来取代复杂性，并且可以扩展来管理数以万计的服务器，同时在几秒内就能和每个系统进行通信。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Saltstack 简介
 
@@ -14,7 +19,7 @@
 
 + Saltstack 配置
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [SaltStack 官方文档](https://docs.saltstack.com/en/latest/contents.html)
 
@@ -24,7 +29,7 @@
 
 ## 2. 简介
 
-### 2.1 Saltstack 概述
+#### 2.1 Saltstack 概述
 
 Saltstack 是一种全新的基础设施管理方式，可以作为一个配置管理系统，用来维护预定义状态的远程节点，也可以作为一个分布式远程执行系统，用来在远程节点上执行命令和查询数据等。
 
@@ -34,7 +39,7 @@ Saltstack 主要还是采用的是 `server/client` 模式，需求的功能内�
 
 > `Chef`：是一个用 Ruby 和 Erlang 编写的配置管理工具。可以简化配置和维护公司服务器的任务，并且可以与众多云平台进行集成，以自动配置和配置新机器。
 
-### 2.2 基本组件
+#### 2.2 基本组件
 
 + `Master`：是 Salt 的主服务器
 
@@ -57,7 +62,7 @@ Saltstack 主要还是采用的是 `server/client` 模式，需求的功能内�
 
 从这张各组件间的结构图可以知道，states 定义了一些适用的事情状态， Pillar 和 Grains 确定了 minion 会受到那种 states 以及 states 本身的参数化。如图所示，Pillar 模板首先会被 Jinjia2 进行渲染，然后和 Grains 传送给 states 中进行渲染，完成后会被解析为 YAML 格式来确定什么样的 states 适用有并运用于 minion 中。
 
-### 2.3 Saltstack 通信
+#### 2.3 Saltstack 通信
 
 Saltstack 采用的是一个 `server-agent` 通信模型，server 组件被称为 `Salt Master` ，而 agent 称为 `Salt Minions`。Master 负责发送命令给 Minions ，然后聚合并显示这些命令的结果，一个 Master 可以管理数千个系统。同时通过消息队列 `ZeroMQ` 在 master 端与 minion 端之间建立消息发布连接。
 
@@ -72,7 +77,7 @@ Saltstack 的通信方式采用的是 `publish-subscribe` 这种模式的管理�
 
 当 minion 第一次启动时，它会在网络中搜索名为 salt 的系统，发现后 minion 进行握手，然后将其公钥发送给 master。初始连接之后，Salt minion 的公钥存储在服务器上，并且必须通过 `Salt-key` 命令来接受 master。（其中 minion 在其密钥被接受之前不会运行任何命令）。在 minion 密钥被接受之后，master 返回它的公钥以及一个旋转的 AES 密钥，该密钥用于加密和解密由 master 发送的消息。`Salt master` 和 `Salt minion` 之间的所有进一步通信都使用 AES 密钥进行加密。
 
-### 2.4 Saltstack 插件
+#### 2.4 Saltstack 插件
 
 插件（`plug-ins`）对于 Saltstack 来说十分重要，学习插件较学习可插式架构来说就如同发展传播和做研究的类比。
 
@@ -84,7 +89,7 @@ Saltstack 包含了超过 20 个的可插式的子系统，但常用的也就是
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1516697284070.png-wm)
 
-### 2.5 Saltstack 特点
+#### 2.5 Saltstack 特点
 
 + **实时通信**：所有的 Salt minions 会同时接受命令，可以在几秒内完成对数千系统的查询，获取信息的方式是实时查询，而不是依赖数据库。
 

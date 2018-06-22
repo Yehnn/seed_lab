@@ -1,12 +1,17 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Playbook 实战
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在上一节的实验中我们学习了用 `AD-HOC` 临时命令来快速执行任务，但是 Ansible 真正的重点在于 playbook 的编写，因为在自动化运维中批量进行系统配置和部署服务才是自动化的核心用法，所以在这一节实验中，我们一起来学习如何编写一个完整的 `playbooks`。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Playbook 介绍
 
@@ -20,7 +25,7 @@
 
 + Playbook 示例
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [Playbooks 官方文档](http://docs.ansible.com/ansible/latest/playbooks_intro.html)
 
@@ -28,13 +33,13 @@
 
 ## 2. Playbook 介绍
 
-### 2.1 Playbook 概述
+#### 2.1 Playbook 概述
 
 `Playbook` 是一种非常简单的配置管理系统以及是多机器部署系统的基础，十分适合复杂的应用部署。同时，`Playbook` 还可以用于声明配置，以及编排有序的执行过程，使得在多组机器之间有序的执行指定步骤，或者同步或异步的发起任务。
 
 `Playbook` 也是一个任务列表，这个列表中的可以包含一个或者多个 `plays`，所有的操作放在这么一个文件中，然后一次性的执行。而它与 `AD-HOC` 最大的不同之处就在于它是把这些任务放在源码中进行控制。
 
-### 2.2 YAML 语法格式
+#### 2.2 YAML 语法格式
 
 在上一个实验中我们尝试了用 `INI` 格式的语言来执行 `AD-HOC` 命令，这里 Ansible 官方默认使用 `YAML` 这种格式来书写 Playbook。（只是为了简化语法，避免做成一种编程语言，就像是 XML 或 JSON 一样是一种利于读写的数据格式，从而降低学习难度。此外，在大多数编程语言中都有用于使用 YAML 的库。）
 
@@ -364,6 +369,20 @@ service apache2 start
 ```bash
 $ sudo vim test_apache.yaml
 $ ansible-playbook test_apache.yaml
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/test_apache.yaml
+  error: /home/shiyanlou 目录下没有 test_apache.yaml 文件
+
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep apache2
+  error: 没有启动 apache2
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1516267533726.png-wm)
