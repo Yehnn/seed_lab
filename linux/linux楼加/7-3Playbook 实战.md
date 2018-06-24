@@ -325,6 +325,25 @@ $ sudo vim test.yaml
 $ ansible-playbook test.yaml
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/test.yaml
+  error: /home/shiyanlou 目录下没有 test.yaml 文件
+- name: check pkg
+  script: |
+    #!/bin/bash
+	dpkg -l sshpass
+  error: 没有安装 sshpass
+- name: check yaml
+  script: |
+    #!/bin/bash
+	ansible-playbook /home/shiyanlou/test.yaml
+  error: 原因可能是 1./etc/ansible/hosts 里的 ssh 密码不对。2. /etc/ansible/ansible.cfg 的 host_key_checking 没有设为 false。3. test.yaml 配置错误。
+  timeout: 30
+```
+
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1516266567018.png-wm)
 
 ## 6. Playbook 示例
@@ -377,12 +396,16 @@ $ ansible-playbook test_apache.yaml
     #!/bin/bash
 	ls /home/shiyanlou/test_apache.yaml
   error: /home/shiyanlou 目录下没有 test_apache.yaml 文件
-
+- name: check pkg
+  script: |
+    #!/bin/bash
+	dpkg -l python-apt
+  error: 没有安装 python-apt
 - name: check service
   script: |
     #!/bin/bash
 	ps -ef|grep -v grep|grep apache2
-  error: 没有启动 apache2
+  error: 没有启动 apache2。注意检查 yaml 文件的格式和单词是否写错
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1516267533726.png-wm)

@@ -212,7 +212,7 @@ Alias ansible_host=192.168.1.50 ansible_port=6666
 
 **ad-hoc** ：临时命令，是在输入内容后，快速执行某些操作，但不希望保存下来的命令。
 
-一般来说，Ansible 的主要在于我们后面会学到的 playbook 的脚本编写，但是，ad-hoc 相较来说，它的优势在于当你收到一个临时任务时，你只用快速简单的执行一个 ad-hoc 临时命令，而不用去编写一个完整的 playbook 脚本就可以了。
+一般来说，Ansible 主要在于我们后面会学到的 playbook 的脚本编写，但是，ad-hoc 相较来说，它的优势在于当你收到一个临时任务时，你只用快速简单的执行一个 ad-hoc 临时命令，而不用去编写一个完整的 playbook 脚本就可以了。
 
 我们知道 Ansible 主要是通过模块来实现各种功能的，下面我们就通过 `ping` 这个简单的模块来操作一下 `ad-hoc` 命令。
 
@@ -264,6 +264,19 @@ eg3：执行命令让 test 组中的主机在指定目录下创建文件，并�
 
 ```bash
 $ ansible test -m file -a "dest=/home/shiyanlou/file state=touch mode=777"
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/file
+  error: /home/shiyanlou 目录下没有 file 文件
+- name: check priv
+  script: |
+    #!/bin/bash
+	stat -c %a /home/shiyanlou/file|grep 777
+  error: /home/shiyanlou/file 权限不是 777
 ```
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516169161655.png/wm)
