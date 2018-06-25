@@ -93,6 +93,14 @@ $ sudo vim testdebug.yaml
 ...
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/testdebug.yaml
+  error: /home/shiyanlou 目录下没有 testdebug.yaml 文件
+```
+
 接着保存退出，执行文件
 
 ```bash
@@ -197,6 +205,14 @@ $ sudo mkdir -p /usr/share/ansible/plugins/callback
 $ sudo mv /home/shiyanlou/ansible-human_log/human_log.py /usr/share/ansible/plugins/callback/human_log.py
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /usr/share/ansible/plugins/callback/human_log.py
+  error: /usr/share/ansible/plugins/callback 目录下没有 human_log.py 文件
+```
+
 这里我们看到会涉及到了 `.py` 文件，这是因为在 Ansible 的使用中是通过 `Python API` 来管理节点，再通过扩展 Ansible 来响应 python 事件，同时也可以通过相应插件（plugins）来调取数据源。
 
 这里我们 git 下来的 `human_log.py` 文件正是插件使用的一个 python API。可以用 `cat` 命令来查看下里面的内容。
@@ -234,6 +250,24 @@ Lookup plugins 可以用于从外部数据存储中获取数据。
 
 ```bash
 $ sudo vim lookup.txt
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/lookup.txt
+  error: /home/shiyanlou 目录下没有 lookup.txt 文件
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/lookup.py
+  error: /home/shiyanlou 目录下没有 lookup.py 文件
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/lookup.yaml
+  error: /home/shiyanlou 目录下没有 lookup.yaml 文件
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1516358618589.png-wm)

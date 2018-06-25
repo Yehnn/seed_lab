@@ -159,6 +159,24 @@ $ sudo service salt-master start
 $ sudo service salt-minion start
 ```
 
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep salt
+  error: 没有启动 salt
+- name: check port1
+  script: |
+    #!/bin/bash
+	netstat -luntp|grep 4505
+  error: 4505 端口没有监听
+- name: check port1
+  script: |
+    #!/bin/bash
+	netstat -luntp|grep 4506
+  error: 4506 端口没有监听
+```
+
 可以通过 ps 命令来查看进程是否跑起来了
 
 ```bash
@@ -194,16 +212,16 @@ $ sudo vim /etc/salt/master
 # 修改下面几项配置
 
 # 将默认的所有网络接口（0.0.0.0）都可访问修改为本地接口
-- # interface:0.0.0.0
-+ interface:127.0.0.1
+- # interface: 0.0.0.0
++ interface: 127.0.0.1
 
 # 设置默认 root 用户运行 salt 进程
-- # user:root
-+ user:root
+- # user: root
++ user: root
 
 # 启用这个设置将自动接受所有来自 minion 的公共密钥
-- # auto_accept:False
-+ auto_accept:False
+- # auto_accept: False
++ auto_accept: False
 ```
 
 > 这里只配置我们需要的配置项，其他配置项大家可以从配置文件中了解或者查看官方文档中 [master 配置项](https://docs.saltstack.com/en/latest/ref/configuration/master.html#configuration-salt-master)的说明。
@@ -215,8 +233,8 @@ $ sudo vim /etc/salt/minion
 
 # 修改如下配置
 
-- # master:salt
-+ master:127.0.0.1
+- # master: salt
++ master: 127.0.0.1
 ```
 
 > 这里只配置我们需要的配置项，其他配置项大家可以从配置文件中了解或者查看官方文档中 [minions 配置项](https://docs.saltstack.com/en/latest/ref/configuration/minion.html#configuration-salt-minion)的说明。
@@ -230,6 +248,18 @@ $ sudo service salt-master restart
 $ sudo service salt-minion restart
 ```
 
+```checker
+- name: check content
+  script: |
+    #!/bin/bash
+	cat /etc/salt/master | grep -e 'interface' -e 'user' -e 'auto_accept'
+  error: /etc/salt/master 没有配置
+- name: check content
+  script: |
+    #!/bin/bash
+	cat /etc/salt/minion | grep 'master'
+  error: /etc/salt/minion 没有配置
+```
 
 Saltstack 配置操作视频：
 
@@ -278,6 +308,14 @@ $ sudo salt-key -L
 
 ```bash
 $ sudo salt '*' test.ping
+```
+
+```checker
+- name: check ping
+  script: |
+    #!/bin/bash
+	salt '*' test.ping|grep True
+  error: master 和 minion 通信不成功
 ```
 
 这里我们使用了 salt 的基本语法来进行测试，在后面一节我们将会详细讲解它的语法内容。

@@ -218,9 +218,9 @@ wget http://labfile.oss.aliyuncs.com/courses/980/files/week10/shiyanlou.conf
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517731756997-wm)
 
-我们可以看到模版中需要使用变化的部分都是用变量来代替了，若 listen 的值使用 `PORT` 变量，若 server_name 的值使用 `HOST` 变量。
+我们可以看到模版中需要使用变化的部分都是用变量来代替了，listen 的值使用 `PORT` 变量， server_name 的值使用 `HOST` 变量。
 
-5.为了能够让我们创建的自定义变量分发我们需要创建 top.sls 文件
+5.为了能够让我们创建的自定义变量分发,我们需要创建 top.sls 文件
 
 ```bash
 sudo vim /srv/salt/pillar/top.sls
@@ -234,7 +234,7 @@ nginx:
 		- nginx
 ```
 
-表示 nginx 目录中的 nginx 文件执行与所有的 minion 节点。
+表示 nginx 目录中的 nginx 文件执行于所有的 minion 节点。
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517731224505-wm)
 
@@ -248,6 +248,32 @@ salt '*' saltutil.refresh_pillar
 
 ```bash
 salt '*' pillar.items
+```
+
+```checker
+- name: check dir
+  script: |
+    #!/bin/bash
+	ls /srv/salt/nginx
+  error: 没有 /srv/salt/nginx 目录
+- name: check dir2
+  script: |
+    #!/bin/bash
+	ls /srv/salt/pillar/nginx
+  error: 没有 /srv/salt/pillar/nginx 目录
+- name: check service
+  script: |
+    ps -ef |grep -v grep |grep salt-master
+  error: 没有启动 salt-master
+- name: check service
+  script: |
+    ps -ef |grep -v grep |grep salt-minion
+  error: 没有启动 salt-minion
+- name: check pillar
+  script: |
+    #!/bin/bash
+	salt '*' pillar.items|grep -e 'HOST' -e 'PORT'
+  error: 分发变量不成功
 ```
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517733247392-wm)
