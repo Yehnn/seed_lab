@@ -1,110 +1,150 @@
----
-show: step
-version: 1.0
-enable_checker: true
----
-# Saltstack 实战
+## 问题描述
 
-## 1. 实验介绍
-
-#### 1.1 实验内容
-
-在本实验中，将带领大家通过使用 Saltstack 安装 Nginx，并配置 Nginx 的方式进一步熟悉使用 Saltstack，同时补充上一章节我们所未能讲解的知识点。
-
-#### 1.2 实验知识点
-
-+ Jinja2 介绍
-+ Saltstack 实战
-
-#### 1.3 推荐阅读
-
-+ [SaltStack 官方文档](https://docs.saltstack.com/en/latest/contents.html)
-
-+ [Jinja2 docs](http://jinja.pocoo.org/docs/dev/)
-
-## 2. Jinja2 介绍
-
-当我们批量部署服务的时候，不仅仅是安装亦或者是查看信息，我们还会修改相关的文件，当我们配置的文件大体相同但是其中只有个别的值是个性化的时候我们就会使用到模板了，
-
-Salt 支持了 Jinja2 的模板引擎，它可以用于 Salt states 文件、Salt pillar 文件和其他管理的文件。Salt 允许使用 Jinja 来访问 minion 的配置值、grains 和 pillar 数据，并调用 salt 来执行模块。
-
-### 2.1 Jinja2 简介
-
-Jinja2 是一个基于 Python 的全功能模板引擎。它能完全支持 unicode，并具有集成的沙箱执行环境，应用广泛。Jinja2 使用 BSD 授权。
-
-Jinja2 是 Python 中最常用的模板引擎之一。它的灵感来自 Django 的模板系统，但是它扩展了一种表达性的语言，给模板提供了更强大的工具集。除此之外，它还添加了沙箱执行和可选的自动转接程序，以确保安全性。其中，Jinja2 和 Python 2.6.x， 2.7.x 和 >= 3.3 的版本兼容。
-
-### 2.2 Jinja2 语法
-
-Jinja2 是一个比较友好的 Python 模板语言，模仿 Django 的模板。（如果你熟悉像 Django 或 Smarty 这类基于文本的模板语言，那么 Jinja2 的学习就会更加轻松）。
-
-Jinja2 中主要有这样的一些 Delimiters:
-
-- {%...%}：在这样的符号中一般放置语句，如模版的继承，流程控制等等
-- {{...}}：在这样的符号中一般放置表达式，如变量名，表达式等等
-- {#...#}：在这样的符号中一般放置需要注释的内容
-
-在 Saltstack 使用 Jinja2 模版中非常少、非常简单的部分，主要掌握在其中使用流程控制与变量名、表达式使用即可，我们通过以下的例子来做进一步的认识。
-
-### 2.3 Jinja 的控制结构
-
-+ 条件语句
-
-Jinja 最常见的就是将条件语句插入到 Salt pillar 文件中。例如不同发行版的软件包的就可以使用 os grain 来设置特定的平台路径，软件包名称和其他值等，如下示例：
+根据如下实验，报错。
 
 ```bash
-# 使用 Jinja 中的判断语句 if，通过 endif 来闭合，判断操作系统的类别
-{% if grains['os_family'] == 'RedHat' %}
-
-# 在红帽系列中 Apache 包名为 httpd
-apache: httpd
-git: git
-{% elif grains['os_family'] == 'Debian' %} 
-
-# 在 Debian 发行版中 Apache 包名为 apache2
-apache: apache2
-
-# 在非常早期的 Debian 中有一个工具集名 git，而版本控制的 git 只好名为 git，但是后来 git 太火便更正了
-git: git-core
-
-# 通过 endif 来闭合 if
-{% endif %}
+shiyanlou:salt/ $ sudo salt '*' state.highstate                                 [10:30:28]
+d5ca07d18557:
+    Minion did not return. [No response]
 ```
 
-+ 循环语句
+### 排除
 
-循环结构在 salt states 下创建用户或文件夹十分有用。如下示例：
-
-批量创建用户：
+#### 1. master 和 minion 进程是开启的
 
 ```bash
-# 在 {% %} 中使用 for 语句
-{% for usr in ['shi','yan','lou'] %}
-
-# 在 {{ }} 中使用变量
-{{ usr }}:
-
-  # 使用 saltstack 的 user 模块来创建用户，name 默认等于 ID，所以省略
-  user.present
-
-# 使用 endfor 语句来闭合 for 循环
-{% endfor %}
+ps -ef |grep -v grep|grep salt-master
+ps -ef |grep -v grep|grep salt-minion
+netstat -luantp  #4505 和 4506 是监听的
 ```
 
-批量创建文件夹：
+#### 2. master 和 minion 是连通的
 
 ```bash
-{% for DIR in ['/dir1','/dir2','/dir3'] %}
-{{ DIR }}:
-  # 使用 saltstack 的 file 模块来创建文件夹
-  file.directory:
-    - user: root
-    - group: root
-    - mode: 774
-{% endfor %}
+shiyanlou:salt/ $ sudo salt '*' test.ping                                       [10:28:36]
+d5ca07d18557:
+    True
 ```
 
-注：一般来说，尽可能保证 salt state 简单，如果编写的 Jinja 过于复杂可以考虑将任务分解成多个 Salt state，或者为任务编自定义的执行模块。
+#### 3. 密钥是接收的
+
+```bash
+shiyanlou:salt/ $ sudo salt-key -L                                              [10:43:31]
+Accepted Keys:
+d5ca07d18557
+Denied Keys:
+Unaccepted Keys:
+Rejected Keys:
+```
+
+#### 4. 变量是分发了的
+
+```bash
+shiyanlou:salt/ $ sudo salt '*' pillar.items                                    [10:48:26]
+d5ca07d18557:
+    ----------
+    nginx:
+        ----------
+        HOST:
+            192.168.42.4
+        PORT:
+            8080
+```
+
+#### 5. 查看日志
+
+```bash
+shiyanlou:salt/ $ sudo tail -f /var/log/salt/master /var/log/salt/minion   
+2018-06-25 18:18:13,213 [salt.loaded.int.module.cmdmod                                    :753 ][ERROR   ][9574] Command '[u'runlevel', u'/run/utmp']' failed with return code: 1
+2018-06-25 18:18:13,238 [salt.loaded.int.module.cmdmod                                    :755 ][ERROR   ][9574] stdout: unknown
+2018-06-25 18:18:13,238 [salt.loaded.int.module.cmdmod                                    :759 ][ERROR   ][9574] retcode: 1
+2018-06-25 18:18:13,238 [salt.loaded.int.module.cmdmod                                    :1075][ERROR   ][9574] Command '[u'runlevel', u'/run/utmp']' failed with return code: 1
+2018-06-25 18:18:13,238 [salt.loaded.int.module.cmdmod                                    :1080][ERROR   ][9574] output: unknown
+```
+
+没看出具体的问题
+
+#### 6. 用 debug 模式运行 minion
+
+```bash
+$ sudo salt-minion -l debug
+[DEBUG   ] Initializing new AsyncZeroMQReqChannel for (u'/etc/salt/pki/minion', u'd5ca07d18557', u'tcp://127.0.0.1:4506', u'aes')
+[DEBUG   ] Initializing new AsyncAuth for (u'/etc/salt/pki/minion', u'd5ca07d18557', u'tcp://127.0.0.1:4506')
+[DEBUG   ] Connecting the Minion to the Master URI (for the return server): tcp://127.0.0.1:4506
+[DEBUG   ] Trying to connect to: tcp://127.0.0.1:4506
+[DEBUG   ] minion return: {u'fun_args': [], u'jid': u'20180626104118658540', u'return': {u'pkgrepo_|-nginx-repo_|-deb http://nginx.org/packages/ubuntu/ trusty nginx_|-managed': {u'comment': u"Package repo 'deb http://nginx.org/packages/ubuntu/ trusty nginx' already configured", u'name': u'deb http://nginx.org/packages/ubuntu/ trusty nginx', u'start_time': '10:41:24.192533', u'result': True, u'duration': 294.91, u'__run_num__': 0, u'__sls__': u'nginx', u'changes': {}, u'__id__': u'nginx-repo'}, u'service_|-nginx-service_|-nginx_|-running': {u'comment': u'The service nginx is already running', u'name': u'nginx', u'start_time': '10:42:02.682633', u'result': True, u'duration': 316.5, u'__run_num__': 4, u'__sls__': u'nginx', u'changes': {}, u'__id__': u'nginx-service'}, u'file_|-nginx-service_|-/etc/nginx/conf.d/shiyanlou.conf_|-managed': {u'comment': u'File /etc/nginx/conf.d/shiyanlou.conf is in the correct state', u'pchanges': {}, u'name': u'/etc/nginx/conf.d/shiyanlou.conf', u'start_time': '10:42:02.457889', u'result': True, u'duration': 219.517, u'__run_num__': 3, u'__sls__': u'nginx', u'changes': {}, u'__id__': u'nginx-service'}, u'archive_|-extract_nginx_|-/home/shiyanlou_|-extracted': {u'comment': u'Path /home/shiyanlou/page exists', u'name': u'/home/shiyanlou', u'start_time': '10:41:24.497514', u'result': True, u'duration': 4.942, u'__run_num__': 1, u'__sls__': u'nginx', u'changes': {}, u'__id__': u'extract_nginx'}, u'pkg_|-nginx-service_|-nginx_|-latest': {u'comment': u'Package nginx is already up-to-date', u'name': u'nginx', u'start_time': '10:41:29.463235', u'result': True, u'duration': 32979.952, u'__run_num__': 2, u'__sls__': u'nginx', u'changes': {}, u'__id__': u'nginx-service'}}, u'retcode': 0, u'success': True, u'fun': u'state.highstate'}
+[INFO    ] User sudo_shiyanlou Executing command pillar.items with jid 20180626105058139017
+[DEBUG   ] Command details {u'tgt_type': u'glob', u'jid': u'20180626105058139017', u'tgt': u'*', u'ret': u'', u'user': u'sudo_shiyanlou', u'arg': [], u'fun': u'pillar.items'}
+```
+
+**等待片刻可以看到 minion 是有响应信息的，然而 master 却提示没有，以上所有说明一个问题。这个时间超过了 master 设置的 timeout。 所以需要增大 timeout。** 
+
+```bash
+$ sudo vi /etc/salt/master
+timeout: 300 # 改的长一些，最好超过 1 分钟
+```
+
+更改过后重启 `sudo service salt-master restart` 。
+
+```bash
+shiyanlou:salt/ $ sudo salt '*' state.highstate                                 [10:40:48]
+d5ca07d18557:
+----------
+          ID: nginx-repo
+    Function: pkgrepo.managed
+        Name: deb http://nginx.org/packages/ubuntu/ trusty nginx
+      Result: True
+     Comment: Package repo 'deb http://nginx.org/packages/ubuntu/ trusty nginx' already configured
+     Started: 10:41:24.192533
+    Duration: 294.91 ms
+     Changes:   
+----------
+          ID: extract_nginx
+    Function: archive.extracted
+        Name: /home/shiyanlou
+      Result: True
+     Comment: Path /home/shiyanlou/page exists
+     Started: 10:41:24.497514
+    Duration: 4.942 ms
+     Changes:   
+----------
+          ID: nginx-service
+    Function: pkg.latest
+        Name: nginx
+      Result: True
+     Comment: Package nginx is already up-to-date
+     Started: 10:41:29.463235
+    Duration: 32979.952 ms
+     Changes:   
+----------
+          ID: nginx-service
+    Function: file.managed
+        Name: /etc/nginx/conf.d/shiyanlou.conf
+      Result: True
+     Comment: File /etc/nginx/conf.d/shiyanlou.conf is in the correct state
+     Started: 10:42:02.457889
+    Duration: 219.517 ms
+     Changes:   
+----------
+          ID: nginx-service
+    Function: service.running
+        Name: nginx
+      Result: True
+     Comment: The service nginx is already running
+     Started: 10:42:02.682633
+    Duration: 316.5 ms
+     Changes:   
+
+Summary for d5ca07d18557
+------------
+Succeeded: 5
+Failed:    0
+------------
+Total states run:     5
+Total run time:  33.816 s
+```
+
+可见已经有响应了。
 
 ## 3. Saltstack 实战
 
@@ -173,9 +213,6 @@ pillar_roots:
       - /srv/salt/pillar
   nginx:
       - /srv/salt/pillar/nginx
-      
-      
-timeout: 300
 ```
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517730228680-wm)
@@ -401,20 +438,3 @@ sudo salt '*' state.highstate
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517734906601-wm)
 
 由此证明我们不仅执行没有出错，我们的结果也是没有问题的。
-
-```checker
-- name: check curl
-  script: |
-    #!/bin/bash
-	curl http://localhost:8080
-  error: 访问 localhost:8080 不成功
-```
-
-## 4. 总结
-
-本节实验中我们学习了以下内容，任何不清楚的地方欢迎与我们交流：
-
-+ Jinja2 介绍
-+ Saltstack 实战
-
-Jinja2 的简单介绍，与通过 Saltstack 编写一个部署的脚本来熟悉应用我们之前章节中所学到的内容。
