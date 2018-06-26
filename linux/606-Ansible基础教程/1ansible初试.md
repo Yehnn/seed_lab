@@ -129,10 +129,6 @@ Ansible 安装完成后，不会添加数据库，也不会有守护进程启动
 
 Ansible 安装操作视频：
 
-`@
-http://labfile.oss.aliyuncs.com/courses/980/week10/1-1.mp4
-@`
-
 ## 4. SSH
 
 在前面我们已经知道了 Ansible 是通过 SSH 来进行通信的。在和远程主机通信时，Ansible 默认假设使用 SSH 密钥，在需要时可以使用 `ansible` 命令的参数 `--ask-pass` 来进行密码认证。
@@ -303,10 +299,6 @@ $ ansible test -m shell -a 'free -m'
 
 Ansible AD_HOC 命令操作视频：
 
-
-`@
-http://labfile.oss.aliyuncs.com/courses/980/week10/1-2.mp4
-@`
 
 ## 7. 总结
 

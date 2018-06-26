@@ -479,10 +479,6 @@ $ ansible-playbook test_docker.yaml
 Playbook 示例操作视频：
 
 
-`@
-http://labfile.oss.aliyuncs.com/courses/980/week10/2-1.mp4
-@`
-
 ## 7. 总结
 
 本节实验主要讲解了 ansible 中 playbook 的编写过程，以及它的详细语法结构等。

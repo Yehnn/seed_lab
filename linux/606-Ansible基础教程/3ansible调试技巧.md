@@ -140,10 +140,6 @@ $ ansible-playbook testdebug.yaml
 Ansible Debug 模块操作视频：
 
 
-`@
-http://labfile.oss.aliyuncs.com/courses/980/week10/3-1.mp4
-@`
-
 ## 4. Plugins
 
 通过之前的实验我们可以发现，当一个 playbook 执行成功时，并未修改会返回一个 `ok:[host ip]` ，若执行成功并进行了修改，就会返回一个 `changed:[host ip]` ，当发生错误时就会返回一些 `fail` 错误信息，但有时这些信息十分繁杂，不利于阅读分析。虽然我们上面讲了如何用 debug 模块来解决这样的麻烦，但是，在批量操作的时候我们不可能挨个去注册这么多变量和模块来查看结果。这时，我们就可以使用 Ansible 中另一个强大的功能——`Plugins`（插件）来帮助我们在执行命令后输出一些信息，其中，在 GitHub 上公开了很多插件的代码，不过相信通过学习你也可以自己编写出一个插件哟！
@@ -180,10 +176,6 @@ $ sudo vim /etc/ansible/ansible.cfg
 
 Ansible 插件介绍视频：
 
-
-`@
-http://labfile.oss.aliyuncs.com/courses/980/week10/3-2.mp4
-@`
 
 这里我们举两个插件的用法为例，其他的插件大家可以下来研究。
 
