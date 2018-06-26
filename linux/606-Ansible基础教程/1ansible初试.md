@@ -5,87 +5,111 @@ enable_checker: true
 ---
 # Ansible 初试
 
-## 一、实验介绍
-#### 1.1 实验内容 
+## 1. 实验介绍
 
-随着云的不断成熟，随着企业服务器数量越来越多，当服务器到达几百台，上千台服务器之后，服务器日常管理也逐渐繁杂，自动化的运维方式逐渐成为主流，提高效率，降低错误几率。本实验将带领大家认识较为常用的自动化运维工具 Ansible  
-`本节实验`做`ansible`的`介绍`和`安装`
-#### 1.2 实验涉及的知识点
+#### 1.1 实验内容
 
-- Ansible 的用处
-- Ansible 的优势
-- Ansible 的 Inventory
-- Ansible 的 Ad-Hoc
+随着云技术的日渐成熟以及服务器数量的增多，对于运维的日常管理也就逐渐繁杂，因此越来越多的运维管理就趋向于自动化的方式。所以从本周开始将带着大家认识和学习几个常用的自动化运维的工具。
 
-#### 1.3 适合人群  
-本节实验适合对于ansible自动化运维框架感兴趣的同学安装和入门学习。
+本节主要讲解的是 Ansible 工具，虽然 Chef、Puppet、SaltStack and Fabric（后面章节会讲） 等等这些都是比较流行的自动化运维管理工具，但是相较于 Ansible 来说要复杂得多，不过每个工具也是各有各的好处，这里我们就先来学习这个比较简单的一款自动化运维工具—— Ansible。
 
-## 二、实验原理
-#### 2.1 Ansible 的简介
+#### 1.2 实验知识点
 
++ Ansible 的简介
 
-随着云的不断成熟，随着企业服务器数量越来越多，当到达上百台，上千台服务器之后，服务器日常管理也逐渐繁杂，而且如此多的服务器若是每天通过人工去频繁的更新或者部署及管理这些服务器，即使是都有成套的脚本，但也需要人工的一台台去执行，这样浪费大量的时间，效率很是低下，而且人为的操作很容易因为不细心、马虎而出现纰漏。
++ Ansible 的安装
 
-运维自动化是指将 IT 运维中日常的、大量的重复性工作自动化，把过去的手工执行转为自动化操作。这样可以大大提高我们的工作效率，能够更加及时，高效的解决问题。
++ Ansible 的配置
 
-而常用的自动化运维工具有许多，Chef, Puppet, Ansible, SaltStack and Fabric 等等，各个工具有各个工具的好处，今天我们要学习的是 Ansible。
++ AD-HOC 临时命令
 
-Ansible 是一款由 python 开发出来的自动化运维的工具。而使用 Ansible 有这样的一些优点:
+#### 1.3 推荐阅读
 
-- Ansible 是使用 python 开发出来的，维护相对于 ruby 较为简单。开发库要比基于 Ruby 的运维工具更多
-- Ansible 是基于 paramiko 开发的，所以无需服务端也不用客户端。是基于 SSH 工作的。
-- Ansible 可以通过命令执行一些简单的任务，也可以使用 playbook 来执行大量的任务。并且 playbook 不用分发到远程，在本地即可执行。
-- Ansible 的 playbook 使用的是 Jinja2，非常的简单易学，不用再去学习一门语言。
-- Ansible 是基于模块工作的,易于扩展，并且 Ansible 是开源的软件，在 [github 公开了代码](https://github.com/ansible/ansible)，可以借鉴开发自己需要的[自定义模块](http://docs.ansible.com/ansible/developing_modules.html)来使用。并且可以使用任意的语言开发。
++ [Ansible 官方文档](http://docs.ansible.com/ansible/latest/intro.html)
++ [Ansible wiki](https://en.wikipedia.org/wiki/Ansible_(software))
 
-Ansible 基于模块工作的，本身没有批量部署的能力。 Ansible 所运行的模块才是真正实现批量部署的关键，Ansible 提供的是一种框架。结构大体如下：
+## 2. Ansible 简介
 
-- connection plugins：主要用于本地与操作端之间的连接与通信；
-- host inventory：指定操作的主机，是一个配置文件里面定义监控的主机；
-- 各种模块：核心模块、自定义模块等等；
-- 使用插件完成记录日志、邮件等功能；
-- playbook：执行多任务，可多个节点也可以单个节点
+#### 2.1 概述
 
-![2.1](https://dn-simplecloud.shiyanlou.com/1135081470635637349-wm)
+Ansible 是一款基于 python 开发，能够实现了批量系统配置、程序部署、运行命令等功能的自动化运维工具。Ansible 主要是基于模块进行工作的，本身没有批量部署的能力，真正实现部署功能的是运行的模块。
+
+#### 2.2 结构框架
+
+和 Chef、Puppet 刚好相反，Ansible 使用的是无代理体系结构，这种体系结构可以通过防止节点轮询控制机器来减少网络开销。Ansible 提供的结果框架如下所示：
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470635637349-wm)
 （此图来源<http://tekslate.com/tutorials/ansible/>）
 
-## 三、实验步骤
++ Ansible ：运行在中央计算机上；
 
-下面正式进入实验。
++ Connection Plugins ：连接插件，主要用于本地与操作端之间的连接与通信；
 
-### 3.1 Ansible 的安装
++ Host Inventory：指定操作的主机，是一个配置文件里面定义监控的主机；
 
-通过上文的介绍，相信大家对 Ansible 有一个大体上的认识了，我们先来安装 ansible（我们可以通过源安装，也可以通过 git 源码来安装，也可以使用 pip 安装，这里是使用源安装）
++ Modules：核心模块、自定义模块等等；
 
-```
-#更新软件包的信息
-sudo apt-get update
++ Plugins ：使用插件来完成记录日志、邮件等功能；
 
-#首先安装管理安装软件库的工具
-sudo apt-get install software-properties-common
++ Playbooks：执行多任务，通过 SSH 部署模块到节点上，可多个节点也可以单个节点。
 
-#添加 ansible 的源
-sudo apt-add-repository ppa:ansible/ansible
+Ansible 主要有两种类型的服务器：控制机器和节点。控制机器用于控制协调，而节点由控制机器通过 SSH 进行管理，并且控制机通过 `inventory` 来描述节点的位置。在节点的编排上，Ansible 通过 SSH 部署模块到节点上，模块临时存储在节点上，并以标准输出的 JSON 协议进行通信，从而在远程机上检索信息，发送命令等。
 
-#若是在执行该命令时报错了，是因为 python3.5 所造成，可以使用这样的命令来临时修复一下
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.4 100
+#### 2.3 特点
 
-#更新软件包信息
-sudo apt-get update
++ Ansible 是基于 python 开发而来，维护相对简单，同时开发库也比基于 Ruby （一种面向对象的程序设计的脚本语言）的运维工具要多。
 
-#安装 ansible
-sudo apt-get install ansible
++ Ansible 默认通过 SSH 协议进行管理。同时 Ansible 是基于 python 的一个模块（paramiko）开发的，遵循 SSH 协议，支持加密和认证的方式来进行远程服务器连接，因此 Ansible 不需要客户端和服务端。
 
-#验证是否正确安装，且是最新版
-ansible --version
++ Ansible 可以通过命令来简单执行一些任务，也可以通过 palybook （后面会讲）的配置脚本来执行复杂任务，同时 playbook 不用分发到远程，在本地就可以执行。
+
++ Ansible 中的 playbook 使用的是 Jinja2 （基于 python 的模板引擎），简单易学。
+
++ Ansible 基于模块工作，易于扩展，而模块可以用任何语言编写，并以标准输出的 JSON协议进行通信。
+
++ Ansible 是开源的软件，在 [GitHub](https://github.com/ansible/ansible) 上有公开的代码。
+
+## 3. 安装
+
+这里我们介绍在 Ubuntu 14.04 上安装 Ansible 的方法。其他环境的安装方法大家可以参考 [Ansible 官方安装手册](http://docs.ansible.com/ansible/latest/intro_installation.html)。
+
+官方手册提供了多种的安装方法（如：通过 git 源码、使用 pip 安装等），这里我们使用源的方法来安装。
+
+1.首先，需要更新软件包的信息以及安装通用的管理软件库的工具（software-properties-common）。
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install software-properties-common
 ```
 
 ```checker
 - name: check pkg
   script: |
     #!/bin/bash
-	dpkg -l software-properties-common
+      dpkg -l software-properties-common
   error: 没有安装 software-properties-common
+```
+
+2.安装了软件库管理工具后，就可以通过 `add-apt-repository` 命令来添加 `ansible` 的源，将 PPA 添加到系统中去。
+
+> `PPA（Personal Package Archives）`，个人软件包档案，Ubuntu Launchpad 网站提供的一项源服务，允许个人用户上传软件源代码，通过 Launchpad 进行编译并发布的二进制 `deb` 软件包，这样使用者就可以便捷的安装最新版的软件。
+
+```bash
+$ sudo python3.4 /usr/bin/add-apt-repository ppa:ansible/ansible
+```
+
+注：由于 python 升级之后使用 `add-apt-repository` 会报错（ImportError：No module named 'apt_pkg'），这是因为在 `/usr/lib/python3/dist-packages` 中 `apt_pkg` 的连接只有 `python3.4`，所以为了避免因为版本的问题这里我们就特别的指定 python 的版本信息。
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/2767331516098353036-wm)
+
+3.最后需要更新一下软件包的信息，以便了解 PPA 中可用的包，然后安装 `ansible` 软件即可。
+
+```
+$ sudo apt-get update
+$ sudo apt-get install ansible
+```
+
+```checker
 - name: check pkg
   script: |
     #!/bin/bash
@@ -93,130 +117,197 @@ ansible --version
   error: 没有安装 ansible
 ```
 
-在添加源的时候记得确认添加
-
-![3.1-1](https://dn-simplecloud.shiyanlou.com/1135081470637371186-wm)
-
-![3.1-2](https://dn-simplecloud.shiyanlou.com/1135081470637544754-wm)
-
-### 3.2 Ansible 的 Inventory
-
-Ansible 可以同时对多台机器或者单台机器亦或者部分机器操作便是通过 Inventory，Inventory 默认是存放在 ·`/etc/ansible/hosts` 中。
-
-在 Inventory 中我们列出了我们需要操作的机器，我们可以单纯的列出这些主机，但是推荐很有条理的为他们分组，在使用时可以只对其中的某组操作，更多的高级的配置可以[参考官方文档](http://docs.ansible.com/ansible/intro_inventory.html)
-
-在 Inventory 中以 `#` 开头的便是注释
+4.验证一下 `Ansible` 是否安装成功以及版本信息
 
 ```
-# 编辑文件
-sudo vim /etc/ansible/hosts
+$ ansible --version
 ```
 
-下面是几个简单的配置范例：
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516168235701.png/wm)
+
+Ansible 安装完成后，不会添加数据库，也不会有守护进程启动或继续运行。你只需要把它安装在至少一台机器上，它可以从该中心点来管理远程机器了。
+
+Ansible 安装操作视频：
+
+`@
+http://labfile.oss.aliyuncs.com/courses/980/week10/1-1.mp4
+@`
+
+## 4. SSH
+
+在前面我们已经知道了 Ansible 是通过 SSH 来进行通信的。在和远程主机通信时，Ansible 默认假设使用 SSH 密钥，在需要时可以使用 `ansible` 命令的参数 `--ask-pass` 来进行密码认证。
+
+这里实验楼提供了当前环境下 SSH 的密码（点击右边的工具栏 "SSH 直连"），因此无需设置 SSH 密钥。
+
+## 5. Inventory
+
+Ansible 能够同时对单台或多台机器亦或部分机器操作是通过 Inventory 来实现的， Inventory 默认保存在 `/etc/ansible/hosts` 配置文件中，而 Ansible 通过这个文件就可以知道要追踪的服务器了。
+
+编辑打开配置文件
 
 ```
-#此为配置文件内容，我们可以这样的来使用
+$ sudo vim /etc/ansible/hosts
+```
 
-#为常用的机器分组，这里为 test 组，可以只有一台，也可以有多台
+可以看到配置文件中有很多的默认的示例配置，用 `'#'` 注释掉了。
+
+![实验楼](https://dn-simplecloud.shiyanlou.com/2767331516098624338-wm)
+
+在 Inventory 中列出我们需要操作的机器，可以单纯的列出这些主机，但是推荐有条理地为他们分组，这样在使用时就可以只对其中的某组操作。
+
+Inventory 文件可以有多种不同的格式（如：INI、YAML 等），具体要取决于相应的插件，这里我们举几个 Ansible 的默认格式（INI）的示例，如下所示：
+
+```bash
+# 1.常用主机（IP 地址）分组，标题是组名，用于分类系统和决定系统的控制等，可以有一台或多台。
 [test]
-127.0.0.1 
+127.0.0.1
+foo.example.com
 
-#添加对该组机器登陆的用户与验证的方式配置，例如连接 54.11.11.11，使用 SSH 公私钥登陆
+# 2.分组后添加对该组机器的登录用户和验证方式。添加主机和用户名以及私钥文件。
 [dev_test]
-54.11.11.11 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/path/of/keyfile
+192.168.42.3 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/path/of/keyfile
 
-#或者不分组，给特别的机器去别名,指定其 ip，与特别开放的端口号
-jumper ansible_port=5555 ansible_host=192.168.1.50
+# 3.不使用分组，采用文件别名的方式。通过端口及主机来描述。
+Alias ansible_host=192.168.1.50 ansible_port=6666
 ```
 
-在这里将 ssh 登陆的密码写在 Inventory 的方式并不推荐，可以在使用 ansible 命令使用 --ask-pass 的参数，此处使用只是因为本实验环境的密码很容易输入错误，若是在这里出现错误可以看看下文的常见错误。
+下面我们来实际操作一下，在配置文件中添加如下语句：
 
-下方是我们实验中将要使用的配置，注意密码每个实验环境都不同，当前实验环境的密码可以点击右边工具栏“SSH直连”查看：
-
-![3.2](https://dn-simplecloud.shiyanlou.com/1135081470646367410-wm))
-
-### 3.3 Ansible 的 Ad-Hoc
-
-我们可以使用 ping 模块来尝试使用 ansible 命令
-
-```
-ansible test -m ping
+```bash
+[test]
+127.0.0.1 ansible_ssh_user=shiyanlou ansible_ssh_pass=666666
 ```
 
-这句操作有可能会报错，主要原因是 Host Key 的检查限制，解决方法便是将 `/etc/ansible/ansible.cfg` 中的 `host_key_checking` 的注释符删除即可（更详细的内容见本实验的第四部分-常见错误）。
+当前实验环境的密码点击右侧工具栏中的 “SSH 直连”可获得，每个环境中密码都不同。
 
-操作成功的效果图：
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516168322623.png/wm)
 
-![3.3-1](https://dn-simplecloud.shiyanlou.com/1135081470642062116-wm)
+注：在 Asible 中并不推荐将 SSH 登录密码以文本形式存储在 Inventory 中的方式。但是此处使用只是因为本实验环境中的密码容易输入错误，避免后续可能出现的一些常见错误。
 
-这里使用的 test 是我们之前设置的分组名，而若是使用的 all 则表示对所有的机器执行命令，`-m` 便是指定使用的模块
+保存退出即可。
 
+### Inventory 参数
+
+如上的示例中，我们通过设置了一些变量来配置和远程主机的交互。下面我们列出几个常见的 inventory 的配置参数。
+
+主机连接：
+
++ `ansible_connection` 连接到主机的类型，任何可能的连接插件名称，例如，SSH 协议类型中有：`ssh`、`smart` 或 `paramiko` 。
+
+一般连接：
+
++ `ansible_host` 要连接的主机名称。
+
++ `ansible_port` ssh 端口号。
+
++ `ansible_user` 默认 ssh 用户名。
+
+具体的 SSH 连接：
+
++ `ansible_ssh_pass` ssh密码
+
++ `ansible_ssh_private_key_file` 由 ssh 使用的私钥文件。
+
+## 6. AD-HOC
+
+**ad-hoc** ：临时命令，是在输入内容后，快速执行某些操作，但不希望保存下来的命令。
+
+一般来说，Ansible 主要在于我们后面会学到的 playbook 的脚本编写，但是，ad-hoc 相较来说，它的优势在于当你收到一个临时任务时，你只用快速简单的执行一个 ad-hoc 临时命令，而不用去编写一个完整的 playbook 脚本就可以了。
+
+我们知道 Ansible 主要是通过模块来实现各种功能的，下面我们就通过 `ping` 这个简单的模块来操作一下 `ad-hoc` 命令。
+
+eg：
+
+```bash
+# 对 test 分组执行命令
+$ ansible test -m ping
+
+# 对所有机器执行命令
+$ ansible all -m ping
 ```
-#我们可以使用这样的方法让所有我们需要操作的机器输出 hello world
-ansible test -a "/bin/echo hello world"
-```
-![3.3-2](https://dn-simplecloud.shiyanlou.com/1135081470642855904-wm)
 
-```
-#我们可以使用这样的方法查看所有我们需要操作的机器的信息
-ansible test -m setup
-```
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516168374181.png/wm)
 
-![3.3-3](https://dn-simplecloud.shiyanlou.com/1135081470643195158-wm)
+操作执行后可能会出现图上的报错，其主要原因是 ssh 连接时需要检查验证 `HOST KEY` ，可在 ssh 连接命令中使用 `-o` 参数将 `StrictHostKeyChecking` 设置为 no 来临时禁用检查。如果要保存设置，可修改 Ansible 配置文件，将 `/etc/ansible/ansible.cfg` 中的 `host_key_checking` 的注释符删除即可。如下操作：
 
-通过以上的例子我们可以看出 Ansible 的 Ad-Hoc命令的格式大致是这样的：
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516168422630.png/wm)
 
-```
-ansible 主机名或者组名 -m 模块名 -a "模块参数" 其他参数
-```
+修改完成后，再次执行 `ad-hoc` 操作的正确结果如下：
 
-Ansible 不仅仅能做上面这些查看信息的一些操作，看这样的一个例子：
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516168450086.png/wm)
 
-```
-#在我们所操作的 test 组中所有的主机的/home/shiyanlou目录下创建一个名为testfile 的文件，并且权限为 777
-ansible test -m file -a "dest=/home/shiyanlou/testfile state=touch mode=777"
+简单尝试后，我们大概了解了 Ansible 的 `ad-hoc` 的一般用法，如下是它的大致命令格式：
+
+```bash
+ansible 主机名或组名 -m 模块名 -a "模块参数" 其他参数
 ```
 
-![3.3-4](https://dn-simplecloud.shiyanlou.com/1135081470647253521-wm)
+我们可以再举几个示例来感受下 `ad-hoc` 命令的操作。
 
-其实 Ansible 为我们提供了很多的模块，可以创建文件，文件夹，可以修改文件内容，可以复制文件，可以使用 AWS 上预留的接口等等。
+eg1：执行命令查看 `setup` 模块中所有我们需要操作的机器的信息。
 
-Ansible 基本上可以支持我们所能想到的常用操作，并且 Ansible 也在不断的完善当中，来支持我们更多需要的操作。
+```bash
+$ ansible all -m setup
+```
 
-若是你有需要的 shell 操作翻阅 Ansible 文档中没有支持，我们还有万不得已的解决方法就是直接使用 shell 模块，使用 shell 命令即可
+![实验楼](https://dn-simplecloud.shiyanlou.com/1135081470643195158-wm)
 
-从上文的截图，以及常见错误截图中我们可以看到返回的有三种类型
+eg2：执行命令让操作的机器输出 `Hello shiyanlou`。
 
-- success：这样的结果表示这个操作成功，这其中有两种情况，第一是做一些查询等等的一些简单操作不需要修改内容的，表示该操作没问题，第二种情况就是若是这个操作曾经做过再做是便会直接表示成功
+```bash
+$ ansible test -a "/bin/echo Hello shiyanlou"
+```
 
-- changed：true 这样的结果表示你做的一些修改行的操作执行成功，如上文的创建了一个文件，或者修改了配置文件，复制了一个文件等等这类的操作就会有这样的结果
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516169220218.png/wm)
 
-- failed：这样的结果表示这个操作执行失败，可能是密码错误，参数错误等等，具体看提示中的 msg 的值。并且在 playbook 中有多个任务，中间的某个任务出现这样的情况便不会继续往下执行。（playbook 会在后续的试验中详细讲解，当然在2.0 之后出了一个新功能来补救这个缺陷）
+eg3：执行命令让 test 组中的主机在指定目录下创建文件，并设置权限。
 
-ansible 更多的参数我们可以使用 `ansible --help` 或者是 `man ansible` 来查看
+```bash
+$ ansible test -m file -a "dest=/home/shiyanlou/file state=touch mode=777"
+```
 
-ansible 有许许多多的模块供我们来使用，更多的是用参数以及模块我们可以查阅 ansible 的 文档中的[模块章节](http://docs.ansible.com/ansible/list_of_all_modules.html)
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/file
+  error: /home/shiyanlou 目录下没有 file 文件
+- name: check priv
+  script: |
+    #!/bin/bash
+	stat -c %a /home/shiyanlou/file|grep 777
+  error: /home/shiyanlou/file 权限不是 777
+```
 
-Ad-Hoc 的作用就是在我们只需要做一些简单的操作，不用脚本记录下来的时候，能够简单、快速的在我们需要的机器中做出相应的修改或者查看。
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516169161655.png/wm)
 
-灵活的使用 Ad-Hoc 能给我们带来很大的便捷,希望在学习之时多多查阅 Ansible Document，新功能的添加与提醒都会在其中体现。
+从上面可以看出 Ansible 提供了很多的模块，还可以创建文件和文件夹、修改文件内容、创建用户、从源代码管理部署、管理软件包等操作。更多的模块及操作大家可以参考 Ansible 官方文档中的[模块章节](http://docs.ansible.com/ansible/latest/list_of_all_modules.html)。
 
-## 四、常见的错误
+对于 Ansible 来说基本支持我们平时常用的操作，并且它也在不断的完善来支持我们更多的操作。不过对于使用 shell 操作在 Ansible 中没有相应的模块支持的操作时，我们可以尝试的解决办法是直接使用 shell 模块来执行命令即可，如下这个例子：
 
-若是遇到这样的错误信息：
+```bash
+$ ansible test -m shell -a 'free -m'
+```
 
-![4-1](https://dn-simplecloud.shiyanlou.com/1135081470640868808-wm)
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid276733labid1997timestamp1516170159413.png/wm)
 
-这是因为 ssh 连接时需要检查验证 host key，在 ssh 连接命令中可以使用 `-o` 参数将 `StrictHostKeyChecking` 设置为 no。而在 ansible 中需要修改配置文件，配置文件中 `host_key_checking=False` 默认是注释的。解决方法便是将 `/etc/ansible/ansible.cfg` 中的 `host_key_checking` 的注释符删除即可。
+**AD-HOC 返回类型**
 
-解决方法[参考](http://noodle.blog.51cto.com/2925423/1769433)
+在之前的操作中我们可能看到返回的类型有如下几种：
 
-## 五、实验总结
++ `success`：这个结果表示操作成功，其中有两种情况，第一种情况是当执行一些查询的简单操作并且不需要修改内容时，表示该操作没问题；第二种情况就是当这个操作曾经执行过再执行时就会直接表示成功。
 
-通过本实验带大家认识了 Ansible 是个什么样的工具，同时也带大家使用了 Ansible Ad-Hoc，领略了它的便捷，无需客户端便可为我们批量的操作大量的机器。一定要多翻阅 ansible document，灵活使用。
++ `changed`：true 这样的结果表示执行的一些修改操作执行成功，如上文的创建了一个文件，或者修改了配置文件，复制了一个文件等等这类的操作就会有这样的结果。
 
-## 六、参考资料
++ `failed`：这样的结果表示这个操作执行失败，可能是密码错误，参数错误等等，具体看提示中的 msg 的值。并且在 playbook 中会有多个任务，中间的某个任务出现这样的情况都不会继续往下执行。（playbook 会在后续的试验中详细讲解）
 
-[1] Ansible 官方文档：<http://docs.ansible.com/ansible/>
+Ansible AD_HOC 命令操作视频：
 
-[2] Ansible 官方文档介绍 Ad-Hoc：<http://docs.ansible.com/ansible/intro_adhoc.html>
+
+`@
+http://labfile.oss.aliyuncs.com/courses/980/week10/1-2.mp4
+@`
+
+## 7. 总结
+
+本节实验主要学习了如何配置 Ansible 服务，以及尝试简单的 AD-HOC 命令的操作，来实现 Ansible 服务和控制的服务器间的通信，在后面实验中我们将继续学习 Ansible 另一个强大的功能——playbook。
