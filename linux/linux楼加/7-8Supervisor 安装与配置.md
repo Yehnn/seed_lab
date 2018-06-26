@@ -119,6 +119,14 @@ Linux 提供了通过系统软件包管理器来安装 Supervisor。这些软件
 $ sudo apt-get install supervisor
 ```
 
+```checker
+- name: check pkg
+  script: |
+    #!/bin/bash
+      dpkg -l supervisor
+  error: 没有安装 supervisor
+```
+
 可以发现在实验楼的环境中已经安装并且运行了 supervisor。
 
 ```bash
@@ -174,6 +182,14 @@ $ ll /etc/supervisor/
 
 ```bash
 $ sudo cp /etc/supervisor/supervisord.conf ./
+```
+
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /home/shiyanlou/supervisord.conf
+  error: /home/shiyanlou 目录下没有 supervisord.conf 文件
 ```
 
 然后，我们就来配置 supervisor 以及相关参数说明。
@@ -253,6 +269,14 @@ pidfile=/var/run/supervisord1.pid
 serverurl=unix:///var/run//supervisor1.sock
 
 4. 对于 [include] 部分，因为环境中已经启动了，再次执行时会有问题，所以这里我们最好把这部分注释掉，在语句前面添上分号（;）即可。但是你在本地若要配置 ssh 服务时还是需要进行配置说明。
+```
+
+```checker
+- name: check content
+  script: |
+    #!/bin/bash
+	grep supervisord1 /home/shiyanlou/supervisord.conf
+  error: /home/shiyanlou/supervisord.conf file 内容不对
 ```
 
 修改配置完成后保存退出。
@@ -366,6 +390,19 @@ startretries=3                # 启动失败时的最多重试次数
 stopwaitsecs=10               # 发送 SIGKILL 前的等待时间
 ```
 
+```checker
+- name: check file
+  script: |
+    #!/bin/bash
+	ls /etc/supervisor/conf.d/supervisor_nginx.conf
+  error: /etc/supervisor/conf.d 目录下没有 supervisor_nginx.conf 文件
+- name: check content
+  script: |
+    #!/bin/bash
+	grep nginx /home/shiyanlou/supervisor.conf
+  error: /home/shiyanlou/supervisor.conf 内容不对
+```
+
 然后，我们需要去配置文件中添加 `supervisor_nginx.conf` 这个 program 项。
 
 ```bash
@@ -407,6 +444,14 @@ $ sudo supervisorctl update
 
 ```bash
 $ ps -ef | grep nginx
+```
+
+```checker
+- name: check service
+  script: |
+    #!/bin/bash
+	ps -ef|grep -v grep|grep nginx
+  error: 没有启动 nginx
 ```
 
 已经启动，然后我们在 supervisor shell 交互界面也查看一下 nginx 的状态。

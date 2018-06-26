@@ -335,5 +335,19 @@ Total states run:     4
 Total run time:  30.748 s
 ```
 
+**最新发现，跟那里的链接无关。应该是进程冲突了**
 
+```
+sudo killall salt-master
+sudo killall salt-minion
+sudo service salt-master start
+sudo service salt-minion start
+sudo salt '*' state.apply 
+sudo salt '*' state.highstate
+```
 
+这样就是成功的了。
+
+### 原因
+
+应该是 saltstack 的结构不熟悉。
