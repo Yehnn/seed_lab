@@ -1,18 +1,25 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Docker 存储与网络
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 在本节内容中，我们将讨论 `Docker` 中管理数据的几种方式。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Docker 存储概念
 + Docker volumes/bind mounts/tmpfs
 + Docker 网络管理
 
 ## 2. 存储
+
+下面我们将会学习存储。
 
 ### 2.1 概述
 

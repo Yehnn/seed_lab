@@ -1,16 +1,21 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # 在 Kubernetes 上运行应用
 
-## 实验介绍
+## 1. 实验介绍
 
 Kubernetes 存在的目的就是为了方便、稳定、可靠的运行应用。本次实验我们来学习如何在 Kubernetes 集群里运行简单的无状态应用。无状态应用没有状态（或者说状态保存在应用之外，比如数据库），可以随时在不同的 Node 之间迁移运行实例。
 
 > 实验环境已经部署好 Kubernetes，进入实验环境后在 `HOME` 目录下执行 `./dind-cluster-v1.10.sh up` 即可启动集群。
 
-## Pod
+## 2. Pod
 
 Pod 是应用在 Kubernetes 集群里的运行实例，一个应用可以在多个 Node 上运行多个 Pod 来扩展性能或者保障高可用性。
 
-### 理解 Pod
+### 2.1. 理解 Pod
 
 Pod 是 Kubernetes 中你可以创建和部署的最小也是最简的单位。一个 Pod 代表着集群中运行的一个进程。Pod 中封装着应用的容器（有的情况下是好几个容器）、存储、网络，管理着容器如何运行的策略选项。Pod 代表着一个部署单位，也就是 Kubernetes 中应用的一个运行实例，可能由一个或者多个共享资源的容器组成。Docker 是 Kubernetes 中最常用的容器运行时，但是 Pod 也支持其他容器运行时。
 
@@ -21,7 +26,7 @@ Pod 是 Kubernetes 中你可以创建和部署的最小也是最简的单位。�
 
 每个 Pod 都是应用的一个实例。如果你想平行扩展应用的话（运行多个实例），你应该运行多个 Pod，每个 Pod 都是一个应用实例。在 Kubernetes 中，这通常被称为复制（replication）。
 
-### Pod 中如何管理多个容器
+### 2.2. Pod 中如何管理多个容器
 
 Pod 中可以同时运行多个进程（作为容器运行）协同工作。同一个 Pod 中的容器会自动的分配到同一个 node 上。同一个 Pod 中的容器共享资源、网络和依赖，它们总是被同时调度。
 
@@ -31,33 +36,33 @@ Pod 中可以同时运行多个进程（作为容器运行）协同工作。同�
 
 Pod中可以共享两种资源：
 
-#### 网络
+#### 2.2.1. 网络
 
 每个 Pod 都会被分配一个唯一的 IP 地址。Pod 中的所有容器共享网络空间，包括 IP 地址和端口。Pod 内部的容器可以使用 localhost 互相通信。Pod 中的容器与外界通信时，必须分配共享网络资源（例如使用宿主机的端口映射）。
 
-#### 存储
+#### 2.2.2. 存储
 
 可以为 Pod 指定多个共享的 Volume。Pod 中的所有容器都可以访问这些共享的 Volume。Volume 也可以用来持久化 Pod 中的存储资源，以防容器重启后文件丢失。
 
-### 使用 Pod
+### 2.3. 使用 Pod
 
 你很少会直接在 Kubernetes 中创建单个 Pod。因为 Pod 的生命周期是短暂的，用后即焚的实体。当 Pod 被创建后（不论是由你直接创建还是被其它 Controller），都会被Kuberentes 调度到集群的 Node 上。直到 Pod 的进程终止、被删掉、因为缺少资源而被驱逐、或者 Node 故障之前，这个 Pod 都会一直保持在那个 Node 上。
 
 Pod 不会自愈。如果 Pod 运行的 Node 故障，或者是调度器本身故障，这个 Pod 就会被删除。同样的，如果 Pod 所在 Node 缺少资源或者 Pod 处于维护状态，Pod 也会被驱逐。Kubernetes 使用更高级的称为 Controller 的抽象层来管理 Pod 实例。虽然可以直接使用 Pod，但是在 Kubernetes 中通常是使用 Controller 来管理 Pod。
 
-### Pod 和 Controller
+### 2.4. Pod 和 Controller
 
 Controller 可以创建和管理多个 Pod，提供副本管理、滚动升级和集群级别的自愈能力。例如，如果一个 Node 故障，Controller 就能自动将该节点上的 Pod 调度到其他健康的 Node 上。通常，Controller 会用你提供的 Pod template 来创建相应的 Pod。
 
-### Pod Template
+### 2.5. Pod Template
 
 Pod 模版是包含了其他对象的 Pod 定义，例如 Replication Controllers，Jobs 和 DaemonSets。Controller 根据 Pod 模板来创建实际的 Pod。
 
-## Deployment
+## 3. Deployment
 
 Deployment 为 Pod 和 ReplicaSet 提供声明式更新。只需要在 Deployment 中描述想要的目标状态是什么，Deployment controller 就会将 Pod 和 ReplicaSet 的实际状态改变到目标状态。可以定义一个全新的 Deployment 来创建 ReplicaSet 或者删除已有的 Deployment 并创建一个新的来替换。
 
-### 创建 Deployment
+### 3.1. 创建 Deployment
 
 下面是一个 Deployment 示例，它创建了一个 ReplicaSet 来启动 3 个 nginx Pod。
 
@@ -125,7 +130,7 @@ nginx-deployment-75675f5897-z887c   1/1       Running   0          6m        app
 
 刚创建的 RS 将保证总是有 3 个 Pod 存在。RS 和 Pod 可以看做是 Deployment 在某一时刻的状态，每次 Deployment 更新，都会导致 RS 和 Pod 对象销毁和重建。
 
-### 更新 Deployment
+### 3.2. 更新 Deployment
 
 假如我们现在想要让 Pod 使用 nginx:1.9.1 的镜像来代替原来的 nginx:1.7.9 的镜像。
 
@@ -148,7 +153,7 @@ nginx-deployment-c4747d96c-xg6f7   1/1       Running   0          1m        app=
 
 也可执行 `kubectl edit deployment/nginx-deployment` 命令来更新 Deployment。该命令会在编辑器里打开 Deployment 文件，修改 `.spec.template.spec.containers[0].image` 节点的值为 `nginx:1.9.1`，以及其它任何需要修改的地方。保存退出后，Kubernetes 会检测到其中的变化，并调整集群中的应用来达到新的部署状态要求。
 
-### 回退 Deployment
+### 3.3. 回退 Deployment
 
 有时候可能想回退一个 Deployment，例如当新的 Deployment 一直在循环崩溃和重启。默认情况下，Kubernetes 会在系统中保存前两次 Deployment 的滚动（rollout）历史记录，以便可以随时回退。只要 Deployment 的 rollout 被触发就会创建一个新的 revision。也就是说当且仅当 Deployment 的 Pod template 被更改，例如更新 template 中的 label 和容器镜像时，就会创建一个新的 revision。其他的更新，比如扩容 Deployment 不会创建 revision，因此我们可以很方便的手动或者自动扩容。这意味着当回退到历史 revision 时，只有 Deployment 中的 Pod template 部分才会回退。
 
@@ -227,7 +232,7 @@ Events:
 
 为了修复这个问题，我们需要回退到稳定的 Deployment revision。
 
-#### 查看 Deployment 升级历史
+#### 3.3.1. 查看 Deployment 升级历史
 
 使用下面的命令来查看 Deployment 的 revision：
 
@@ -260,7 +265,7 @@ Pod Template:
   Volumes: 、<none>
 ```
 
-#### 回退到历史版本
+#### 3.3.2. 回退到历史版本
 
 使用下面的命令来回退到上一个版本：
 
@@ -287,11 +292,11 @@ nginx-deployment-595696685f   0         0         0         22m
 nginx-deployment-75675f5897   3         3         3         52m
 ```
 
-#### 清理策略
+#### 3.3.3. 清理策略
 
 你可以通过设置 `.spec.revisonHistoryLimit` 项来指定 Deployment 最多保留多少次 revision 历史记录。默认会保留所有，如果将该项设置为 0，Deployment 将不允许回退。
 
-### Deployment 扩容
+### 3.4. Deployment 扩容
 
 可以使用下面的命令来扩容 Deployment：
 
@@ -315,13 +320,13 @@ $ kubectl autoscale deployment nginx-deployment --min=3 --max=10 --cpu-percent=8
 deployment.apps "nginx-deployment" autoscaled
 ```
 
-## 实验知识点
+## 4. 实验知识点
 
 - Pod 对象介绍
 - 通过 Deployment 对象来运行应用
 - 应用更新
 - 应用回退
 
-## 实验总结
+## 5. 实验总结
 
 本次实验通过学习 Pod 和 Deployment 对象，我们掌握了如何在 Kubernetes 集群里运行应用，以及如何更新和回退应用版本。

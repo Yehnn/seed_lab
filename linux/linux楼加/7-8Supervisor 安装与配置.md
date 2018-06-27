@@ -276,7 +276,7 @@ serverurl=unix:///var/run//supervisor1.sock
   script: |
     #!/bin/bash
 	grep supervisord1 /home/shiyanlou/supervisord.conf
-  error: /home/shiyanlou/supervisord.conf file 内容不对
+  error: /home/shiyanlou/supervisord.conf 内容不对
 ```
 
 修改配置完成后保存退出。
@@ -318,7 +318,7 @@ program 配置部分我们是单独保存在 `conf.d` 路径下的，为了能�
 我们通常选择参数 `-c` 来指定 supervisord 命令的配置文件的绝对路径，这样可以确保安全性。
 
 ```bash
-$ sudo supervisord -c supervisor.conf
+$ sudo supervisord -c supervisord.conf
 ```
 
 #### 4.3.2 运行 supervisorctl
@@ -343,7 +343,7 @@ $ sudo supervisorctl
 
 | 参数     | 说明                                                    |
 | -------- | ------------------------------------------------------- |
-| `-c`     | 配置文件的路径，默认为 /etc/supervisor.conf             |
+| `-c`     | 配置文件的路径，默认为 /etc/supervisor/supervisord.conf             |
 | `-i`     | 执行命令后启动交互式 shell                              |
 | `-h`     | 打印使用情况并退出                                      |
 | `-u`     | 用于与服务器进行验证的用户名                            |
@@ -354,7 +354,7 @@ $ sudo supervisorctl
 比如我们可以通过参数 `-c` 来看看环境中默认启动的那个 supervisor 的服务。
 
 ```bash
-$ sudo supervisorctl -c /etc/supervisor/supervisor.conf
+$ sudo supervisorctl -c /etc/supervisor/supervisord.conf
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/276733/1517565779558.png-wm)
@@ -399,8 +399,8 @@ stopwaitsecs=10               # 发送 SIGKILL 前的等待时间
 - name: check content
   script: |
     #!/bin/bash
-	grep nginx /home/shiyanlou/supervisor.conf
-  error: /home/shiyanlou/supervisor.conf 内容不对
+	grep nginx /home/shiyanlou/supervisord.conf
+  error: /home/shiyanlou/supervisord.conf 内容不对
 ```
 
 然后，我们需要去配置文件中添加 `supervisor_nginx.conf` 这个 program 项。

@@ -1,39 +1,44 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Docker Swarm 管理
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验主要介绍 Docker 的 Swarm 相关管理。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Docker Swarm 基本概念
 + Docker Swarm 常用命令
 
-### 1.3 推荐阅读
+#### 1.3 推荐阅读
 
 + [Docker 集群：工作原理](http://www.subond.com/pages/2017/04/26/docker-swarm-gong-zuo-yuan-li.html)
 
 ## 2. 概述
 
-### 2.1 Swarm
+#### 2.1 Swarm
 
 Swarm 是 Docker 发布的管理集群的工具，一个集群由多个运行 `Docker` 的主机组成。下面我们简单介绍 Swarm 中的一些关键概念。
 
 Swarm 在 Docker 1.12 之后被集成到 Docker Engine 中，又被称为 `swarm mode`，后面我们所说的 swarm 都是指 swarm mode。
 
-### 2.2 关键概念
+#### 2.2 关键概念
 
-#### Role
+##### Role
 
 一个集群由多个运行 Docker 的主机组成，分别作为管理者（Manager）和工作者（Worker）两个角色。管理者管理集群中的成员，而工作者运行集群服务。给定的 Docker 主机可以是一个管理员，也可以是一个工作者，或者同时具备这两个角色。
 
-#### Node
+##### Node
 
 一个节点（Node）是参与到 Swarm 集群中的一个实例。一般表现为运行 Docker 的主机。
 
-#### 服务与任务
+##### 服务与任务
 
 一个服务是任务在管理节点或工作节点执行的定义，服务中运行的单个容器被称为任务。
 
@@ -45,13 +50,15 @@ Swarm 在 Docker 1.12 之后被集成到 Docker Engine 中，又被称为 `swarm
 
 一个服务的多个任务之间没有什么不同，但是对于一些特殊的服务而言，例如涉及到端口映射的服务，即便设定了多个任务，也只能启动一个。
 
-#### 堆栈
+##### 堆栈
 
 堆栈（stack）是一组相互关联的服务，即一个堆栈能够定义和协调整个应用程序的功能（但是一些非常复杂的应用程序可能需要使用多个堆栈）。
 
 对于在上一节我们学习的 Docker Compose 定义的应用程序来说，从技术角度来讲，就可以说我们一直在使用堆栈。但是 Docker Compose 是运行在单个主机上，而这里我们所说的堆栈可以运行在一个集群中，即是一个分布式的应用程序。
 
 ## 3. Docker Swarm
+
+下面我们将会学习 Docker Swarm。
 
 ### 3.1 环境搭建
 

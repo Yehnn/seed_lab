@@ -1,18 +1,25 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Docker 容器与镜像
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节内容我们将学习 Docker 容器和镜像的一些管理操作。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Docker 基本命令
 + Docker 容器操作命令
 + Docker 镜像管理及制作
 
 ## 2. docker 命令
+
+下面我们将会学习docker 命令。
 
 ### 2.1 查看系统信息
 
@@ -75,6 +82,8 @@ http://labfile.oss.aliyuncs.com/courses/980/week11/2-1.mp4
 @`
 
 ## 3. 容器
+
+下面我们将会学习容器。
 
 ### 3.1 查看容器列表
 

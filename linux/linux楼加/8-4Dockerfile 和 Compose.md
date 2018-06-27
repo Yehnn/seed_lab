@@ -1,12 +1,17 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Dockerfile 和 Compose
 
 ## 1. 实验介绍
 
-### 1.1 实验内容
+#### 1.1 实验内容
 
 本节实验接着之前的实验继续来探讨 Docker 中的 Dockerfile，以及如何在 Dockerfile 中创建镜像和对 Docker Compose 的学习，最后通过一个实战来进行巩固学习。
 
-### 1.2 实验知识点
+#### 1.2 实验知识点
 
 + Dockerfile 基本语法
 + Dockerfile 创建镜像流程
@@ -184,6 +189,8 @@ http://labfile.oss.aliyuncs.com/courses/980/week11/4-1.mp4
 @`
 
 ## 4. Docker Compose
+
+下面我们将会学习Docker Compose。
 
 ### 4.1 概述
 

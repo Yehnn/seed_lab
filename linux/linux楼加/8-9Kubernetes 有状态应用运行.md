@@ -1,20 +1,25 @@
+---
+show: step
+version: 1.0
+enable_checker: true
+---
 # Kubernetes 有状态应用运行
 
-## 实验介绍
+## 1. 实验介绍
 
 有状态应用的状态需要在 Pod 销毁和重建之间保持，那么这些状态需要在应用运行过程中持久化到存储里。Kubernetes 里持久化存储通过 Volume 抽象来实现，Volume 底层实现可以是云存储或本地存储。Kubernetes 里使用 PV（PersistentVolume）来表示存储资源，通过 PVC（PersistentVolumeClaim）来声明存储资源需求。PV/PVC 的关系类似于 Node/Pod，只不过一个描述的是存储资源，另一个描述的是计算资源。有状态应用的 Pod 需要绑定 PV，在 Pod 销毁和重建之间要保证绑定到之前的 PV，另外很多时候 Pod 的启动顺序有要求。Kubernetes 里提供了 StatefulSet 对象来控制有状态应用的运行。本次实验我们先学习 Kubernetes 里跟存储相关的对象，然后再学习如何使用 StatefulSet 来控制有状态应用的运行。
 
-## 实验知识点
+## 2. 实验知识点
 
 - Volume
 - PersistentVolume 和 PersistentVolumeClaim
 - StatefulSet
 
-## Volume（卷）
+## 3. Volume（卷）
 
-容器里文件的生命周期是短暂的，这使得在容器中运行某些应用时会出现问题。比如当容器崩溃时，kubelet 会重启它，但是容器中的文件将丢失，因为容器会以干净的状态（镜像最初状态）重新启动。另外在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 使用卷抽象很好的解决了这些问题。
+容器里文件的生命周期是短暂的，这使得在容器中运行某些应用时会出现问题。比如当容器崩溃时，kubelet 会重启它，但是容器中的文件将丢失，因为容器会以干净的状态（镜像最初状态）重新启动。另外在 Pod 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 使用卷抽象很好地解决了这些问题。
 
-### 背景
+### 3.1. 背景
 
 Docker 中也有卷的概念，但它比较宽松，功能也比较简单。在 Docker 中，卷是磁盘或其它容器中的一个目录，它的生命周期不受管理。即便 Docker 现在提供了卷驱动程序，但功能还是比较有限。
 
@@ -22,7 +27,7 @@ Docker 中也有卷的概念，但它比较宽松，功能也比较简单。在 
 
 容器中的进程看到的是由其 Docker 镜像和卷组成的文件系统。Docker 镜像位于文件系统层次结构的根目录，任何卷都被挂载在镜像的指定路径中。卷无法挂载到其他卷上或与其它卷有硬连接。Pod 中的每个容器都必须独立指定每个卷的挂载位置。
 
-### 卷的类型
+### 3.2. 卷的类型
 
 Kubernetes 支持以下类型的卷：
 
@@ -54,7 +59,7 @@ Kubernetes 支持以下类型的卷：
 
 Kubernetes 是开放的，如果没有适合的，可以自己去实现一种新的卷。下面我们选两种典型的卷来了解一下其使用方法，一种是云存储卷，另一种是本地存储卷。
 
-### awsElasticBlockStore
+### 3.3. awsElasticBlockStore
 
 awsElasticBlockStore 卷将 Amazon Web Services（AWS）的 EBS 卷挂载到容器中。即便 Pod 被删除，awsElasticBlockStore 卷也只是被卸载，其内容会保留下来。
 
@@ -91,7 +96,7 @@ spec:
       fsType: ext4
 ```
 
-### local
+### 3.4. local
 
 local 卷表示本地存储设备，如磁盘、分区或目录。本地卷只能用作静态创建的 PV，系统会通过查看 Pod 使用的 PV 的关联节点来得到节点约束，从而将 Pod 调度到正确的节点上。注意 local 卷受底层节点可用性影响。
 
@@ -125,15 +130,17 @@ spec:
       path: /mnt/disks/ssd1
 ```
 
-## PersistentVolume（持久卷）和 PersistentVolumeClaim（持久卷声明）
+## 4. PersistentVolume（持久卷）和 PersistentVolumeClaim（持久卷声明）
 
-### 介绍
+下面我们将会学习PersistentVolume（持久卷）和 PersistentVolumeClaim（持久卷声明）。
+
+### 4.1. 介绍
 
 卷子系统将如何提供存储的细节抽象了出来。为此，Kubernetes 引入了两个新的 API 资源，PersistentVolume（PV） 和 PersistentVolumeClaim（PVC）。
 
 PV 是由管理员设置的存储，它是集群的一部分。就像 Node 是集群中的资源一样，PV 也是集群中的资源。PVC 是用户的存储需求，它与 Pod 相似。Pod 消耗 Node 资源，PVC 消耗 PV 资源。Pod 可以请求特定级别的计算资源（CPU 和内存），PVC 可以请求特定大小和访问模式的存储资源。
 
-### PV 类型
+### 4.2. PV 类型
 
 各种类型的 PV 以插件形式来实现。Kubernetes 目前支持以下类型：
 
@@ -158,7 +165,7 @@ PV 是由管理员设置的存储，它是集群的一部分。就像 Node 是�
 - ScaleIO Volumes
 - StorageOS
 
-### PV 配置
+### 4.3. PV 配置
 
 每个 PV 配置中都包含一个 sepc 规格字段和一个 status 状态字段。
 
@@ -183,15 +190,15 @@ spec:
     server: 172.17.0.2
 ```
 
-#### 容量（capacity）
+#### 4.3.1. 容量（capacity）
 
 通常，PV 将具有特定的存储容量，使用 PV 的 `capacity` 属性来设置。目前，存储大小是可以设置的唯一属性，未来可能支持 IOPS、吞吐量等。
 
-#### 卷模式（volumeMode）
+#### 4.3.2. 卷模式（volumeMode）
 
 卷模式通过 `volumeMode` 属性来设置，除了文件系统，还支持原始块设备。volumeMode 的有效值可以是 Filesystem 或 Block，默认为 Filesystem。
 
-#### 访问模式（accessModes）
+#### 4.3.3. 访问模式（accessModes）
 
 PV 可以以资源提供者支持的任何方式挂载到主机上。每个供应商支持不同的功能，每个 PV 的访问模式只能被设置为供应商支持的模式。例如 NFS 支持多个客户端同时读/写，但特定的 NFS PV 可能是以只读方式挂载到服务器上。
 
@@ -207,11 +214,11 @@ PV 可以以资源提供者支持的任何方式挂载到主机上。每个供�
 - ROX - ReadOnlyMany
 - RWX - ReadWriteMany
 
-#### 类（storageClassName）
+#### 4.3.4. 类（storageClassName）
 
 PV 可以具有一个类，通过 `storageClassName` 属性来设置。一个特定类别的 PV 只能绑定到请求该类别的 PVC。没有设置 storageClassName 属性的 PV 就没有类，它只能绑定到不需要特定类的 PVC。
 
-#### 状态（status）
+#### 4.3.5. 状态（status）
 
 PV 可以处于以下某种状态：
 
@@ -220,7 +227,7 @@ PV 可以处于以下某种状态：
 - Released（已释放） PVC 已被删除，但是 PV 还未被回收
 - Failed（失败） 回收失败
 
-### PVC 配置
+### 4.4. PVC 配置
 
 每个 PVC 中都包含一个 spec 规格字段和一个 status 状态字段。
 
@@ -244,19 +251,19 @@ spec:
       - {key: environment, operator: In, values: [dev]}
 ```
 
-#### 访问模式（accessModes）
+#### 4.4.1. 访问模式（accessModes）
 
 在请求具有特定访问模式的存储时，PVC 使用与 PV 相同的设置。
 
-#### 卷模式（volumeMode）
+#### 4.4.2. 卷模式（volumeMode）
 
 PVC 使用与 PV 相同的设置，将卷用作文件系统或块设备。
 
-#### 资源（resources）
+#### 4.4.3. 资源（resources）
 
 像 Pod 一样，PVC 可以请求特定数量的资源。
 
-#### 选择器（selector）
+#### 4.4.4. 选择器（selector）
 
 PVC 可以指定一个标签选择器来进一步过滤 PV。只有标签与选择器匹配的 PV 可以绑定到声明。选择器由两个字段组成：
 
@@ -265,11 +272,11 @@ PVC 可以指定一个标签选择器来进一步过滤 PV。只有标签与选�
 
 所有来自 matchLabels 和 matchExpressions 的要求需要全部满足才算匹配。
 
-#### 类（storageClassName）
+#### 4.4.5. 类（storageClassName）
 
 PVC 只能绑定到具有相同类的 PV，没有指定类的只能绑定到同样没有指定类的 PVC。
 
-### 在 Pod 中使用卷
+### 4.5. 在 Pod 中使用卷
 
 Pod 通过 PVC 来使用卷。PVC 必须与 Pod 位于相同的命名空间。集群在 Pod 的命名空间中查找 PVC，并使用它来获取支持 PVC 的 PV，然后挂载到 Pod 里。
 
@@ -291,7 +298,7 @@ spec:
         claimName: myclaim
 ```
 
-## StatefulSet
+## 5. StatefulSet
 
 StatefulSet 是一种控制器（Controller），类似于 Deployment，都是用来控制应用的运行，只不过 StatefulSet 控制的是更为复杂的有状态应用。StatefulSet 为应用的每个 Pod 实例提供唯一的标识，并且它可以保证部署和扩容的顺序。其应用场景包括：
 
@@ -314,7 +321,7 @@ StatefulSet 中每个 Pod 的域名格式为 `statefulSetName-{0..N-1}.serviceNa
 - namespace 为服务所在的 namespace，Headless Service 和 StatefulSet 必须在相同的 namespace 中
 - .svc.cluster.local 为 Cluster Domain
 
-### 使用 StatefulSet
+### 5.1. 使用 StatefulSet
 
 StatefulSet 适用于有以下某个或多个需求的应用：
 
@@ -384,37 +391,37 @@ spec:
 - 一个名为 web 的 StatefulSet，它的 spec 中指定在了 2 个运行 nginx 容器的 Pod。
 - volumeClaimTemplates 使用 local-storage 提供的存储资源来创建 PV。
 
-### Pod 身份
+### 5.2. Pod 身份
 
 StatefulSet Pod 具有唯一的身份，包括序号、稳定的网络 ID 和稳定的存储。身份绑定到 Pod 上，不管它（重新）调度到哪个节点上。
 
-#### 序号
+#### 5.2.1. 序号
 
 对于一个有 N 个副本的 StatefulSet，每个副本都会被指定一个整数序号，在 [0,N) 之间，且唯一。
 
-#### 稳定的网络 ID
+#### 5.2.2. 稳定的网络 ID
 
 StatefulSet 中的每个 Pod 的主机名由 StatefulSet 的名称和 Pod 的序号构成。前面的示例会创建两个名为 web-0、web-1 的 Pod。StatefulSet 可以使用 Headless Service 来控制其 Pod 的域。在创建每个 Pod 时，它将获取一个匹配的 DNS 子域，形式为 $(Pod 名称).$(管理服务域)，其中管理服务域由 StatefulSet 上的 serviceName 字段定义。
 
-#### 稳定存储
+#### 5.2.3. 稳定存储
 
 Kubernetes 为每个 volumeClaimTemplate 创建一个 PV。前面的 nginx 例子中，每个 Pod 将具有一个由 local-storage 存储类创建的 10MB 空间的 PV。当该 Pod（重新）调度到其它节点后，volumeMounts 将挂载之前的 PV。
 
-### Pod 管理策略
+### 5.3. Pod 管理策略
 
-#### OrderedReady Pod
+#### 5.3.1. OrderedReady Pod
 
 StatefulSet 中默认使用的是这种策略。它实现了前面所述的行为。
 
-#### Parallel Pod
+#### 5.3.2. Parallel Pod
 
 Parallel Pod 策略告诉 StatefulSet 并行的启动和终止 Pod，在启动和终止其他 Pod 之前不会等待其它 Pod 变成运行/就绪或完全终止状态。
 
-### 动手实验
+### 5.4. 动手实验
 
 下面我们通过实际运行一个有状态应用来实践一下前面学到的内容。
 
-#### 创建 local PV
+#### 5.4.1. 创建 local PV
 
 在创建 StatefulSet 之前我们先要准备好 PV 资源。在实验环境中我们只能创建 local（本地存储）类型的 PV。
 
@@ -497,7 +504,7 @@ local-pv2   1Gi        RWO            Retain           Available             loc
 
 可以看到两个 PV 都已创建成功，其状态为可用（Available），底层资源提供者为 local-storage。
 
-#### 创建 StatefulSet
+#### 5.4.2. 创建 StatefulSet
 
 将前面的示例文件保存为 `web.yml`，然后按照下面的命令来操作。
 
@@ -528,6 +535,6 @@ web-0     1/1       Running   0          34s
 web-1     1/1       Running   0          30s
 ```
 
-## 实验总结
+## 6. 实验总结
 
 本次实验我们先学习了 Kubernetes 里有关存储的管理，包括各种存储对象，然后学习了如何使用 StatefulSet 来控制有状态应用的运行，最后实际运行了一个简单的有状态应用。
