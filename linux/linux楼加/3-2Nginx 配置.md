@@ -60,7 +60,7 @@ Nginx 的安装方式同样分为两种：
 
 在 Nginx 中添加新的模块并不如 Apache 那样的方便，安装相关的工具，通过命令加载即可，在 Nginx 中添加新的模块需要在编译时添加相关的参数，然后安装才行。
 
-所当我们需要添加一些默认不提供的模块我们必须使用编译安装。
+所以当我们需要添加一些默认不提供的模块我们必须使用编译安装。
 
 1.包管理工具安装
 
@@ -181,7 +181,7 @@ http {
  }
 ```
 
-一个典型、完整的静态 Web 服务器还会包含多个 server 配置块和 location 配置块，例如（/etc/nginx/site-avaliabel/default.conf）：
+一个典型、完整的静态 Web 服务器还会包含多个 server 配置块和 location 配置块，例如（/etc/nginx/sites-avaliabel/default）：
 
 ```bash
 # 设置虚拟主机配置
@@ -298,7 +298,7 @@ upstream shiyanlounode {
 }
 # 设置虚拟主机
 server {
-    # 监听 800 端口
+    # 监听 81 端口
      listen 81;
 
     # location 块
@@ -529,6 +529,13 @@ sudo service nginx reload
 在浏览器中访问 `localhost:801/index.php`，我们便成功的看到了 php 参数的展示页面：
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517348967217-wm)
+
+如果出现 502 错误，很有可能是 php5-fpm 没有启动或者权限问题。可以使用如下命令修复：
+
+```bash
+sudo chmod o+r /var/run/php5-fpm.sock 
+sudo chmod o+w /var/run/php5-fpm.sock 
+```
 
 ```checker
 - name: check url

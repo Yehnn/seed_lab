@@ -366,7 +366,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: gcr.io/google_containers/nginx-slim:0.8
+        image: registry.cn-hangzhou.aliyuncs.com/chenshi-kubernetes/nginx-slim:0.8
         ports:
         - containerPort: 80
           name: web
@@ -384,6 +384,8 @@ spec:
         requests:
           storage: 10Mi
 ```
+
+> 因为没有翻墙的话，国内访问不到 `gcr.io/google_containers/nginx-slim:0.8` ，所以我们放到了实验楼的镜像仓库中，这里用的 `registry.cn-hangzhou.aliyuncs.com/chenshi-kubernetes/nginx-slim:0.8`
 
 其中包含了以下组件：
 

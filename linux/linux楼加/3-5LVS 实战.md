@@ -92,7 +92,7 @@ docker run --name=RealServer2 -tdi ubuntu
 >
 >  name 参数：给容器命名，方便区分
 >
->  tid 参数：分配 tty，能够与之交互
+>  tdi 参数：分配 tty，能够与之交互
 >
 >  ubuntu：指定容器镜像，这里使用 ubuntu 环境
 
@@ -357,6 +357,12 @@ ifconfig lo:0 192.168.0.10 broadcast 192.168.0.10 netmask 255.255.255.255 up
 # 添加路由，因为本就是相同的网段所以可以不添加该路由
 route add -host 192.168.0.10 dev lo:0
 ```
+
+> `lo:0`: lo 表示的是主机的回环地址，0 指 0 端口，这个端口是永不关闭的。
+> `broadcast`: 为指定网卡设置广播协议
+> `netmask`: 设置子网掩码
+> `up`：启动指定网络设备/网卡
+> `192.168.0.10` ： 是我们配置的虚拟 ip 
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516029742820.png-wm)
 

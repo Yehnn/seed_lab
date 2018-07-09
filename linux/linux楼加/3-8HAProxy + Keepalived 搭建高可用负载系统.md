@@ -121,14 +121,14 @@ docker run --privileged --name=nginx-server-3 -tid ubuntu
 
 ### 4.2 安装与配置 nginx 服务器
 
-以下操作在 nginx-server 服务器集群中操作。这里以 `ngxin-server-1` 为例，另外两台操作相同。
+以下操作在 nginx-server 服务器集群中操作。这里以 `nginx-server-1` 为例，另外两台操作相同。
 
-通过 `docker attach ngxin-server-1` 登录 server-1，依次执行以下命令：
+通过 `docker attach nginx-server-1` 登录 server-1，依次执行以下命令：
 
 ```bash
 apt-get update
 apt-get install vim nginx -y
-server nginx start	# 启动 nginx 服务
+service nginx start	# 启动 nginx 服务
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1514106306847.png-wm)
@@ -388,7 +388,7 @@ http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/week8/3-haproxy-config.m
 编辑 hosts 配置文件：
 
 ```sh
-vim /etc/hosts
+sudo vim /etc/hosts
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1514358104237.png-wm)
@@ -399,7 +399,7 @@ vim /etc/hosts
 
 ### 4.9 服务运行
 
-完成所有的配置之后，分别启动 HAProxy-master 和 HAProxy-backup 启动 Keepalived：
+完成所有的配置之后，分别在 HAProxy-master 和 HAProxy-backup 启动 Keepalived：
 
 ```bash
 service keepalived start
@@ -416,8 +416,8 @@ VIP 已经被绑定到当前服务器。说明 Keepalived 已经成功启动并�
 接下来启动 HAProxy 服务：
 
 ```sh
-haproxy -c -f /etc/haproxy/haproxy.conf #检查配置文件是否存在语法错误
-haproxy -d -f /etc/haproxy/haproxy.conf	#以调试模式启动 HAProxy
+haproxy -c -f /etc/haproxy/haproxy.cfg #检查配置文件是否存在语法错误
+haproxy -d -f /etc/haproxy/haproxy.cfg	#以调试模式启动 HAProxy
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1514361147607.png-wm)

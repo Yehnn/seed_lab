@@ -77,7 +77,7 @@ certbot 工具安装好之后就可以用它来申请证书。由于安装了 ng
 第一步，执行下面的命令来开启交互界面。
 
 ```bash
-$ sudo certbot certonly --authenticator standalone --pre-hook "systemctl stop nginx" --post-hook "systemctl stop nginx"
+$ sudo certbot certonly --authenticator standalone --pre-hook "systemctl stop nginx" --post-hook "systemctl start nginx"
 ```
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5898timestamp1528190731717.png/wm)

@@ -286,13 +286,15 @@ Stopping "minikube"...
 
 Kubeadm-dind 提供了一个预先配置好的脚本来部署集群，一键就可以完成集群的部署。请同样确保本地访问国外网络的畅通性。
 
+**实验楼这里使用的 kubeadm-dind 方式安装部署。环境中已经自带有镜像和启动脚本了，所以不需要下载了。只需要使用 `./dind-cluster-v1.10.sh up` 启动就行了**
+
 ```bash
 wget https://cdn.rawgit.com/Mirantis/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.10.sh
 chmod +x dind-cluster-v1.10.sh
 ./dind-cluster-v1.10.sh up
 ```
 
-如果本地先前没有安装 kubectl，可把 Kubeadm-dind 自带的 kubectl 命令添加到系统路径下。然后执行 `kubectl get nodes` 来查看集群里的所有节点。
+如果本地先前没有安装 kubectl，可把 Kubeadm-dind 自带的 kubectl 命令添加到系统路径下（实验环境中不需要执行下面这句命令）。然后执行 `kubectl get nodes` 来查看集群里的所有节点。
 
 ```bash
 export PATH="$HOME/.kubeadm-dind-cluster:$PATH"

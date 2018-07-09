@@ -134,7 +134,7 @@ $ netstat -lunapt | grep 8080
 
 在前面的学习中我们知道对服务的监控需要通过 agent 去采集数据，所以下面就该对 agent 进行配置。
 
-在 `/etc/zabbix/zabbix-agent.conf` 配置文件中的最底端添加下面的这个语句，让 agent 使用脚本来采集 Nginx 的数据，然后发送给 server。
+在 `/etc/zabbix/zabbix_agentd.conf` 配置文件中的最底端添加下面的这个语句，让 agent 使用脚本来采集 Nginx 的数据，然后发送给 server。
 
 ```
 $ sudo vim /etc/zabbix/zabbix_agentd.conf

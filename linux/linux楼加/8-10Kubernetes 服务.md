@@ -300,9 +300,11 @@ spec:
 1、在集群里运行一个 Hello World 应用，包含两个实例。
 
 ```bash
-$ kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --image=gcr.io/google-samples/node-hello:1.0  --port=8080
+$ kubectl run hello-world --replicas=2 --labels="run=load-balancer-example" --image=registry.cn-hangzhou.aliyuncs.com/chenshi-kubernetes/node-hello:1.0  --port=8080
 deployment.apps "hello-world" created
 ```
+
+> 因为没有翻墙的话，国内访问不到 `gcr.io/google-samples/node-hello:1.0`，所以我们放到了实验楼的镜像仓库中，使用的 `registry.cn-hangzhou.aliyuncs.com/chenshi-kubernetes/node-hello:1.0`
 
 2、查看 Deployment 对象。
 
@@ -412,7 +414,7 @@ Events:                   <none>
 6、查看运行 Hello World 应用的 Pods。
 
 ```bash
-$ kubectl get pods --selector="run=load-balancer-example" --output=wide
+$ kubectl get pods --selector="run=load-balancer-example" --output=wide  #或者 kubectl get pods -o wide
 NAME                           READY     STATUS    RESTARTS   AGE       IP           NODE
 hello-world-5b446dd74b-bchvp   1/1       Running   0          4m        10.244.3.2   kube-node-2
 hello-world-5b446dd74b-v9chh   1/1       Running   0          4m        10.244.2.4   kube-node-1

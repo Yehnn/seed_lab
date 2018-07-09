@@ -1,0 +1,133 @@
+root@syl-ubuntu-alihk:~# history
+    1  hostname syl-ubuntu-alihk
+    2  vi /etc/hostname 
+    3  vi /etc/hosts
+    4  cat /etc/hostname
+    5  dpkg-reconfigure locales
+    6  visudo 
+    7  useradd -h
+    8  useradd -d /home/shiyanlou shiyanlou
+    9  ll /home/
+   10  userdel shiyanlou
+   11  useradd 
+   12  adduser
+   13  adduser -h
+   14  adduser shiyanlou
+   15  ls /home/
+   16  usermod -a -G sudo shiyanlou
+   17  cat /etc/apt/sources.list
+   18  apt-get update
+   19  apt-get install -y apt-transport-https
+   20  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+   21  cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+   22  deb http://apt.kubernetes.io/ kubernetes-xenial main
+   23  EOF
+   24  apt-get update
+   25  apt-get install  -y kubectl
+   26  wget https://github.com/kubernetes/minikube/releases/download/v0.28.0/minikube_0.28-0.deb
+   27  ls
+   28  dpkg -i minikube_0.28-0.deb 
+   29  minikube start
+   30  apt install -y vitrualbox
+   31  lsb_release -a
+   32  wget https://download.virtualbox.org/virtualbox/5.2.12/virtualbox-5.2_5.2.12-122591~Ubuntu~xenial_amd64.deb
+   33  ls
+   34  dpkg -i virtualbox-5.2_5.2.12-122591~Ubuntu~xenial_amd64.deb 
+   35  apt install -y virtualbox
+   36  apt-get -f
+   37  apt-get -f install
+   38  minikube start
+   39  wget https://cdn.rawgit.com/Mirantis/kubeadm-dind-cluster/master/fixed/dind-cluster-v1.10.sh
+   40  chmod +x dind-cluster-v1.10.sh 
+   41  ./dind-cluster-v1.10.sh  up
+   42  ifconfig
+   43  kubectl get ns
+   44  kuberctl create -f https://Kubernetes.io/docs/user-guide/nginx-deployment.yaml ¡ªrecord deployment ¡°nginx-deployment¡° created
+   45  kubectl create -f https://Kubernetes.io/docs/user-guide/nginx-deployment.yaml ¡ªrecord deployment ¡°nginx-deployment¡° created
+   46  ls
+   47  vi nginx-deployment.yaml
+   48  kubectl create -f nginx-deployment.yaml --record
+   49  kubectl get ns
+   50  kubectl get pods -l environment=production,tier=frontend
+   51  kubectl get pods -l 'environment in (production),tier in (frontend)'
+   52  kubectl get deployments
+   53  kubectl get rs
+   54  kubectl get pod
+   55  docker ps
+   56  docker images
+   57  kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
+   58  kubectl get deployments
+   59  docker ps
+   60  kubectl get rs
+   61  kubectl get pod
+   62  kubectl get pods --show-labels
+   63  kubectl edit deployment/nginx-deployment
+   64  kubectl set image deployment/nginx-deployment nginx=nginx:1.91
+   65  kubectl rollout status deployments nginx-deployment
+   66  kubectl get rs
+   67  kubectl get pods
+   68  kubectl get pods --show-labels
+   69  kubectl describe deployment
+   70  kubectl rollout history deployment/nginx-deloyment
+   71  kubectl rollout history deployment/nginx-deployment
+   72  vim
+   73  vim ~/.bashrc 
+   74  source ~/.bashrc
+   75  vim ~/.bashrc 
+   76  source ~/.bashrc
+   77  kubectl roolout history deployment/nginx-deployment
+   78  kubectl rollout history deployment/nginx-deployment
+   79  kubectl rollout history deployment/nginx-deployment --revision=3
+   80  kubectl rollout undo deployment/nginx-deployment
+   81  kubectl rollout history deployment/nginx-deployment
+   82  kubectl get deployment
+   83  kubectl get rs
+   84  kubectl get pods
+   85  kubectl get rs
+   86  kubectl describe deployment
+   87  kubectl scale deployment nginx-deployment --replicas 5
+   88  kubectl get deployment
+   89  kubectl autoscale deployment nginx-deployment --min=3 --max=10 --cpu-percent=80
+   90  nginx -V
+   91  ls
+   92  vi index.html
+   93  vi Dockerfile
+   94  ./dind-cluster-v1.10.sh -h
+   95  docker build -t shiyanlou .
+   96  ./dind-cluster-v1.10.sh copy-image shiyanlou
+   97  vi deployment.yaml
+   98  kubectl -h
+   99  kubectl apply deployment.yaml 
+  100  kubectl apply -f deployment.yaml 
+  101  kubectl get deployment
+  102  kubectl describe -h
+  103  kubectl describe deployment shiyanlou
+  104  kubectl get rs
+  105  kubectl get pods
+  106  docker images
+  107  ls
+  108  cat dind-cluster-v1.10.sh 
+  109  vi dind-cluster-v1.10.sh 
+  110  ls -l
+  111  stat -c %a dind-cluster-v1.10.sh 
+  112  vi local-storage.yml
+  113  kubectl create -f local-storage.yml
+  114  docker ps
+  115  docker get deployment
+  116  kubectl get deployment
+  117  kubectl get storage
+  118  kubectl get -h
+  119  kubectl get pv
+  120  kubectl get po
+  121  kubectl get pvc
+  122  kubectl get pv
+  123  vi local-pv.yml
+  124  kubectl get no
+  125  kubectl create -f local-pv.yml
+  126  kubectl get pv
+  127  kubectl describe pv local-pv1
+  128  kubectl -h
+  129  vi web.yml
+  130  history
+
+
