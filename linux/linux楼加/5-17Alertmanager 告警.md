@@ -120,6 +120,10 @@ cp simple.yml alertmanager.yml
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5956timestamp1528873174587.png/wm)
 
+`@
+http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/newweek5/05-22%20Alertmanager.mp4
+@`
+
 #### 3.2.2. 配置
 
 告警管理器可通过命令行参数和配置文件来配置。命令行参数用来配置运行期间不可变的系统参数，配置文件用来配置抑制规则、通知路由和通知接收者等。

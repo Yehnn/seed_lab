@@ -33,7 +33,7 @@ Prometheus 是一个开源监控系统，它前身是 [SoundCloud](http://soundc
 
 下面这张图描述了 Prometheus 的整体架构，以及其生态中的一些常用组件。 
 
-![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5950timestamp1528872414704.png/wm)
+![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5950timestamp1530862369613.png/wm)
 
 Prometheus Server 采用拉取方式从监控目标直接拉取数据，或者通过中间网关间接地拉取监控目标推送给网关的数据。它在本地存储抓取的数据，通过一定规则进行清理和整理数据，然后把得到的结果存储起来。各种 Web UI 使用 PromQL 查询语言来从 Server 里获取数据。当 Server 监测到有异常时会推送告警给 Alertmanager，Alertmanager 负责去通知相关人。
 
