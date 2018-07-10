@@ -56,7 +56,7 @@ VRRP 将局域网的一组物理路由器组织成一个虚拟路由器，称之
 
 * VRRP 备份组中的路由器会根据优先级选举出主路由 MASTER，MASTER 路由器通过发送报文，将虚拟 MAC 地址通知给与它相连的设备或主机，从而承担报文转发任务。
 * MASTER 主路由会周期性的向备份组内所有备份路由器 BACKUP 发送 VRRP 通告报文，备份路由器根据报文信息监控 MASTER 的运行状态。
-* 如果 MASTER 出现故障，BACKUP 再 3 秒内不能收到 MASTER 发送的 VRRP 通告报文，其他 BACKUP 会从新进行选举，其中优先级最高的 BACKUP 将成为新的 MASTER。
+* 如果 MASTER 出现故障，BACKUP 在 3 秒内不能收到 MASTER 发送的 VRRP 通告报文，其他 BACKUP 会重新进行选举，其中优先级最高的 BACKUP 将成为新的 MASTER。
 * VRRP 备份组进行状态切换时，新的 MASTER 会立即发送带有虚拟路由器的 MAC 地址和虚拟 IP 地址信息的报文，更新与它相连的设备中 ARP 表。从而将用户流量导入到新的 MASTER 路由器。整个切换过程非常快，对用户完全透明，保证了服务的持续可用性。
 * 当原 MASTER 故障恢复后，在收到现 MASTER 发来的 VRRP 数据包时，从中解析出它的优先级，如果自己的优先级较高，则通知当前 MASTER，进行角色切换，现 MASTER 降级为 BACKUP，自己升级为 MASTER。如果两者优先级相同，则比较两者的 IP 地址，IP 地址越大，优先级越高。
 * 当 BACKUP 路由器的优先级高于 MASTER 主路由时，主要由 BACKUP 路由器的工作方式（抢占或非抢占）来决定是否重新选举 MASTER 主路由。

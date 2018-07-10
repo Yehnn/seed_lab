@@ -90,7 +90,7 @@ service nginx stop
 - 启动一台 docker container 作为我们的 Real Server 1（VIP：192.168.0.10）；
 - 启动一台 docker container 作为我们的 Real Server 2（VIP：192.168.0.10）；
 
-实际的 IP 地址请查看，以实际的为主，当前通过该顺序创建并以默认的配置参数，IP 地址会这样分配，通过如下的命令来创建：
+通过如下的命令来创建四个容器：
 
 ```bash
 docker run --privileged --name=LoadBalancer1 -tid ubuntu
@@ -99,7 +99,7 @@ docker run --privileged --name=RealServer1 -tid ubuntu
 docker run --privileged --name=RealServer2 -tid ubuntu
 ```
 
-相关参数与命令的作用在 LVS 实战中做了详细的解释，在第 10 周我们会深入的学习 docker，此处不必过于深究，当作轻量级虚拟机即可。
+相关参数与命令的作用在 LVS 实战中做了详细的解释，在第 8 周我们会深入的学习 docker，此处不必过于深究，当作轻量级虚拟机即可。
 
 通过 `docker ps` 我们可以验证我们成功的创建：
 
@@ -144,8 +144,6 @@ vim /usr/share/nginx/html/index.html
 service nginx start 
 ```
 
-最后使用 `ctrl+p` + `ctrl+q` 快捷键来退出容器。
-
 #### 3.3.3 修改内核参数，抑制 arp
 
 修改 arp 的内核参数配置，来防止 LVS 的集群的 arp 表，从而影响负载均衡机器数据包的接受：
@@ -188,7 +186,7 @@ ifconfig lo:0 192.168.0.10 broadcast 192.168.0.10 netmask 255.255.255.255 up
 route add -host 192.168.0.10 dev lo:0
 ```
 
-由此我们便完成了其中一台 RealServer 的环境配置，我们只需要在另外一台做相同的操作即可，完成两台 RealServer 的配置之后我们通过 Firefox 浏览器来验证我们的 Web 服务是否正常工作。
+由此我们便完成了其中一台 RealServer 的环境配置，我们只需要在另外一台做相同的操作即可（退出容器可以使用 `ctrl+p` + `ctrl+q` 快捷键），完成两台 RealServer 的配置之后我们通过 Firefox 浏览器来验证我们的 Web 服务是否正常工作。
 
 完成 RealServer 的配置之后，紧接着便是 LoadBalancer 机器的配置
 

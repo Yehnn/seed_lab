@@ -49,7 +49,7 @@ Kibana 是一款基于 Apache 开源协议，并且使用 JavaScript 语言编�
 
 Elasticsearch + Logstash + Kibana 也称为 ELK Stack。三个软件协同工作，可以满足大部分场景需求，且性能方面也非常优秀。
 
-Redis 本身并不属于 ELK 技术栈里的一份子，而是作为一个可选的应用存在于 ELK 技术栈中。Redis 提供了一个很好的缓冲区，它能够很好的帮助我们在主节点上屏蔽掉多个从节点之间不同日志文件的差异，负责管理日志端（从节点）的人可以专注于向 Redis 里生产数据，而负责数据分析聚合端的人则可以专注于从 Redis 内消费数据，达到分层目的。
+Redis 本身并不属于 ELK 技术栈里的一份子，而是作为一个可选的应用存在于 ELK 技术栈中。Redis 提供了一个很好的缓冲区，它能够很好地帮助我们在主节点上屏蔽掉多个从节点之间不同日志文件的差异，负责管理日志端（从节点）的人可以专注于向 Redis 里生产数据，而负责数据分析聚合端的人则可以专注于从 Redis 内消费数据，达到分层目的。
 
 关于 ELK 的相关实验，主要以实际操作为主。实验偏向环境的搭建和软件的运行测试过程。
 
@@ -62,7 +62,7 @@ ELK(R) Stack 工作原理：
 由于 Elasticsearch 是由 Java 编写的，所以运行它需要依赖 Java 环境，检查系统中是否已安装 JDK 以及 JDK 版本：
 
 ```
-java --version
+java -version
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516781882835.png-wm)
@@ -151,7 +151,7 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/3-1.mp4
 
 ### 2.4 APT 方式安装 ELK（推荐）
 
-安装软件的方式，推荐选择 apt-get 方式，通过这种方式安装的软件，可以很方便的管理软件运行状态。下面通过 apt-get 的方式来安装 ELK 环境：
+安装软件的方式，推荐选择 apt-get 方式，通过这种方式安装的软件，可以很方便地管理软件运行状态。下面通过 apt-get 的方式来安装 ELK 环境：
 
 1. 导入 Elastic PGP Key：
 
@@ -192,7 +192,7 @@ sudo service elasticsearch start
 
 启动 Elasticsearch 时，由于在线环境的原因，会遇到如上图的警告信息，但是 Elasticsearch 也成功启动了。（这同样也是因为使用环境所导致）
 
-使用一下方式解决警告信息：
+使用以下方式解决警告信息：
 
 ```
 sudo service elasticsearch stop
@@ -285,13 +285,13 @@ ELK 用来构建日志分析系统，所以还需要配置日志信息。常用�
 
 环境中已经默认安装了 Nginx 服务。修改 Nginx 的配置文件，指定日志存放路径。Nginx 默认的配置文件位于 `/etc/nginx/sites-available/default`。
 
-```sh
+```sh	
 sudo vim /etc/nginx/site-available/default
 ```
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516789624880.png-wm)
 
-这里指定的是 Nginx 的访问日志存放路径。这个路径此时并不存在，所以需要提前创建响应的目录和文件，否则 Nginx 不能正常启动。
+这里指定的是 Nginx 的访问日志存放路径。这个路径此时并不存在，所以需要提前创建相应的目录和文件，否则 Nginx 不能正常启动。
 
 ```sh
 cd /home/shiyanlou/Code && sudo mkdir elk && cd elk && sudo touch access.log

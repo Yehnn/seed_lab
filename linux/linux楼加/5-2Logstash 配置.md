@@ -48,7 +48,7 @@ Logstash 工作流程一般分为三个部分：INPUTS（输入），FILTERS（�
 
 **Outputs:**
 
-输出是 Logstash 处理数据的最后一步，输出的方式有很多种，比较常用的是 Elasticsearch 和 file。将输出方式设定为 Elasticsearch 后，就可以通过 Elasticsearch 对数据进行高效，便捷的查询。当输出的方式为 file 时，Logstash 会将数据写入到磁盘文件中。
+输出是 Logstash 处理数据的最后一步，输出的方式有很多种，比较常用的是 Elasticsearch 和 file。将输出方式设定为 Elasticsearch 后，就可以通过 Elasticsearch 对数据进行高效，便捷地查询。当输出的方式为 file 时，Logstash 会将数据写入到磁盘文件中。
 
 ## 3. Logstash 基本配置
 
