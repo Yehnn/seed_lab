@@ -112,6 +112,9 @@ python3 prometheus.py
 
 除了上面使用的 Summary 类型的度量指标，Python 客户端库还支持 Counter、Gauge 和 Histogram 其它几种。更多用法请参考 Python 客户端库 GitHub 仓库的文档。
 
+`@
+http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/newweek5/05-20-1%20Prometheus%20Python.mp4
+@`  
 ## 4. 推送度量指标到 Prometheus 网关
 
 对于一些短生命周期的应用程序，比如批处理脚本、定时任务等，无法通过抓取的方式来获取它们的度量指标。这时可以采用推送方式，应用程序把采集到的度量指标主动推送到 Prometheus 网关里暂存，Prometheus Server 定时从网关里去抓取这些指标。
@@ -183,6 +186,9 @@ push_to_gateway('localhost:9091', job='batchA', registry=registry)
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5954timestamp1528872994770.png/wm)
 
+`@
+http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/newweek5/05-20-2%20Prometheus.mp4
+@`
 #### 4.2.3. 从命令行推送
 
 除了使用客户端库在代码里推送，我们还可以从命令行通过 HTTP API 来推送。
@@ -432,6 +438,9 @@ scrape_configs:
 
 ![此处输入图片的描述](https://doc.shiyanlou.com/document-uid606277labid5954timestamp1528873036997.png/wm)
 
+`@
+http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/newweek5/05-20-3%20Prometheus%20MySQL.mp4
+@`  
 ## 6. 实验总结
 
 本次实验我们学习如何使用 Prometheus 来监测我们的应用和服务，可以看到 Prometheus 功能非常强大，相关生态也已经十分完善。

@@ -69,12 +69,12 @@ mysql> SELECT * FROM test1;
 - name: check sql
   script: |
     #!/bin/bash
-	mysql -u root -p shiyanlou001 -e "show tables"|grep "test1"
+	mysql -u root shiyanlou001 -e "show tables"|grep "test1"
   error: 没有在 shiyanlou001 创建 test1 表
 - name: check sql
   script: |
     #!/bin/bash
-	mysql -u root -p shiyanlou001 -e "select * from test1"|grep "12345"
+	mysql -u root shiyanlou001 -e "select * from test1"|grep "12345"
   error: 没有在 test1 表插入数据
 ```
 
@@ -124,12 +124,12 @@ mysql>
 - name: check sql
   script: |
     #!/bin/bash
-	mysql -u root -p shiyanlou001 -e "show tables"|grep "test2"
+	mysql -u root shiyanlou001 -e "show tables"|grep "test2"
   error: 没有在 shiyanlou001 创建 test2 表
 - name: check sql
   script: |
     #!/bin/bash
-	mysql -u root -p shiyanlou001 -e "select * from test2"|grep "002"
+	mysql -u root shiyanlou001 -e "select * from test2"|grep "002"
   error: 没有在 test2 表插入数据
 ```
 
@@ -203,7 +203,7 @@ double|1|11|52
 
 `TIME` 时间。范围是 `-838:59:59 到 838:59:59`。`MySQL` 以 `HH:MM:SS` 格式或者 `HHH:MM:SS` 格式显示 `TIME` 值，但允许使用字符串或数字为 `TIME` 列分配值。
 
-> `TIME` 的小时范围较大，因为其不仅可以表示 `24` 小时制的时间，还可以表示两个事件发生的事件间隔
+> `TIME` 的小时范围较大，因为其不仅可以表示 `24` 小时制的时间，还可以表示两个事件发生的时间间隔
 
 #### DATETIME
 
@@ -249,7 +249,7 @@ mysql>
 
 #### 数字
 
-数值与我们平时使用的数字没有什么区别。`MySQL` 中可以使用科学记数法，如下示例：
+数值与我们平时使用的数字没有什么区别。`MySQL` 中可以使用科学计数法，如下示例：
 
 ```bash
 mysql> SELECT true, false, TRUE, FALSE, 100, -100, 1.2e+3, 2.67;
@@ -347,7 +347,7 @@ mysql>
 
 #### 时间和日期
 
-时间和日期的组合方式，这里不再举例。参考上述时间和日期的单独示例。
+mysql 中时间和日期组合的格式为 `YYYY-MM-DD HH:MM:SS` 。
 
 ### 3.2 识别符
 

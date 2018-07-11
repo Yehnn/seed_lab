@@ -41,7 +41,7 @@ enable_checker: true
 
 ### 2.1 ELK 简介
 
-ELK（Elasticsearch + Logstash + Kibana）是一套完整的日志分析解决方案，是三个开源软件产品的简称。Elasticsearch 是一个分布式的 RESTful 风格的搜索和数据分析引擎，它可以用于全文搜索。机构化搜索以及分析数据，采用 Java 语言编写，是整个日志分析系统的核心。
+ELK（Elasticsearch + Logstash + Kibana）是一套完整的日志分析解决方案，是三个开源软件产品的简称。Elasticsearch 是一个分布式的 RESTful 风格的搜索和数据分析引擎，它可以用于全文搜索，结构化搜索以及分析数据，采用 Java 语言编写，是整个日志分析系统的核心。
 
 Logstash 开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到指定的存储库，比如 Elasticsearch，采用 JRuby 语言编写，主要有三个组成部分：Shipper，发送日志数据；Broker，收集日志数据；Indexer，写入日志数据。
 
@@ -209,7 +209,7 @@ sudo vim /etc/init.d/elasticsearch
 
 ![图片描述](https://dn-simplecloud.shiyanlou.com/uid/108299/1516785964710.png-wm)
 
-若是解决了以上问题还是启动失败，我们可以修改 /etc/elasticsearch/jvm.options 中的 Xms 与 Xmx 中的内存配置参数，默认情况下使用 2G 的内存，我们可以修改至 1G 或者是 512m 即可。
+若是解决了以上问题还是启动失败，我们可以修改 /etc/logstash/jvm.options 中的 Xms 与 Xmx 中的内存配置参数，默认情况下使用 2G 的内存，我们可以修改至 1G 或者是 512m 即可。
 
 Elasticsearch 监听在本地的 9200 端口，浏览器打开地址：**localhost:9200**
 

@@ -215,7 +215,7 @@ ipvsadm -l
 
 因为 Keepalived 就是为 LVS 而诞生的，他会调用 IPVS 模块，所以此时我们并不需要再去通过 ipvsadm 工具来编写规则，我们直接将我们要做的配置写在配置文件中，Keepalived 会根据配置文件自动的为我们配置。
 
-首先我们修改 LoadBalancer1 中的 Keepalived 配置文件：
+首先我们在 LoadBalancer1 中新建一个 Keepalived 配置文件：
 
 ```bash
 vim /etc/keepalived/keepalived.conf
@@ -286,6 +286,8 @@ virtual_server 192.168.0.10 80 { #配置虚拟服务器，需要制定虚拟 IP 
     }
 }
 ```
+
+> 此示例配置文件可使用 `wget http://labfile.oss.aliyuncs.com/courses/1077/keepalived.conf` 下载
 
 以上配置内容为 LoadBalancer1 的 Keepalived.conf 配置内容。在编写配置内容时。一定要注意文字和语法格式，因为 Keepalived 在启动时并不会检测配置文件的正确性，及时没有配置文件，Keepalived 也能正常启动，所以一定要保证配置文件内容的正确性。
 

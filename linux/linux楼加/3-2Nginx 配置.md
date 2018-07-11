@@ -387,7 +387,7 @@ sudo nginx -t
 sudo nginx -s reload
 ```
 
-reload 是一个优雅的查新加载配置文件的做法，在不用中断 nginx 服务的情况下使得我们的配置文件生效。
+reload 是一个优雅的重新加载配置文件的做法，在不用中断 nginx 服务的情况下使得我们的配置文件生效。
 
 ![实验楼](https://dn-simplecloud.shiyanlou.com/1135081517349296358-wm)
 
@@ -441,7 +441,7 @@ http://labfile.oss.aliyuncs.com/courses/980/week9-mp4/2-1.mp4
 @`
 ### 4.2 Nginx 与 PHP 搭建服务
 
-Nginx 一般为用户提供静态文件服务，动态的页面服务本生并无法提供，Nginx 不像 Apache 默认加载了 php/python 等解释器模块，所以 Nginx 该如何结合 PHP 搭建服务呢？
+Nginx 一般为用户提供静态文件服务，动态的页面服务本身并无法提供，Nginx 不像 Apache 默认加载了 php/python 等解释器模块，所以 Nginx 该如何结合 PHP 搭建服务呢？
 
 首先 Nginx 无法解析 PHP，所以必然需要第三方模块，通常 Nginx 通过 fastcgi 将相关的请求发送给 php-fpm，通过 php-fpm 解析后将数据返回，Nginx 再将获取的数据返回给客户端。
 

@@ -163,6 +163,9 @@ Dashboard 用来将相关 Panel 组织在一起，方便集中浏览。在创建
 
 在 Prometheus Dashboard 里选择顶部工具条里的 `Add panel` 来再添加两个 Panel，分别用于展示 Metric http_request_duration_microseconds 和 http_request_size_bytes。这样 Prometheus Dashboard 里就包含了三个 Panel，可以通过拖动来调整各个 Panel 的位置和大小。
 
+  `@
+http://labfile.oss-cn-hangzhou.aliyuncs.com/courses/980/newweek5/05-19%20Grafana.mp4
+@`
 ## 5. 控制台模板
 
 控制台模板允许你使用 [Go 模板语言](http://golang.org/pkg/text/template/) 来创建任意想要的控制台界面，它在 Prometheus 服务端里渲染。控制台模板方式能力最强，但刚开始的学习曲线较陡，对于新手应尽量使用 Grafana 这样的方式。这里不再详细展开，需要的时候大家可以查阅 [官方资料](https://prometheus.io/docs/visualization/consoles/)。
